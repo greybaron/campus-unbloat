@@ -1,13 +1,15 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { env } from '$env/dynamic/private';
 
 export const actions: Actions = {
 	login: async ({ cookies, request }) => {
+		console.log(`fetch ${env.CD_API_URL}/signin`);
 		const form = await request.formData();
 		const username = form.get('username');
 		const password = form.get('password');
 
-		const response = await fetch(`${import.meta.env.VITE_API_URL}/signin`, {
+		const response = await fetch(`${env.CD_API_URL}/signin`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
