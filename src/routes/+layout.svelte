@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import '../app.postcss';
-	
+
 	import { AppShell, AppBar, LightSwitch } from '@skeletonlabs/skeleton';
 
 	// Floating UI for Popups
@@ -16,11 +16,11 @@
 	// initializeStores();
 </script>
 
-
-
 <!-- lmao 1 hour in and already doing this shit -->
 <AppShell
-	slotSidebarLeft="{$page.url.pathname != '/' ? 'transition-[width] duration-300 bg-surface-500/5 lg:w-64 sm:w-20 sm:block hidden' : ''}"
+	slotSidebarLeft={$page.url.pathname != '/'
+		? 'transition-[width] duration-300 bg-surface-500/5 lg:w-64 sm:w-20 sm:block hidden'
+		: ''}
 >
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
@@ -43,14 +43,13 @@
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		{#if $page.url.pathname != '/'}
-		<Sidebar />
+			<Sidebar />
 		{/if}
 	</svelte:fragment>
-	
+
 	<!-- Page Route Content -->
 	<slot />
-
 </AppShell>
 {#if $page.url.pathname != '/'}
-<TabbarMobile />
+	<TabbarMobile />
 {/if}

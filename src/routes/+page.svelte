@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-    import type { ActionData } from './$types';
-    export let form: ActionData;
+	import type { ActionData } from './$types';
+	export let form: ActionData;
 	// let error = form?? {};
 	// $: error = form ?? {
 	// 	error: { message: '' },
 	// };
 
-    // let { username, error } = form ?? {};
-    // $: ({ username, error } = form ?? {
-    //     username: '',
-    //     error: { field: '', message: '' },
-    // });
+	// let { username, error } = form ?? {};
+	// $: ({ username, error } = form ?? {
+	//     username: '',
+	//     error: { field: '', message: '' },
+	// });
 </script>
 
 <div class="flex w-hull h-full items-center justify-center">
@@ -43,7 +43,7 @@
 					type="password"
 					placeholder="***************"
 				/>
-				{ #if form?.message }
+				{#if form?.message}
 					<small class="text-red-500" id="email-error">{form.message}</small>
 				{/if}
 			</div>
