@@ -30,7 +30,7 @@
 	on:click={() => dispatch('click')}
 	class="{clickable
 		? ''
-		: 'pointer-events-none'} transition-all variant-glass-primary flex flex-col w-80 rounded-xl p-2 pt-1 space-y-1"
+		: 'pointer-events-none'} transition-all variant-glass-primary flex flex-col items-center w-80 rounded-xl p-2 pt-1 space-y-1"
 >
 	<header class="pl-2 text-xl font-bold text-left">{title}</header>
 	<hr />
