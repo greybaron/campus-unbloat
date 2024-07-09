@@ -1,3 +1,10 @@
-<div class="p-2 sm:p-4 space-y-2 flex flex-grow items-center flex-col h-full pb-[72px] sm:pb-4">
+<script lang="ts">
+	export let add_class: string = '';
+</script>
+
+<div
+	class="{add_class} p-2 sm:p-4 space-y-4 flex flex-grow-0
+	flex-col pb-[72px] sm:pb-4 max-w-3xl max mx-auto"
+>
 	<slot />
 </div>

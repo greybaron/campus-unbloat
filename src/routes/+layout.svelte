@@ -13,8 +13,14 @@
 	import Sidebar from '$lib/Sidebar/Sidebar.svelte';
 	import TabbarMobile from '$lib/Sidebar/TabbarMobile.svelte';
 	import { page } from '$app/stores';
+
+	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+	initializeStores();
+
 	// initializeStores();
 </script>
+
+<Modal />
 
 <!-- lmao 1 hour in and already doing this shit -->
 <AppShell

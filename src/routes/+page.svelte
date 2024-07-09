@@ -31,7 +31,7 @@
 					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
 					name="password"
 					type="password"
-					placeholder="***************"
+					placeholder="das normale, nicht die Hash"
 				/>
 				{#if form?.message}
 					<small class="text-red-500" id="email-error">{form.message}</small>
