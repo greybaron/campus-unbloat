@@ -25,7 +25,7 @@
 	{#if deser_data}
 		<h1 class="text-3xl font-bold pl-4">Hallo, {deser_data.first_name}.</h1>
 	{/if}
-	<div class="transition-all grid grid-cols-1 md:grid-cols-2 gap-4 mx-auto">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-auto">
 		<BasicInfoTile basic_data={deser_data} />
 		<GradesTile />
 		<ExamSignupTile />
