@@ -1,6 +1,7 @@
 <script lang="ts">
 	import PageContainer from '$lib/PageContainer.svelte';
 	import BasicInfoTile from '$lib/TilesAndModals/BasicInfoTile.svelte';
+	import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
 	import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensiTile from '$lib/TilesAndModals/MensiTile.svelte';
@@ -30,6 +31,7 @@
 		<GradesTile />
 		<ExamSignupTile />
 		<MensiTile />
+		<CalendarTile />
 	</div>
 	<!-- <DashboardTile title="Meine Kurse" bind:any_tile_open />
 	<DashboardTile title="Meine Noten" bind:any_tile_open /> -->
