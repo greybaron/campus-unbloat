@@ -1,5 +1,5 @@
 FROM node:18-alpine AS builder
-LABEL Developers="Florian Schmidt"
+LABEL Developers="Florian Schmidt, Len Porath"
 WORKDIR /app
 COPY package*.json .
 RUN npm ci
