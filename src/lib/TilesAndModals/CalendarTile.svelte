@@ -8,13 +8,12 @@
 	import { writable, type Writable } from 'svelte/store';
 
 	interface Event {
-    	start: Date;
-    	end: Date;
-    	title: string;
-    	backgroundColor: string;
-    	textColor: string;
+		start: Date;
+		end: Date;
+		title: string;
+		backgroundColor: string;
+		textColor: string;
 	}
-
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -45,7 +44,7 @@
 		view: 'listDay',
 		events: previousEvents,
 		date: getNextMonday(),
-		headerToolbar: {start: '', center: '', end: ''}
+		headerToolbar: { start: '', center: '', end: '' }
 	};
 
 	function persistentStore(key: string) {
@@ -58,7 +57,7 @@
 		});
 
 		return store;
-	}	
+	}
 
 	function yallahParseDenKalender() {
 		fetchedCalendar.forEach((element) => {
@@ -74,31 +73,30 @@
 	}
 
 	function getNextMonday(date = new Date()) {
-    	const day = date.getDay();
-    	const diff = day === 6 ? 2 : (day === 0 ? 1 : 0); // 6 = Samstag, 0 = Sonntag
-    	if (diff > 0) {
-    	    date.setDate(date.getDate() + diff);
-    	}
-    	return date;
+		const day = date.getDay();
+		const diff = day === 6 ? 2 : day === 0 ? 1 : 0; // 6 = Samstag, 0 = Sonntag
+		if (diff > 0) {
+			date.setDate(date.getDate() + diff);
+		}
+		return date;
 	}
 
 	onMount(async () => {
-
 		storedEvents = persistentStore('storedEvents');
-		
+
 		previousEvents = [];
 
-		$storedEvents.forEach(e => {
-        	e.start = new Date(Math.floor(new Date(e.start).getTime()) + 7200);
-        	e.end = new Date(Math.floor(new Date(e.end).getTime()) + 7200);
+		$storedEvents.forEach((e) => {
+			e.start = new Date(Math.floor(new Date(e.start).getTime()) + 7200);
+			e.end = new Date(Math.floor(new Date(e.end).getTime()) + 7200);
 		});
 
 		previousEvents = $storedEvents;
 		options.events = previousEvents;
 
 		modalComponent = {
-			ref: CalendarModal
-			//props: { stats: calendar }
+			ref: CalendarModal,
+			props: { stats: $storedEvents }
 		};
 
 		modal = {
@@ -112,11 +110,11 @@
 		}
 		fetchedCalendar = await res.json();
 
-		console.log("Calender fetched...");
+		console.log('Calender fetched...');
 
 		yallahParseDenKalender();
 
-		console.log("Calender parsed...");
+		console.log('Calender parsed...');
 
 		options.events = [];
 		options.events = newEvents;
