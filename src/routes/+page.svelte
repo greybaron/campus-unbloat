@@ -2,12 +2,23 @@
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
 	export let form: ActionData;
+
+	let login_in_progress = false;
 </script>
 
 <div class="flex w-hull h-full items-center justify-center">
 	<div class="w-full max-w-xs">
 		<form
-			use:enhance
+			use:enhance={() => {
+				// clear the previous response if any (to remove bad credentials msg)
+				form = null;
+				login_in_progress = true;
+
+				return async ({ update }) => {
+					await update();
+					login_in_progress = false;
+				}
+			}}
 			action="?/login"
 			method="POST"
 			class="bg-surface-100-800-token dark:bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -20,6 +31,7 @@
 					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					name="username"
 					type="text"
+					required
 					placeholder="500xxxx"
 				/>
 			</div>
@@ -31,6 +43,7 @@
 					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
 					name="password"
 					type="password"
+					required
 					placeholder="das normale, nicht die Hash"
 				/>
 				{#if form?.message}
@@ -39,7 +52,7 @@
 			</div>
 			<div class="flex justify-center">
 				<button
-					class="w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+					class="{login_in_progress ? "variant-filled-surface" : "variant-filled-primary"} btn w-32"
 				>
 					Anmelden
 				</button>
