@@ -1,9 +1,8 @@
 <script lang="ts">
-    import DashboardModal from "$lib/DashboardModal.svelte";
-
+	import DashboardModal from '$lib/DashboardModal.svelte';
 </script>
 
-<DashboardModal title="Kalender" >
+<DashboardModal title="Kalender">
 	<svelte:fragment slot="body">
 		<p>test</p>
 	</svelte:fragment>
