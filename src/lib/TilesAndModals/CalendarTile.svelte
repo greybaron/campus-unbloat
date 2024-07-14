@@ -5,6 +5,7 @@
 	import CalendarModal from './CalendarModal.svelte';
 	import Calendar from '@event-calendar/core';
 	import List from '@event-calendar/list';
+	import { writable, type Writable } from 'svelte/store';
 
 	interface Event {
     	start: Date;
@@ -34,6 +35,8 @@
 		remarks: string;
 	}>;
 
+	let storedEvents: Writable<Event[]>;
+
 	let previousEvents: Event[] = [];
 	let newEvents: Event[] = [];
 
@@ -44,6 +47,18 @@
 		date: getNextMonday(),
 		headerToolbar: {start: '', center: '', end: ''}
 	};
+
+	function persistentStore(key: string) {
+		const storedValue = localStorage.getItem(key);
+		const initialValue = storedValue ? JSON.parse(storedValue) : [];
+		const store = writable(initialValue);
+
+		store.subscribe((value) => {
+			localStorage.setItem(key, JSON.stringify(value));
+		});
+
+		return store;
+	}	
 
 	function yallahParseDenKalender() {
 		fetchedCalendar.forEach((element) => {
@@ -68,6 +83,19 @@
 	}
 
 	onMount(async () => {
+
+		storedEvents = persistentStore('storedEvents');
+		
+		previousEvents = [];
+
+		$storedEvents.forEach(e => {
+        	e.start = new Date(Math.floor(new Date(e.start).getTime()) + 7200);
+        	e.end = new Date(Math.floor(new Date(e.end).getTime()) + 7200);
+		});
+
+		previousEvents = $storedEvents;
+		options.events = previousEvents;
+
 		modalComponent = {
 			ref: CalendarModal
 			//props: { stats: calendar }
@@ -90,7 +118,11 @@
 
 		console.log("Calender parsed...");
 
+		options.events = [];
 		options.events = newEvents;
+
+		$storedEvents = [];
+		storedEvents.set(newEvents);
 	});
 
 	function openModal() {
