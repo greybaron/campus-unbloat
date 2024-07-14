@@ -9,15 +9,13 @@
 	} from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 
-	let conicStops: ConicStop[] = [{ color: 'rgba(255,255,255,.8)', start: 0, end: 10 }];
+	let conicStops: ConicStop[];
 
 	import GradesModal from '$lib/TilesAndModals/GradesModal.svelte';
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
-
-	// { color: 'rgba(255,255,255,0.5)', start: 10, end: 35 },
 
 	let stats: {
 		total: number;
@@ -86,7 +84,7 @@
 	}
 </script>
 
-<DashboardTile title="Noten" on:click={openModal}>
+<DashboardTile title="Noten" on:click={openModal} ready={Boolean(conicStops)}>
 	<svelte:fragment slot="body">
 		<ConicGradient stops={conicStops} legend></ConicGradient>
 	</svelte:fragment>

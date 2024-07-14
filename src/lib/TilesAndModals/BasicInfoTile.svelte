@@ -9,8 +9,8 @@
 		user: string;
 	};
 
-	let ects: string;
 	let fachsemester: string;
+	let ects: string;
 
 	onMount(async () => {
 		const res1 = await fetch('/api/getects');
@@ -27,7 +27,11 @@
 	});
 </script>
 
-<DashboardTile title="Daten zur Person" clickable={false}>
+<DashboardTile
+	title="Daten zur Person"
+	clickable={false}
+	ready={Boolean(basic_data && fachsemester && ects)}
+>
 	<svelte:fragment slot="body">
 		{#if basic_data}
 			<div class="flex flex-col h-full justify-center space-y-2">

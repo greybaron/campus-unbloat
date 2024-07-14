@@ -4,7 +4,7 @@
 	export let signup_ops: Array<{ name: string; verfahren: string; status: string }>;
 </script>
 
-<DashboardModal title="Noten">
+<DashboardModal title="Anmeldung">
 	<svelte:fragment slot="body">
 		<ul>
 			{#each signup_ops as signup}

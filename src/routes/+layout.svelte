@@ -16,8 +16,6 @@
 
 	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
 	initializeStores();
-
-	// initializeStores();
 </script>
 
 <Modal />
