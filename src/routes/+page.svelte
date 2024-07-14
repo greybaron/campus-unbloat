@@ -17,7 +17,7 @@
 				return async ({ update }) => {
 					await update();
 					login_in_progress = false;
-				}
+				};
 			}}
 			action="?/login"
 			method="POST"
@@ -46,13 +46,15 @@
 					required
 					placeholder="das normale, nicht die Hash"
 				/>
-				{#if form?.message}
-					<small class="text-red-500" id="email-error">{form.message}</small>
-				{/if}
+				<div class="h-4">
+					{#if form?.message}
+						<small class="text-red-500">{form.message}</small>
+					{/if}
+				</div>
 			</div>
 			<div class="flex justify-center">
 				<button
-					class="{login_in_progress ? "variant-filled-surface" : "variant-filled-primary"} btn w-32"
+					class="{login_in_progress ? 'variant-ghost-primary' : 'variant-filled-primary'} btn w-32"
 				>
 					Anmelden
 				</button>
