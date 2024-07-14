@@ -6,11 +6,20 @@
 	import Calendar from '@event-calendar/core';
 	import List from '@event-calendar/list';
 
+	interface Event {
+    	start: Date;
+    	end: Date;
+    	title: string;
+    	backgroundColor: string;
+    	textColor: string;
+	}
+
+
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let calendar: Array<{
+	let fetchedCalendar: Array<{
 		title: string;
 		start: number; // UNIX Timestamp
 		end: number; // UNIX Timestamp
@@ -25,54 +34,37 @@
 		remarks: string;
 	}>;
 
-	let parsedCalendar: Array<{
-		id: number;
-		start: Date;
-		end: Date;
-		title: string;
-		backgroundColor: string;
-		textColor: string;
-		resourceIds: [];
-		editable: false;
-		startEditable: false;
-		durationEditable: false;
-		display: 'auto';
-		extendedProps: [];
-	}> = [];
+	let previousEvents: Event[] = [];
+	let newEvents: Event[] = [];
 
 	let plugins = [List];
 	let options = {
 		view: 'listDay',
-		events: [
-			{
-				start: new Date(new Date().setHours(0, 0, 0, 0).valueOf() + 3600),
-				end: new Date(new Date().setHours(23, 59, 59, 0).valueOf() - 7200),
-				title: 'test',
-				backgroundColor: '#FFA500',
-				textColor: '#FFFFFF'
-			}
-		]
+		events: previousEvents,
+		date: getNextMonday(),
+		headerToolbar: {start: '', center: '', end: ''}
 	};
 
 	function yallahParseDenKalender() {
-		let identifier = 0;
-		calendar.forEach((element) => {
-			parsedCalendar.push({
-				id: identifier,
+		fetchedCalendar.forEach((element) => {
+			newEvents.push({
 				start: new Date(element.start * 1000),
 				end: new Date(element.end * 1000),
 				title: element.title + '\n' + element.room,
 				backgroundColor: element.color == 'orange' ? '#FFA500' : '#8B0000',
-				textColor: '#FFFFFF',
-				resourceIds: [],
-				editable: false,
-				startEditable: false,
-				durationEditable: false,
-				display: 'auto',
-				extendedProps: []
+				textColor: '#FFFFFF'
 			});
-			identifier++;
 		});
+		console.log(newEvents);
+	}
+
+	function getNextMonday(date = new Date()) {
+    	const day = date.getDay();
+    	const diff = day === 6 ? 2 : (day === 0 ? 1 : 0); // 6 = Samstag, 0 = Sonntag
+    	if (diff > 0) {
+    	    date.setDate(date.getDate() + diff);
+    	}
+    	return date;
 	}
 
 	onMount(async () => {
@@ -90,11 +82,15 @@
 		if (!res.ok) {
 			return { props: { error: res.status } };
 		}
-		calendar = await res.json();
+		fetchedCalendar = await res.json();
+
+		console.log("Calender fetched...");
 
 		yallahParseDenKalender();
 
-		options.events = parsedCalendar;
+		console.log("Calender parsed...");
+
+		options.events = newEvents;
 	});
 
 	function openModal() {
@@ -102,9 +98,9 @@
 	}
 </script>
 
-<DashboardTile title="Kalender" on:click={openModal}>
+<DashboardTile title="Kalender" on:click={openModal} ready={options.events.length != 0}>
 	<svelte:fragment slot="body">
-		{#if parsedCalendar}
+		{#if newEvents}
 			<Calendar {plugins} {options} />
 		{/if}
 	</svelte:fragment>
