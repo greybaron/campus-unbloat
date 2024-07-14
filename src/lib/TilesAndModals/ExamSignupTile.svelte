@@ -9,7 +9,7 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let signup_ops: Array<{ name: string; verfahren: string; status: string }> = [];
+	let signup_ops: Array<{ name: string; verfahren: string; status: string }>;
 	let signUppable: number;
 
 	onMount(async () => {
@@ -39,12 +39,10 @@
 	}
 </script>
 
-<DashboardTile title="Anmeldung" on:click={openModal}>
+<DashboardTile title="Anmeldung" on:click={openModal} ready={Boolean(signup_ops)}>
 	<svelte:fragment slot="body">
 		{#if signup_ops}
 			<p>Du kannst dich für {signUppable} Prüfungen anmelden</p>
-		{:else}
-			<p>warte mal</p>
 		{/if}
 	</svelte:fragment>
 </DashboardTile>
