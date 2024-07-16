@@ -5,7 +5,8 @@
 	import CalendarModal from './CalendarModal.svelte';
 	import Calendar from '@event-calendar/core';
 	import List from '@event-calendar/list';
-	import { writable, type Writable } from 'svelte/store';
+	import { type Writable } from 'svelte/store';
+	import { persistentStore } from '$lib/LocalStorageHelper';
 
 	interface Event {
 		start: Date;
@@ -35,31 +36,19 @@
 	}>;
 
 	let storedEvents: Writable<Event[]>;
-
-	let previousEvents: Event[] = [];
-	let newEvents: Event[] = [];
+	let calendarEvents: Event[] = [];
 
 	let plugins = [List];
 	let options = {
 		view: 'listDay',
-		events: previousEvents,
+		events: calendarEvents,
 		date: getNextMonday(),
 		headerToolbar: { start: '', center: '', end: '' }
 	};
 
-	function persistentStore(key: string) {
-		const storedValue = localStorage.getItem(key);
-		const initialValue = storedValue ? JSON.parse(storedValue) : [];
-		const store = writable(initialValue);
-
-		store.subscribe((value) => {
-			localStorage.setItem(key, JSON.stringify(value));
-		});
-
-		return store;
-	}
-
 	function yallahParseDenKalender() {
+		let newEvents: Event[] = [];
+
 		fetchedCalendar.forEach((element) => {
 			newEvents.push({
 				start: new Date(element.start * 1000),
@@ -69,6 +58,8 @@
 				textColor: '#FFFFFF'
 			});
 		});
+
+		return newEvents;
 	}
 
 	function getNextMonday(date = new Date()) {
@@ -106,17 +97,14 @@
 	}
 
 	onMount(async () => {
-		storedEvents = persistentStore('storedEvents');
-
-		previousEvents = [];
+		storedEvents = persistentStore('storedEvents', []);
 
 		$storedEvents.forEach((e) => {
 			e.start = convertToBerlinTime(new Date(e.start));
 			e.end = convertToBerlinTime(new Date(e.end));
 		});
 
-		previousEvents = $storedEvents;
-		options.events = previousEvents;
+		options.events = $storedEvents;
 
 		modalComponent = {
 			ref: CalendarModal,
@@ -132,20 +120,14 @@
 		if (!res.ok) {
 			return { props: { error: res.status } };
 		}
+		console.log('Fetching calendar');
 		fetchedCalendar = await res.json();
 
-		console.log('Calender fetched...');
-
-		yallahParseDenKalender();
-
+		let parsed = yallahParseDenKalender();
 		console.log('Calender parsed...');
 
-		options.events = [];
-		options.events = newEvents;
-
-		$storedEvents = [];
-		storedEvents.set(newEvents);
-		console.log('storedEv updated!!');
+		options.events = parsed;
+		storedEvents.set(parsed);
 	});
 
 	function openModal() {
@@ -155,8 +137,6 @@
 
 <DashboardTile title="Kalender" on:click={openModal} ready={options.events.length != 0}>
 	<svelte:fragment slot="body">
-		{#if newEvents}
-			<Calendar {plugins} {options} />
-		{/if}
+		<Calendar {plugins} {options} />
 	</svelte:fragment>
 </DashboardTile>
