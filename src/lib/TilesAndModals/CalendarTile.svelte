@@ -69,7 +69,6 @@
 				textColor: '#FFFFFF'
 			});
 		});
-		console.log(newEvents);
 	}
 
 	function getNextMonday(date = new Date()) {
@@ -107,21 +106,17 @@
 
 		previousEvents = [];
 
-		console.log($storedEvents);
-
 		$storedEvents.forEach((e) => {
     		e.start = convertToBerlinTime(new Date(e.start));
     		e.end = convertToBerlinTime(new Date(e.end));
 		});
-
-		console.log($storedEvents);
 
 		previousEvents = $storedEvents;
 		options.events = previousEvents;
 
 		modalComponent = {
 			ref: CalendarModal,
-			props: { stats: options.events }
+			props: {eventList: options.events}
 		};
 
 		modal = {
