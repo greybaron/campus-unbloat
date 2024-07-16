@@ -2,7 +2,11 @@ import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 if (!env.CD_API_URL) {
-	console.error('CD_API_URL is not set');
+	console.error('environment variable CD_API_URL is not set');
+	process.exit(1);
+}
+if (!env.MENSA_API_URL) {
+	console.error('environment variable MENSA_API_URL is not set');
 	process.exit(1);
 }
 
