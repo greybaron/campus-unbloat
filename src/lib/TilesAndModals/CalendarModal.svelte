@@ -2,8 +2,9 @@
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
-	import { onMount } from 'svelte';
-	import { writable, type Writable } from 'svelte/store';
+	import { type Writable } from 'svelte/store';
+
+	export let storedEvents: Writable<Event[]>;
 
 	interface Event {
 		start: Date;
@@ -11,18 +12,6 @@
 		title: string;
 		backgroundColor: string;
 		textColor: string;
-	}
-
-	function persistentStore(key: string) {
-		const storedValue = localStorage.getItem(key);
-		const initialValue = storedValue ? JSON.parse(storedValue) : [];
-		const store = writable(initialValue);
-
-		store.subscribe((value) => {
-			localStorage.setItem(key, JSON.stringify(value));
-		});
-
-		return store;
 	}
 
 	function getNextMonday(date = new Date()) {
@@ -34,29 +23,7 @@
 		return date;
 	}
 
-	function convertToBerlinTime(dateUTC: Date): Date {
-	    const options: Intl.DateTimeFormatOptions = {
-	        timeZone: 'Europe/Berlin',
-	        year: 'numeric', month: 'numeric', day: 'numeric',
-	        hour: 'numeric', minute: 'numeric', second: 'numeric',
-	        hour12: false
-	    };
-
-	    const formatter = new Intl.DateTimeFormat('de-DE', options);
-	    const parts = formatter.formatToParts(dateUTC);
-
-	    const year = parseInt(parts.find(p => p.type === 'year')?.value || '0', 10);
-    	const month = parseInt(parts.find(p => p.type === 'month')?.value || '0', 10) - 1; // Monate sind 0-basiert
-    	const day = parseInt(parts.find(p => p.type === 'day')?.value || '0', 10);
-    	const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '0', 10);
-    	const minute = parseInt(parts.find(p => p.type === 'minute')?.value || '0', 10);
-    	const second = parseInt(parts.find(p => p.type === 'second')?.value || '0', 10);
-
-	    return new Date(year, month, day, hour, minute, second);
-	}
-
 	let eventList: Event[] = [];
-	let storedEvents: Writable<Event[]>;
 
 	let plugins = [TimeGrid];
 	let options = {
@@ -71,18 +38,13 @@
 		slotWidth: 60
 	};
 
-	onMount(async () => {
-		storedEvents = persistentStore('storedEvents');
-		eventList = [];
+	$: $storedEvents, run($storedEvents);
 
-		$storedEvents.forEach((e) => {
-    		e.start = convertToBerlinTime(new Date(e.start));
-    		e.end = convertToBerlinTime(new Date(e.end));
-		});
-
-		eventList = $storedEvents;
-		options.events = $storedEvents;
-	});
+	function run(events: Event[]) {
+		if (events) {
+			options.events = events;
+		}
+	}
 </script>
 
 <DashboardModal title="Kalender">

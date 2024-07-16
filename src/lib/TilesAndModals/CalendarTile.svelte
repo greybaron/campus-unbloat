@@ -81,24 +81,28 @@
 	}
 
 	function convertToBerlinTime(dateUTC: Date): Date {
-	    const options: Intl.DateTimeFormatOptions = {
-	        timeZone: 'Europe/Berlin',
-	        year: 'numeric', month: 'numeric', day: 'numeric',
-	        hour: 'numeric', minute: 'numeric', second: 'numeric',
-	        hour12: false
-	    };
+		const options: Intl.DateTimeFormatOptions = {
+			timeZone: 'Europe/Berlin',
+			year: 'numeric',
+			month: 'numeric',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric',
+			hour12: false
+		};
 
-	    const formatter = new Intl.DateTimeFormat('de-DE', options);
-	    const parts = formatter.formatToParts(dateUTC);
+		const formatter = new Intl.DateTimeFormat('de-DE', options);
+		const parts = formatter.formatToParts(dateUTC);
 
-	    const year = parseInt(parts.find(p => p.type === 'year')?.value || '0', 10);
-    	const month = parseInt(parts.find(p => p.type === 'month')?.value || '0', 10) - 1; // Monate sind 0-basiert
-    	const day = parseInt(parts.find(p => p.type === 'day')?.value || '0', 10);
-    	const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '0', 10);
-    	const minute = parseInt(parts.find(p => p.type === 'minute')?.value || '0', 10);
-    	const second = parseInt(parts.find(p => p.type === 'second')?.value || '0', 10);
+		const year = parseInt(parts.find((p) => p.type === 'year')?.value || '0', 10);
+		const month = parseInt(parts.find((p) => p.type === 'month')?.value || '0', 10) - 1; // Monate sind 0-basiert
+		const day = parseInt(parts.find((p) => p.type === 'day')?.value || '0', 10);
+		const hour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
+		const minute = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
+		const second = parseInt(parts.find((p) => p.type === 'second')?.value || '0', 10);
 
-	    return new Date(year, month, day, hour, minute, second);
+		return new Date(year, month, day, hour, minute, second);
 	}
 
 	onMount(async () => {
@@ -107,8 +111,8 @@
 		previousEvents = [];
 
 		$storedEvents.forEach((e) => {
-    		e.start = convertToBerlinTime(new Date(e.start));
-    		e.end = convertToBerlinTime(new Date(e.end));
+			e.start = convertToBerlinTime(new Date(e.start));
+			e.end = convertToBerlinTime(new Date(e.end));
 		});
 
 		previousEvents = $storedEvents;
@@ -116,7 +120,7 @@
 
 		modalComponent = {
 			ref: CalendarModal,
-			props: {eventList: options.events}
+			props: { storedEvents: storedEvents }
 		};
 
 		modal = {
@@ -141,6 +145,7 @@
 
 		$storedEvents = [];
 		storedEvents.set(newEvents);
+		console.log('storedEv updated!!');
 	});
 
 	function openModal() {
