@@ -1,0 +1,28 @@
+services:
+  debloat-frontend:
+    image: docker.io/flschmidt/campusdebloat-webapp
+    environment:
+      - CD_API_URL=http://debloat-api-campus:8080
+      - MENSA_API_URL=http://debloat-api-mensa:9090
+    ports:
+      - "3000:3000"
+    networks:
+      - eduroam
+
+  debloat-api-campus:
+    image: docker.io/flschmidt/campusdebloat-api-campus
+    networks:
+      - eduroam
+
+  debloat-api-mensa:
+    image: docker.io/flschmidt/campusdebloat-api-mensa
+    volumes:
+      - mensa_volume:/app/data
+    networks:
+      - eduroam
+
+
+networks:
+  eduroam:
+volumes:
+  mensa_volume:
