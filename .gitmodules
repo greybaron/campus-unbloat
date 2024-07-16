@@ -1,6 +1,0 @@
-[submodule "APIs/campusdual"]
-	path = APIs/campusdual
-	url = https://github.com/greybaron/campus-api.git
-[submodule "APIs/mensa"]
-	path = APIs/mensa
-	url = https://github.com/greybaron/mensa-api.git
