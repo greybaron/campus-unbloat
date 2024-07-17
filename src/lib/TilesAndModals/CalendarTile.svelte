@@ -7,7 +7,15 @@
 	import List from '@event-calendar/list';
 	import { type Writable } from 'svelte/store';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import { convertToBerlinTime, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
+
+	interface EventUnix {
+		start: number;
+		end: number;
+		title: string;
+		backgroundColor: string;
+		textColor: string;
+	}
 
 	interface Event {
 		start: Date;
@@ -21,7 +29,7 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let fetchedCalendar: Array<{
+	type fetchedCalendar = Array<{
 		title: string;
 		start: number; // UNIX Timestamp
 		end: number; // UNIX Timestamp
@@ -36,46 +44,58 @@
 		remarks: string;
 	}>;
 
-	let storedEvents: Writable<Event[]>;
-	let calendarEvents: Event[] = [];
+	let storedEventsUnix: Writable<EventUnix[]>;
 
 	let plugins = [List];
+	let emptyEvents: Event[] = [];
 	let options = {
 		view: 'listDay',
-		events: calendarEvents,
+		events: emptyEvents,
 		date: getNextWeekday(),
 		headerToolbar: { start: '', center: '', end: '' }
 	};
 
-	function yallahParseDenKalender() {
-		let newEvents: Event[] = [];
+	function fetchedToUnixEvents(fetched: fetchedCalendar): EventUnix[] {
+		let newEventsUnix: EventUnix[] = [];
 
-		fetchedCalendar.forEach((element) => {
-			newEvents.push({
-				start: new Date(element.start * 1000),
-				end: new Date(element.end * 1000),
+		fetched.forEach((element) => {
+			newEventsUnix.push({
+				start: element.start,
+				end: element.end,
 				title: element.title + '\n' + element.room,
-				backgroundColor: element.color == 'orange' ? '#FFA500' : '#8B0000',
+				backgroundColor: element.color,
 				textColor: '#FFFFFF'
 			});
 		});
 
-		return newEvents;
+		return newEventsUnix;
+	}
+
+	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
+		let events: Event[] = [];
+
+		uEvents.forEach((event) => {
+			events.push({
+				start: new Date(event.start),
+				end: new Date(event.end),
+				title: event.title,
+				backgroundColor: event.backgroundColor,
+				textColor: event.textColor
+			});
+		});
+
+		return events;
 	}
 
 	onMount(async () => {
-		storedEvents = persistentStore('storedEvents', []);
+		storedEventsUnix = persistentStore('storedEvents', []);
+		let events = unixEventsToEvents($storedEventsUnix);
 
-		$storedEvents.forEach((e) => {
-			e.start = convertToBerlinTime(new Date(e.start));
-			e.end = convertToBerlinTime(new Date(e.end));
-		});
-
-		options.events = $storedEvents;
+		options.events = events;
 
 		modalComponent = {
 			ref: CalendarModal,
-			props: { storedEvents: storedEvents }
+			props: { storedEvents: storedEventsUnix }
 		};
 
 		modal = {
@@ -83,16 +103,18 @@
 			component: modalComponent
 		};
 
+		console.log('Fetching calendar');
 		const res = await fetch('/api/stundenplan');
 		if (!res.ok) {
 			return { props: { error: res.status } };
 		}
-		console.log('Fetching calendar');
-		fetchedCalendar = await res.json();
 
-		let parsed = yallahParseDenKalender();
+		let fetchedCalendar = await res.json();
+		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
+		let parsed = unixEventsToEvents(parsedUnix);
+
 		options.events = parsed;
-		storedEvents.set(parsed);
+		storedEventsUnix.set(parsedUnix);
 	});
 
 	function openModal() {

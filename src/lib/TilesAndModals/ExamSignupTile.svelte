@@ -43,7 +43,7 @@
 	<svelte:fragment slot="body">
 		{#if signup_ops}
 			Du kannst dich für <p class="font-bold">{signUppable} Prüfungen</p>
-			 anmelden
+			anmelden
 		{/if}
 	</svelte:fragment>
 </DashboardTile>
