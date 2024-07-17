@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import { onMount, tick } from 'svelte';
-	import { persistentStore } from '$lib/LocalStorageHelper';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { browser } from '$app/environment';
 
 	import MensiModal from './MensiModal.svelte';
@@ -16,6 +16,7 @@
 	import MealContainer from '$lib/MealContainer.svelte';
 	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import type { Writable } from 'svelte/store';
+	import { getNextWeekdayString } from '$lib/TSHelpers/DateHelper';
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -86,32 +87,6 @@
 		fetchMealsWrapper(mensaId);
 	}
 
-	function getFormattedDate(date: Date): string {
-		const year = date.getFullYear();
-		const month = (date.getMonth() + 1).toString().padStart(2, '0');
-		const day = date.getDate().toString().padStart(2, '0');
-		return `${year}-${month}-${day}`;
-	}
-
-	function getNextMonday(date: Date): Date {
-		const day = date.getDay();
-		const daysToAdd = day === 0 ? 1 : 7 - day + 1;
-		date.setDate(date.getDate() + daysToAdd);
-		return date;
-	}
-
-	function getCurrentOrNextMondayDate(): string {
-		const today = new Date();
-		const day = today.getDay();
-
-		if (day === 6 || day === 0) {
-			// Saturday or Sunday
-			return getFormattedDate(getNextMonday(today));
-		}
-
-		return getFormattedDate(today);
-	}
-
 	function fetchMealsWrapper(mensaId: number) {
 		if (browser) {
 			fetchMeals(mensaId).then((meals) => {
@@ -122,7 +97,7 @@
 
 	async function fetchMeals(mensaId: number): Promise<mensaMealsType> {
 		console.log('fetch meals for', mensaId);
-		let date = getCurrentOrNextMondayDate();
+		let date = getNextWeekdayString();
 		const res = await fetch(`/api/get_day_at_mensa/?mensa=${mensaId}&date=${date}`);
 
 		if (res.ok) {
