@@ -8,7 +8,7 @@ export async function GET({ cookies }) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const response = await fetch(`${env.CD_API_URL}/stundenplan`, {
+	const response = await fetch(`${env.CD_API_URL}/get_stundenplan`, {
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
