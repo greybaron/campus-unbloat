@@ -30,7 +30,7 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl">CampusDual</strong>
+				<strong class="text-xl">CampusUnbloat</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a

@@ -6,7 +6,8 @@
 	import Calendar from '@event-calendar/core';
 	import List from '@event-calendar/list';
 	import { type Writable } from 'svelte/store';
-	import { persistentStore } from '$lib/LocalStorageHelper';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import { convertToBerlinTime, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 
 	interface Event {
 		start: Date;
@@ -42,7 +43,7 @@
 	let options = {
 		view: 'listDay',
 		events: calendarEvents,
-		date: getNextMonday(),
+		date: getNextWeekday(),
 		headerToolbar: { start: '', center: '', end: '' }
 	};
 
@@ -60,40 +61,6 @@
 		});
 
 		return newEvents;
-	}
-
-	function getNextMonday(date = new Date()) {
-		const day = date.getDay();
-		const diff = day === 6 ? 2 : day === 0 ? 1 : 0; // 6 = Samstag, 0 = Sonntag
-		if (diff > 0) {
-			date.setDate(date.getDate() + diff);
-		}
-		return date;
-	}
-
-	function convertToBerlinTime(dateUTC: Date): Date {
-		const options: Intl.DateTimeFormatOptions = {
-			timeZone: 'Europe/Berlin',
-			year: 'numeric',
-			month: 'numeric',
-			day: 'numeric',
-			hour: 'numeric',
-			minute: 'numeric',
-			second: 'numeric',
-			hour12: false
-		};
-
-		const formatter = new Intl.DateTimeFormat('de-DE', options);
-		const parts = formatter.formatToParts(dateUTC);
-
-		const year = parseInt(parts.find((p) => p.type === 'year')?.value || '0', 10);
-		const month = parseInt(parts.find((p) => p.type === 'month')?.value || '0', 10) - 1; // Monate sind 0-basiert
-		const day = parseInt(parts.find((p) => p.type === 'day')?.value || '0', 10);
-		const hour = parseInt(parts.find((p) => p.type === 'hour')?.value || '0', 10);
-		const minute = parseInt(parts.find((p) => p.type === 'minute')?.value || '0', 10);
-		const second = parseInt(parts.find((p) => p.type === 'second')?.value || '0', 10);
-
-		return new Date(year, month, day, hour, minute, second);
 	}
 
 	onMount(async () => {
@@ -124,8 +91,6 @@
 		fetchedCalendar = await res.json();
 
 		let parsed = yallahParseDenKalender();
-		console.log('Calender parsed...');
-
 		options.events = parsed;
 		storedEvents.set(parsed);
 	});
