@@ -165,7 +165,7 @@
 	<svelte:fragment slot="body">
 		<div class="flex flex-col items-stretch space-y-2 w-full">
 			{#if !$showMealsInTile}
-				<p class="pt-4 pb-2 my-auto text-md font-bold">Klicken, um alle Mensen anzuzeigen.</p>
+				<p class="pt-4 my-auto text-md font-bold">Klicken, um alle Mensen anzuzeigen.</p>
 			{/if}
 			<TileInteractiveElementWrapper>
 				{#if $showMealsInTile && mensaList}
