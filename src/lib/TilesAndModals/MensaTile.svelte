@@ -4,7 +4,7 @@
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { browser } from '$app/environment';
 
-	import MensiModal from './MensiModal.svelte';
+	import MensaModal from './MensaModal.svelte';
 	import {
 		Accordion,
 		AccordionItem,
@@ -62,7 +62,7 @@
 		selectedMensa = persistentStore('selectedMensa', mensaList[0].id);
 
 		modalComponent = {
-			ref: MensiModal,
+			ref: MensaModal,
 			props: { mensaList: mensaList }
 		};
 
@@ -145,7 +145,7 @@
 			<TileInteractiveElementWrapper>
 				{#if $showMealsInTile && mensaList}
 					<select
-						class="select mb-2"
+						class="select mb-2 transition-none"
 						bind:value={mensaSelectElementValue}
 						on:change={() => {
 							changeMensa(mensaSelectElementValue);
