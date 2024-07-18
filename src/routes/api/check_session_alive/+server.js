@@ -8,16 +8,16 @@ export async function GET({ cookies }) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const response = await fetch(`${env.CD_API_URL}/get_examsignup`, {
+	const response = await fetch(`${env.CD_API_URL}/check_session_alive`, {
 		headers: {
 			Authorization: `Bearer ${token}`
 		}
 	});
 
 	if (!response.ok) {
-		return json({ error: 'Failed to fetch signup ops' }, { status: response.status });
+		return json(false);
 	}
 
-	const signup_ops = await response.json();
-	return json(signup_ops);
+	// const stats = response;
+	return json(true);
 }
