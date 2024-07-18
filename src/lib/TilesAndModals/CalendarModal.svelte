@@ -4,7 +4,15 @@
 	import TimeGrid from '@event-calendar/time-grid';
 	import { type Writable } from 'svelte/store';
 
-	export let storedEvents: Writable<Event[]>;
+	export let storedEvents: Writable<EventUnix[]>;
+
+	interface EventUnix {
+		start: number;
+		end: number;
+		title: string;
+		backgroundColor: string;
+		textColor: string;
+	}
 
 	interface Event {
 		start: Date;
@@ -12,6 +20,22 @@
 		title: string;
 		backgroundColor: string;
 		textColor: string;
+	}
+
+	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
+		let events: Event[] = [];
+
+		uEvents.forEach((event) => {
+			events.push({
+				start: new Date(event.start),
+				end: new Date(event.end),
+				title: event.title,
+				backgroundColor: event.backgroundColor,
+				textColor: event.textColor
+			});
+		});
+
+		return events;
 	}
 
 	function getNextMonday(date = new Date()) {
@@ -38,7 +62,7 @@
 		slotWidth: 60
 	};
 
-	$: $storedEvents, run($storedEvents);
+	$: $storedEvents, run(unixEventsToEvents($storedEvents));
 
 	function run(events: Event[]) {
 		if (events) {

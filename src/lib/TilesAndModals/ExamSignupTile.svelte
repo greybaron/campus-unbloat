@@ -41,7 +41,7 @@
 
 <DashboardTile title="Anmeldung" on:click={openModal} ready={Boolean(signup_ops)}>
 	<svelte:fragment slot="body">
-		{#if signup_ops}
+		{#if signUppable}
 			Du kannst dich für <p class="font-bold">{signUppable} Prüfungen</p>
 			anmelden
 		{/if}
