@@ -15,6 +15,7 @@
 	import { page } from '$app/stores';
 
 	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
 	initializeStores();
 </script>
 
@@ -33,14 +34,14 @@
 				<strong class="text-xl">CampusUnbloat</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
-					target="_blank"
-					rel="noreferrer"
+				<button
+					on:click={async () => {
+						goto('/logout');
+					}}
+					class="btn btn-sm variant-ghost-primary"
 				>
-					GitHub
-				</a>
+					Abmelden
+				</button>
 				<LightSwitch />
 			</svelte:fragment>
 		</AppBar>
