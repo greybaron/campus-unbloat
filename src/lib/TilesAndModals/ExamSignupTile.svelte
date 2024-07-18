@@ -9,7 +9,14 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let signup_ops: Array<{ name: string; verfahren: string; status: string }>;
+	type fetchedExamSignup = Array<{
+		name: string;
+		verfahren: string;
+		status: string;
+		warning_message: string;
+	}>;
+
+	let signupOptions: fetchedExamSignup;
 	let signUppable: number;
 
 	onMount(async () => {
@@ -20,12 +27,12 @@
 			return { props: { error: res.status } };
 		}
 
-		signup_ops = await res.json();
-		signUppable = signup_ops.filter((op) => op.status === '📝').length;
+		signupOptions = await res.json();
+		signUppable = signupOptions.filter((op) => op.status === '📝').length;
 
 		modalComponent = {
 			ref: ExamSignupModal,
-			props: { signup_ops: signup_ops }
+			props: { signupOptions: signupOptions }
 		};
 
 		modal = {
@@ -39,7 +46,7 @@
 	}
 </script>
 
-<DashboardTile title="Anmeldung" on:click={openModal} ready={Boolean(signup_ops)}>
+<DashboardTile title="Anmeldung" on:click={openModal} ready={Boolean(signupOptions)}>
 	<svelte:fragment slot="body">
 		{#if signUppable}
 			Du kannst dich für <p class="font-bold">{signUppable} Prüfungen</p>

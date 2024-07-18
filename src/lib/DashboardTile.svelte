@@ -11,12 +11,14 @@
 
 <button
 	on:click={() => dispatch('click')}
-	class="{clickable
+	class="{clickable && ready
 		? ''
 		: 'pointer-events-none'} variant-glass-primary flex flex-col items-center w-80 rounded-xl p-4 pt-2 pb-3 space-y-1"
 >
 	<div class="flex items-center w-full">
-		<i class="w-4 fa-solid fa-up-right-and-down-left-from-center"></i>
+		{#if clickable}
+			<i class="{ready ? '' : 'opacity-40'} w-4 fa-solid fa-up-right-and-down-left-from-center" />
+		{/if}
 		<header class="flex-grow text-xl font-bold text-center">{title}</header>
 		<div class="w-4" />
 	</div>
