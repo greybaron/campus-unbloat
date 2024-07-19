@@ -8,16 +8,24 @@ export async function GET({ cookies }) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const response = await fetch(`${env.CD_API_URL}/get_grades`, {
-		headers: {
-			Authorization: `Bearer ${token}`
+	try {
+		const response = await fetch(`${env.CD_API_URL}/get_grades`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+
+		if (!response.ok) {
+			throw new Error();
 		}
-	});
 
-	if (!response.ok) {
-		return json({ error: 'Failed to fetch grades' }, { status: response.status });
+		return response;
+	} catch (error) {
+		console.error('Error at grades:');
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+
+		return new Response('CaDu: Noten-Abfrage ist fehlgeschlagen', { status: 500 });
 	}
-
-	const grades = await response.json();
-	return json(grades);
 }

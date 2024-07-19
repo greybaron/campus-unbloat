@@ -1,14 +1,8 @@
 <script lang="ts">
 	import DashboardModal from '$lib/DashboardModal.svelte';
-	export let stats: {
-		total: number;
-		successful: number;
-		unsuccessful: number;
-		unassessed: number;
-		booked: number;
-		finished: number;
-		ronmodus: number;
-	};
+	import type { ExamStats } from '$lib/types';
+
+	export let stats: ExamStats;
 </script>
 
 <DashboardModal title="Noten">

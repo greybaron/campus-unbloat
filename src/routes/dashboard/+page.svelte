@@ -6,37 +6,98 @@
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 
+	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
+	import { ToastPayloadClass, type BasicUserData, type ToastPayload } from '$lib/types.js';
 	import { onMount } from 'svelte';
+
 	export let data;
 
-	let deser_data: {
-		first_name: string;
-		last_name: string;
-		seminar_group: string;
-		seminar_name: string;
-		user: string;
-	};
+	let deserData: BasicUserData;
 
 	onMount(async () => {
-		deser_data = JSON.parse(data.user_basic!);
+		deserData = JSON.parse(data.user_basic!);
 		const res = await fetch('/api/check_session_alive');
-		let alive: boolean = await res.json();
 
-		if (!alive) {
-			await fetch('/logout');
+		if (!res.ok) {
+			let error = await res.text();
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			showToast(payload);
+		} else {
+			let alive: boolean = await res.json();
+
+			if (!alive) {
+				await fetch('/logout');
+			}
 		}
 	});
+
+	function showToast(payload: ToastPayload) {
+		let bg: string;
+		switch (payload.class) {
+			case ToastPayloadClass.success:
+				bg = 'variant-filled-success';
+				bg = '';
+				break;
+			case ToastPayloadClass.warn:
+				bg = 'variant-filled-warning';
+				break;
+			case ToastPayloadClass.error:
+				bg = 'variant-filled-error';
+				break;
+		}
+		if (payload.class == ToastPayloadClass.error) {
+			const t: ToastSettings = {
+				message: payload.text,
+				background: bg,
+				autohide: false
+			};
+			toastStore.trigger(t);
+		} else {
+			const t: ToastSettings = {
+				message: payload.text,
+				background: bg,
+				timeout: 10000
+			};
+			toastStore.trigger(t);
+		}
+	}
 </script>
 
 <PageContainer>
-	{#if deser_data}
-		<h1 class="text-3xl font-bold pl-4">Hallo, {deser_data.first_name}.</h1>
+	{#if deserData}
+		<h1 class="text-3xl font-bold pl-4">Hallo, {deserData.first_name}.</h1>
 	{/if}
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-auto">
-		<BasicInfoTile basic_data={deser_data} />
-		<GradesTile />
-		<ExamSignupTile />
-		<MensaTile />
-		<CalendarTile />
+		<BasicInfoTile
+			basicUserData={deserData}
+			on:showToast={(e) => {
+				showToast(e.detail);
+			}}
+		/>
+		<GradesTile
+			on:showToast={(e) => {
+				showToast(e.detail);
+			}}
+		/>
+		<ExamSignupTile
+			on:showToast={(e) => {
+				showToast(e.detail);
+			}}
+		/>
+		<MensaTile
+			on:showToast={(e) => {
+				showToast(e.detail);
+			}}
+		/>
+		<CalendarTile
+			on:showToast={(e) => {
+				showToast(e.detail);
+			}}
+		/>
 	</div>
 </PageContainer>

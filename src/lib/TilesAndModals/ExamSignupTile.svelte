@@ -9,26 +9,30 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	type fetchedExamSignup = Array<{
-		name: string;
-		verfahren: string;
-		status: string;
-		warning_message: string;
-	}>;
-
-	let signupOptions: fetchedExamSignup;
+	let signupOptions: Array<ExamSignup>;
 	let signUppable: number;
 
+	import { createEventDispatcher } from 'svelte';
+	import { ToastPayloadClass, type ExamSignup, type ToastPayload } from '$lib/types';
+	const dispatch = createEventDispatcher();
+
 	onMount(async () => {
-		console.log('Fetching stats...');
+		console.log('Fetching examsignup...');
 		const res = await fetch('/api/examsignup');
 
 		if (!res.ok) {
-			return { props: { error: res.status } };
-		}
+			let error = await res.text();
 
-		signupOptions = await res.json();
-		signUppable = signupOptions.filter((op) => op.status === '📝').length;
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			dispatch('showToast', payload);
+		} else {
+			signupOptions = await res.json();
+			signUppable = signupOptions.filter((op) => op.status === '📝').length;
+		}
 
 		modalComponent = {
 			ref: ExamSignupModal,

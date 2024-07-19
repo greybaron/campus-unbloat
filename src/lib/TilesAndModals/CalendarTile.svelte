@@ -8,22 +8,7 @@
 	import { type Writable } from 'svelte/store';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
-
-	interface EventUnix {
-		start: number;
-		end: number;
-		title: string;
-		backgroundColor: string;
-		textColor: string;
-	}
-
-	interface Event {
-		start: Date;
-		end: Date;
-		title: string;
-		backgroundColor: string;
-		textColor: string;
-	}
+	import type { EventUnix, Event } from '$lib/types';
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -87,6 +72,10 @@
 		return events;
 	}
 
+	import { createEventDispatcher } from 'svelte';
+	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
+	const dispatch = createEventDispatcher();
+
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
 		let events = unixEventsToEvents($storedEventsUnix);
@@ -105,8 +94,16 @@
 
 		console.log('Fetching calendar');
 		const res = await fetch('/api/stundenplan');
+
 		if (!res.ok) {
-			return { props: { error: res.status } };
+			let error = await res.text();
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			dispatch('showToast', payload);
+			return;
 		}
 
 		let fetchedCalendar = await res.json();
