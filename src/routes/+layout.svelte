@@ -9,24 +9,15 @@
 	import { storePopup } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
-	// import { initializeStores, Drawer } from '@skeletonlabs/skeleton';
-	import Sidebar from '$lib/Sidebar/Sidebar.svelte';
-	import TabbarMobile from '$lib/Sidebar/TabbarMobile.svelte';
-	import { page } from '$app/stores';
-
-	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+	import { initializeStores, Modal, Toast } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	initializeStores();
 </script>
 
+<Toast buttonDismiss="btn-icon btn-icon-sm variant-filled transition-none" />
 <Modal />
 
-<!-- lmao 1 hour in and already doing this shit -->
-<AppShell
-	slotSidebarLeft={$page.url.pathname != '/'
-		? 'transition-[width] duration-300 bg-surface-500/5 lg:w-64 sm:w-20 sm:block hidden'
-		: ''}
->
+<AppShell>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
 		<AppBar>
@@ -46,15 +37,7 @@
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
-	<svelte:fragment slot="sidebarLeft">
-		{#if $page.url.pathname != '/'}
-			<Sidebar />
-		{/if}
-	</svelte:fragment>
 
 	<!-- Page Route Content -->
 	<slot />
 </AppShell>
-{#if $page.url.pathname != '/'}
-	<TabbarMobile />
-{/if}
