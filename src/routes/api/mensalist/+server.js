@@ -1,13 +1,19 @@
-import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 export async function GET() {
-	const response = await fetch(`${env.MENSA_API_URL}/mensalist`);
+	try {
+		const response = await fetch(`${env.MENSA_API_URL}/mensalist`);
 
-	if (!response.ok) {
-		return json({ error: 'Failed to fetch exam stats' }, { status: response.status });
+		if (!response.ok) {
+			throw new Error();
+		}
+
+		return response;
+	} catch (error) {
+		console.error('Error at mensalist:');
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+		return new Response('Mensalisten-Abfrage ist fehlgeschlagen', { status: 500 });
 	}
-
-	const mensaList = await response.json();
-	return json(mensaList);
 }

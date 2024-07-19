@@ -8,16 +8,23 @@ export async function GET({ cookies }) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const response = await fetch(`${env.CD_API_URL}/get_examstats`, {
-		headers: {
-			Authorization: `Bearer ${token}`
+	try {
+		const response = await fetch(`${env.CD_API_URL}/get_examstats`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+
+		if (!response.ok) {
+			throw new Error();
 		}
-	});
 
-	if (!response.ok) {
-		return json({ error: 'Failed to fetch exam stats' }, { status: response.status });
+		return response;
+	} catch (error) {
+		console.error('Error at examstats:');
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+		return new Response('CaDu: Ergebnisstatistik-Abfrage ist fehlgeschlagen', { status: 500 });
 	}
-
-	const stats = await response.json();
-	return json(stats);
 }

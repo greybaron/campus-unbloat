@@ -17,22 +17,24 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let stats: {
-		total: number;
-		successful: number;
-		unsuccessful: number;
-		unassessed: number;
-		booked: number;
-		finished: number;
-		ronmodus: number;
-	};
+	let stats: ExamStats;
+
+	import { createEventDispatcher } from 'svelte';
+	import { ToastPayloadClass, type ExamStats, type ToastPayload } from '$lib/types';
+	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		console.log('Fetching stats...');
+		console.log('Fetching examstats...');
 		const res = await fetch('/api/examstats');
 
 		if (!res.ok) {
-			return { props: { error: res.status } };
+			let error = await res.text();
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+			dispatch('showToast', payload);
+			return;
 		}
 
 		stats = await res.json();

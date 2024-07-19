@@ -7,17 +7,23 @@ export async function GET({ cookies }) {
 	if (!token) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
+	try {
+		const response = await fetch(`${env.CD_API_URL}/get_examsignup`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 
-	const response = await fetch(`${env.CD_API_URL}/get_examsignup`, {
-		headers: {
-			Authorization: `Bearer ${token}`
+		if (!response.ok) {
+			throw new Error();
 		}
-	});
 
-	if (!response.ok) {
-		return json({ error: 'Failed to fetch signup ops' }, { status: response.status });
+		return response;
+	} catch (error) {
+		console.error('Error at examsignup:');
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+		return new Response('CaDu: Anmeldeoptionen-Abfrage ist fehlgeschlagen', { status: 500 });
 	}
-
-	const signup_ops = await response.json();
-	return json(signup_ops);
 }

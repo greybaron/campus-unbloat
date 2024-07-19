@@ -17,30 +17,17 @@
 	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import type { Writable } from 'svelte/store';
 	import { getNextWeekdayString } from '$lib/TSHelpers/DateHelper';
+	import { createEventDispatcher } from 'svelte';
+	import { ToastPayloadClass, type Mensa, type MensaMeal, type ToastPayload } from '$lib/types';
+	const dispatch = createEventDispatcher();
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let mensaList: Array<{
-		id: number;
-		name: string;
-	}>;
+	let mensaList: Array<Mensa>;
+	let mensaMeals: Array<MensaMeal> | undefined;
 
-	type mensaMealsType =
-		| Array<{
-				meal_type: string;
-				sub_meals: mensaSubMeals;
-		  }>
-		| undefined;
-
-	type mensaSubMeals = Array<{
-		name: string;
-		additional_ingredients: Array<string>;
-		price: string;
-	}>;
-
-	let mensaMeals: mensaMealsType;
 	let mensaSelectElementValue: number; // = 140;;
 
 	let showMealsInTile: Writable<boolean>;
@@ -52,7 +39,14 @@
 		const res = await fetch('/api/mensalist');
 
 		if (!res.ok) {
-			return { props: { error: res.status } };
+			let error = await res.text();
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			dispatch('showToast', payload);
+			return;
 		}
 
 		mensaList = await res.json();
@@ -95,12 +89,20 @@
 		}
 	}
 
-	async function fetchMeals(mensaId: number): Promise<mensaMealsType> {
+	async function fetchMeals(mensaId: number): Promise<Array<MensaMeal> | undefined> {
 		console.log('fetch meals for', mensaId);
 		let date = getNextWeekdayString();
 		const res = await fetch(`/api/get_day_at_mensa/?mensa=${mensaId}&date=${date}`);
 
-		if (res.ok) {
+		if (!res.ok) {
+			let error = await res.text();
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			dispatch('showToast', payload);
+		} else {
 			return res.json();
 		}
 	}
