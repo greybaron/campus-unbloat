@@ -3,24 +3,9 @@
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
 	import { type Writable } from 'svelte/store';
+	import type { EventUnix, Event } from '$lib/types';
 
 	export let storedEvents: Writable<EventUnix[]>;
-
-	interface EventUnix {
-		start: number;
-		end: number;
-		title: string;
-		backgroundColor: string;
-		textColor: string;
-	}
-
-	interface Event {
-		start: Date;
-		end: Date;
-		title: string;
-		backgroundColor: string;
-		textColor: string;
-	}
 
 	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
 		let events: Event[] = [];

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import DashboardModal from '$lib/DashboardModal.svelte';
+	import type { ExamSignup } from '$lib/types';
 
-	export let signupOptions: Array<{ name: string; verfahren: string; status: string }>;
+	export let signupOptions: Array<ExamSignup>;
 </script>
 
 <DashboardModal title="Anmeldung">
