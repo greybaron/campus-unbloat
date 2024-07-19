@@ -70,7 +70,7 @@
 
 <PageContainer>
 	{#if deserData}
-		<h1 class="text-3xl font-bold pl-4">Hallo, {deserData.firstName}.</h1>
+		<h1 class="text-3xl font-bold pl-4">Hallo, {deserData.first_name}.</h1>
 	{/if}
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-auto">
 		<BasicInfoTile

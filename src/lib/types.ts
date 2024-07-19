@@ -8,14 +8,6 @@ export enum ToastPayloadClass {
 	error
 }
 
-export type BasicUserData = {
-	firstName: string;
-	last_name: string;
-	seminar_group: string;
-	seminar_name: string;
-	user: string;
-};
-
 export interface EventUnix {
 	start: number;
 	end: number;
@@ -33,6 +25,13 @@ export interface Event {
 }
 
 //////// API response types
+export type BasicUserData = {
+	first_name: string;
+	last_name: string;
+	seminar_group: string;
+	seminar_name: string;
+	user: string;
+};
 
 export type ExamSignup = {
 	name: string;
