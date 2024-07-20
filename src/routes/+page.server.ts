@@ -54,6 +54,8 @@ export const actions: Actions = {
 				return fail(500, {
 					message: 'CampusUnbloat ist nicht verfügbar.'
 				});
+			} else {
+				throw error;
 			}
 		}
 	}
