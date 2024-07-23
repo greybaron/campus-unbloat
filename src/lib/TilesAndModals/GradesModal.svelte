@@ -1,11 +1,13 @@
 <script lang="ts">
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import type { ExamStats } from '$lib/types';
+	import type { SvelteComponent } from 'svelte';
 
 	export let stats: ExamStats;
+	export let parent: SvelteComponent;
 </script>
 
-<DashboardModal title="Noten">
+<DashboardModal bind:parent title="Noten">
 	<svelte:fragment slot="body">
 		{#if stats}
 			<p>Prüfungsversuche insgesamt: {stats.total}</p>

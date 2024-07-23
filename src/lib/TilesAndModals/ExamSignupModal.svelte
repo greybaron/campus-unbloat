@@ -1,11 +1,13 @@
 <script lang="ts">
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import type { ExamSignup } from '$lib/types';
+	import type { SvelteComponent } from 'svelte';
 
+	export let parent: SvelteComponent;
 	export let signupOptions: Array<ExamSignup>;
 </script>
 
-<DashboardModal title="Anmeldung">
+<DashboardModal bind:parent title="Anmeldung">
 	<svelte:fragment slot="body">
 		<ul>
 			{#each signupOptions as signup}
