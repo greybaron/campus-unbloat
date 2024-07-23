@@ -8,14 +8,12 @@
 </script>
 
 <DashboardModal bind:parent title="Anmeldung">
-	<svelte:fragment slot="body">
-		<ul>
-			{#each signupOptions as signup}
-				<li>
-					<strong>{signup.name}</strong>: {signup.verfahren} (Status: {signup.status})
-				</li>
-			{/each}
-		</ul>
-	</svelte:fragment>
+	<ul>
+		{#each signupOptions as signup}
+			<li>
+				<strong>{signup.name}</strong>: {signup.verfahren} (Status: {signup.status})
+			</li>
+		{/each}
+	</ul>
 	<svelte:fragment slot="optionalbuttons"></svelte:fragment>
 </DashboardModal>
