@@ -4,7 +4,7 @@
 
 <div
 	class="{add_class} p-2 sm:p-4 space-y-4 flex flex-grow-0
-	flex-col pb-[72px] sm:pb-4 max-w-3xl max mx-auto"
+	flex-col pb-[72px] sm:pb-4 mx-auto"
 >
 	<slot />
 </div>

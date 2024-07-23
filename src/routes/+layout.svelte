@@ -11,6 +11,7 @@
 
 	import { initializeStores, Modal, Toast } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	initializeStores();
 </script>
 
@@ -25,14 +26,18 @@
 				<strong class="text-xl">CampusUnbloat</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<button
-					on:click={async () => {
-						goto('/logout');
-					}}
-					class="btn btn-sm variant-ghost-primary"
-				>
-					Abmelden
-				</button>
+				{#if $page.url.pathname != '/'}
+					<button
+						on:click={async () => {
+							goto('/logout');
+						}}
+						class="btn btn-sm variant-ghost-primary"
+					>
+						Abmelden
+					</button>
+				{:else}
+					<div class="h-8" />
+				{/if}
 				<LightSwitch />
 			</svelte:fragment>
 		</AppBar>

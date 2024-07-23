@@ -4,8 +4,10 @@
 	import TimeGrid from '@event-calendar/time-grid';
 	import { type Writable } from 'svelte/store';
 	import type { EventUnix, Event } from '$lib/types';
+	import type { SvelteComponent } from 'svelte';
 
 	export let storedEvents: Writable<EventUnix[]>;
+	export let parent: SvelteComponent;
 
 	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
 		let events: Event[] = [];
@@ -56,7 +58,7 @@
 	}
 </script>
 
-<DashboardModal title="Kalender">
+<DashboardModal bind:parent title="Kalender">
 	<svelte:fragment slot="body">
 		<Calendar {plugins} {options} />
 	</svelte:fragment>

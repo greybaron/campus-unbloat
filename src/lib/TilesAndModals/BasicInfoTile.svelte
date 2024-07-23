@@ -56,9 +56,8 @@
 				<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
 				<p>{basicUserData.seminar_name}</p>
 			{/if}
-			<div class="h-2" />
 			{#if fachsemester && ects}
-				<div class="flex w-full justify-evenly space-x-7">
+				<div class="flex w-full justify-evenly space-x-12">
 					<small>Fachsemester: {fachsemester}</small>
 					<small>ECTS: {ects} / 180</small>
 				</div>
