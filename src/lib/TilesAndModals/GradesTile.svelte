@@ -18,17 +18,23 @@
 	let modal: ModalSettings;
 
 	let stats: ExamStats;
+	let grades: Array<CampusDualGrade>;
 
 	import { createEventDispatcher } from 'svelte';
-	import { ToastPayloadClass, type ExamStats, type ToastPayload } from '$lib/types';
+	import {
+		ToastPayloadClass,
+		type CampusDualGrade,
+		type ExamStats,
+		type ToastPayload
+	} from '$lib/types';
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
 		console.log('Fetching examstats...');
-		const res = await fetch('/api/examstats');
+		const res1 = await fetch('/api/examstats');
 
-		if (!res.ok) {
-			let error = await res.text();
+		if (!res1.ok) {
+			let error = await res1.text();
 			let payload: ToastPayload = {
 				text: error,
 				class: ToastPayloadClass.error
@@ -36,11 +42,25 @@
 			dispatch('showToast', payload);
 			return;
 		}
+		stats = await res1.json();
 
-		stats = await res.json();
+		const res2 = await fetch('/api/grades');
+		if (res2.ok) {
+			grades = await res2.json();
+		} else {
+			let error = await res2.text();
+
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			dispatch('showToast', payload);
+		}
+
 		modalComponent = {
 			ref: GradesModal,
-			props: { stats: stats }
+			props: { grades: grades }
 		};
 
 		modal = {
@@ -86,7 +106,7 @@
 	}
 </script>
 
-<DashboardTile title="Noten" on:click={openModal} ready={Boolean(conicStops)}>
+<DashboardTile title="Noten" on:click={openModal} ready={Boolean(conicStops && grades)}>
 	<svelte:fragment slot="body">
 		<ConicGradient stops={conicStops} legend></ConicGradient>
 	</svelte:fragment>

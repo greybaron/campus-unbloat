@@ -65,3 +65,22 @@ export type MensaSubMeal = {
 	additional_ingredients: Array<string>;
 	price: string;
 };
+
+export type CampusDualGrade = {
+	name: string;
+	grade: string;
+	total_passed?: boolean;
+	credit_points: number;
+	akad_period: string;
+	subgrades: CampusDualSubGrade[];
+};
+
+export type CampusDualSubGrade = {
+	name: string;
+	grade: string;
+	passed?: boolean;
+	beurteilung: string;
+	bekanntgabe: string;
+	wiederholung?: string;
+	akad_period: string;
+};
