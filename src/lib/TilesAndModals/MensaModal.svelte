@@ -5,8 +5,6 @@
 </script>
 
 <DashboardModal bind:parent title="Mensa">
-	<svelte:fragment slot="body">
-		<p>das essen halt</p>
-	</svelte:fragment>
+	<p>das essen halt</p>
 	<svelte:fragment slot="optionalbuttons"></svelte:fragment>
 </DashboardModal>

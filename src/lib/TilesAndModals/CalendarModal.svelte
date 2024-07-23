@@ -59,8 +59,6 @@
 </script>
 
 <DashboardModal bind:parent title="Kalender">
-	<svelte:fragment slot="body">
-		<Calendar {plugins} {options} />
-	</svelte:fragment>
+	<Calendar {plugins} {options} />
 	<svelte:fragment slot="optionalbuttons"></svelte:fragment>
 </DashboardModal>
