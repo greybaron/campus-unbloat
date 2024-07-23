@@ -72,7 +72,7 @@
 	{#if deserData}
 		<h1 class="text-3xl font-bold pl-4">Hallo, {deserData.first_name}.</h1>
 	{/if}
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-auto">
+	<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
 		<BasicInfoTile
 			basicUserData={deserData}
 			on:showToast={(e) => {

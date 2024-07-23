@@ -13,7 +13,7 @@
 	on:click={() => dispatch('click')}
 	class="{clickable && ready
 		? ''
-		: 'pointer-events-none'} variant-glass-primary flex flex-col items-center w-80 rounded-xl p-4 pt-2 pb-3 space-y-1"
+		: 'pointer-events-none'} variant-glass-primary flex flex-col items-center w-full sm:w-96 rounded-xl p-4 pt-2 pb-3 space-y-1"
 >
 	<div class="flex items-center w-full">
 		{#if clickable}

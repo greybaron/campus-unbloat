@@ -10,7 +10,12 @@ export default {
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-		extend: {}
+		extend: {},
+		screens: {
+			sm: '480px',
+			md: '640px',
+			lg: '820px'
+		}
 	},
 	plugins: [
 		forms,
