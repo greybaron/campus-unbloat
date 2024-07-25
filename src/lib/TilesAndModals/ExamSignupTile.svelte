@@ -1,6 +1,7 @@
 <script lang="ts">
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import { onMount } from 'svelte';
+	import { type Writable } from 'svelte/store';
 
 	import ExamSignupModal from './ExamSignupModal.svelte';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
@@ -9,19 +10,23 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let signupOptions: Array<ExamSignup>;
+	let signupOptions: Array<CampusDualSignupOption> | undefined;
 	let signUppable: number;
 
 	import { createEventDispatcher } from 'svelte';
-	import { ToastPayloadClass, type ExamSignup, type ToastPayload } from '$lib/types';
+	import { ToastPayloadClass, type CampusDualSignupOption, type ToastPayload } from '$lib/types';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	const dispatch = createEventDispatcher();
 
-	onMount(async () => {
-		console.log('Fetching examsignup...');
-		const res = await fetch('/api/examsignup');
+	export async function fetchStuff() {
+		signupOptions = undefined;
+		signalStore.set(false);
 
-		if (!res.ok) {
-			let error = await res.text();
+		console.log('Fetching examsignup...');
+		const res1 = await fetch('/api/examsignup');
+
+		if (!res1.ok) {
+			let error = await res1.text();
 
 			let payload: ToastPayload = {
 				text: error,
@@ -30,19 +35,27 @@
 
 			dispatch('showToast', payload);
 		} else {
-			signupOptions = await res.json();
-			signUppable = signupOptions.filter((op) => op.status === '📝').length;
+			signupOptions = await res1.json();
+			signUppable = signupOptions!.filter((op) => op.status === '📝').length;
 		}
 
 		modalComponent = {
 			ref: ExamSignupModal,
-			props: { signupOptions: signupOptions }
+			props: { signupOptions: signupOptions, signalStore: signalStore }
 		};
 
 		modal = {
 			type: 'component',
 			component: modalComponent
 		};
+	}
+
+	let signalStore: Writable<boolean>;
+	$: if ($signalStore) fetchStuff();
+
+	onMount(async () => {
+		signalStore = persistentStore('signal', false);
+		fetchStuff();
 	});
 
 	function openModal() {
@@ -50,11 +63,13 @@
 	}
 </script>
 
-<DashboardTile title="Anmeldung" on:click={openModal} ready={Boolean(signupOptions)}>
+<DashboardTile title="Prüfungen" on:click={openModal} ready={Boolean(signupOptions)}>
 	<svelte:fragment slot="body">
-		{#if signUppable}
-			Du kannst dich für <p class="font-bold">{signUppable} Prüfungen</p>
-			anmelden
+		{#if signUppable || signUppable === 0}
+			Du kannst dich für <p class="font-bold">
+				{signUppable} Prüfung{signUppable != 1 ? 'en' : ''}
+			</p>
+			anmelden.
 		{/if}
 	</svelte:fragment>
 </DashboardTile>

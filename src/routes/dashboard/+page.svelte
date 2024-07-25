@@ -6,9 +6,14 @@
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 
-	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
-	import { ToastPayloadClass, type BasicUserData, type ToastPayload } from '$lib/types.js';
+	import {
+		getToastSettings,
+		ToastPayloadClass,
+		type BasicUserData,
+		type ToastPayload
+	} from '$lib/types.js';
 	import { onMount } from 'svelte';
 
 	export let data;
@@ -37,34 +42,8 @@
 	});
 
 	function showToast(payload: ToastPayload) {
-		let bg: string;
-		switch (payload.class) {
-			case ToastPayloadClass.success:
-				bg = 'variant-filled-success';
-				bg = '';
-				break;
-			case ToastPayloadClass.warn:
-				bg = 'variant-filled-warning';
-				break;
-			case ToastPayloadClass.error:
-				bg = 'variant-filled-error';
-				break;
-		}
-		if (payload.class == ToastPayloadClass.error) {
-			const t: ToastSettings = {
-				message: payload.text,
-				background: bg,
-				autohide: false
-			};
-			toastStore.trigger(t);
-		} else {
-			const t: ToastSettings = {
-				message: payload.text,
-				background: bg,
-				timeout: 10000
-			};
-			toastStore.trigger(t);
-		}
+		const toastSettings = getToastSettings(payload);
+		toastStore.trigger(toastSettings);
 	}
 </script>
 
