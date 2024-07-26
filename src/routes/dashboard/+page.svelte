@@ -8,12 +8,7 @@
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
-	import {
-		getToastSettings,
-		ToastPayloadClass,
-		type BasicUserData,
-		type ToastPayload
-	} from '$lib/types.js';
+	import { getToastSettings, type BasicUserData, type ToastPayload } from '$lib/types.js';
 	import { onMount } from 'svelte';
 
 	export let data;
@@ -22,23 +17,6 @@
 
 	onMount(async () => {
 		deserData = JSON.parse(data.user_basic!);
-		const res = await fetch('/api/check_session_alive');
-
-		if (!res.ok) {
-			let error = await res.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			showToast(payload);
-		} else {
-			let alive: boolean = await res.json();
-
-			if (!alive) {
-				await fetch('/logout');
-			}
-		}
 	});
 
 	function showToast(payload: ToastPayload) {

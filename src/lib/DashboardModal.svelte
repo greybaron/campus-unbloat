@@ -9,7 +9,7 @@
 <div
 	class="{dynamicwidth
 		? ''
-		: 'w-modal'} modal block overflow-y-auto bg-surface-100-800-token h-auto p-4 space-y-4 rounded-container-token shadow-xl"
+		: 'w-modal'} modal block bg-surface-100-800-token h-auto p-4 space-y-4 rounded-container-token shadow-xl"
 	role="dialog"
 >
 	<div class="flex w-full items-center">
@@ -21,8 +21,10 @@
 			class="size-8 fa-solid fa-xmark scale-150"
 		/>
 	</div>
-	<slot />
-	<footer class="modal-footer flex justify-end space-x-2">
-		<slot name="optionalbuttons" />
-	</footer>
+	<slot name="header" />
+	<div
+		class="overflow-y-auto {$$slots.header ? 'max-h-safe-screen-with-header' : 'max-h-safe-screen'}"
+	>
+		<slot />
+	</div>
 </div>

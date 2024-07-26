@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Accordion, AccordionItem, getModalStore } from '@skeletonlabs/skeleton';
+	import { Accordion, AccordionItem, getModalStore, ProgressRadial } from '@skeletonlabs/skeleton';
 	import {
 		getToastSettings,
 		SignupOrVerfahren,
@@ -40,8 +40,13 @@
 		} else {
 			let resp_text = await response.text();
 			if (resp_text === '{}') {
+				const text =
+					signupOrVerfahren === SignupOrVerfahren.signup
+						? 'Erfolgreich angemeldet'
+						: 'Erfolgreich abgemeldet';
+
 				toastPayload = {
-					text: 'Erfolgreich angemeldet',
+					text,
 					class: ToastPayloadClass.success
 				};
 			} else {
@@ -60,7 +65,19 @@
 </script>
 
 <Accordion>
-	{#if data}
+	{#if !data}
+		<div class="flex justify-center">
+			<ProgressRadial
+				width="w-20"
+				stroke={80}
+				value={undefined}
+				strokeLinecap="round"
+				track="stroke-surface-500/30 dark:stroke-surface-300/30"
+			/>
+		</div>
+	{:else if data.length == 0}
+		<p class="p-4 text-lg text-center">Es gibt keine Einträge.</p>
+	{:else}
 		{#each data as signup}
 			<AccordionItem open>
 				<svelte:fragment slot="lead">

@@ -42,16 +42,19 @@
 </script>
 
 <DashboardModal bind:parent title="Prüfungen">
-	<div class="flex flex-col items-center">
-		<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-			<RadioItem bind:group={signupOrVerfahren} name="radio" value={SignupOrVerfahren.signup}
-				>Anmeldung</RadioItem
-			>
-			<RadioItem bind:group={signupOrVerfahren} name="radio" value={SignupOrVerfahren.verfahren}
-				>Verfahren</RadioItem
-			>
-		</RadioGroup>
-	</div>
+	<svelte:fragment slot="header">
+		<div class="flex justify-center">
+			<RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+				<RadioItem bind:group={signupOrVerfahren} name="radio" value={SignupOrVerfahren.signup}
+					>Anmeldung</RadioItem
+				>
+				<RadioItem bind:group={signupOrVerfahren} name="radio" value={SignupOrVerfahren.verfahren}
+					>Verfahren</RadioItem
+				>
+			</RadioGroup>
+		</div>
+	</svelte:fragment>
+
 	{#if signupOrVerfahren === SignupOrVerfahren.signup}
 		<ExamSignupAccordion data={signupOptions} {signupOrVerfahren} {signalStore}
 		></ExamSignupAccordion>
@@ -59,5 +62,4 @@
 		<ExamSignupAccordion data={verfahrenOptions} {signupOrVerfahren} {signalStore}
 		></ExamSignupAccordion>
 	{/if}
-	<svelte:fragment slot="optionalbuttons"></svelte:fragment>
 </DashboardModal>

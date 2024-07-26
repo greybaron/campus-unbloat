@@ -16,6 +16,6 @@ export async function GET({ cookies }) {
 
 function distantDate() {
 	const date = new Date();
-	date.setFullYear(date.getFullYear() + 1);
+	date.setFullYear(date.getFullYear() - 1);
 	return date;
 }
