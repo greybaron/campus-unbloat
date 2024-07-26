@@ -33,6 +33,9 @@ services:
 
   debloat-api-campus:
     image: docker.io/flschmidt/campusdebloat-api-campus
+    environment:
+      - JWT_SECRET= # your JWT secret. The longer the better
+      - AES_KEY= # your AES key. Has to be 32 bytes or longer (only the first 32 bytes will be used)
     networks:
       - eduroam
 
