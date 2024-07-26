@@ -12,8 +12,8 @@ export default {
 	theme: {
 		extend: {
 			maxHeight: {
-				'safe-screen': 'calc(100dvh - 168px)',
-				'safe-screen-with-header': 'calc(100dvh - 226px)' //assuming header is 58px incl. padding and stuff
+				'safe-screen': 'calc(100dvh - 188px)',
+				'safe-screen-with-header': 'calc(100dvh - 246px)' //assuming header is 58px incl. padding and stuff
 			}
 		},
 		screens: {
