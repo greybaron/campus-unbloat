@@ -10,7 +10,6 @@ export async function POST({ request, cookies }) {
 
 	try {
 		let text = await request.text();
-		console.error(text);
 
 		const response = await fetch(`${env.CD_API_URL}/registerexam`, {
 			method: 'POST',
