@@ -86,7 +86,8 @@
 							? 'variant-filled-secondary fa-pen'
 							: signup.status == '🚫'
 								? 'variant-filled-error saturate-200 fa-ban'
-								: ' variant-filled-surface fa-question'}">
+								: ' variant-filled-surface fa-question'}"
+					>
 					</span>
 				</svelte:fragment>
 				<svelte:fragment slot="summary"

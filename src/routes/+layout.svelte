@@ -30,7 +30,7 @@
 					<button
 						on:click={async () => {
 							await fetch('/logout', {
-								method: 'POST',
+								method: 'POST'
 							});
 							goto('/');
 						}}
