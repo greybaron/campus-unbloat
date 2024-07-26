@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-export async function GET({ cookies }) {
+export async function POST({ cookies }) {
 	// Unset the cookie by setting its expiry date to a date in the past
 	cookies.set('jwt', '', {
 		path: '/',

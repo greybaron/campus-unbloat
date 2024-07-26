@@ -29,7 +29,10 @@
 				{#if $page.url.pathname != '/'}
 					<button
 						on:click={async () => {
-							goto('/logout');
+							await fetch('/logout', {
+								method: 'POST',
+							});
+							goto('/');
 						}}
 						class="btn btn-sm variant-ghost-primary"
 					>

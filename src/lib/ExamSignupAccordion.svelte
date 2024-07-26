@@ -82,12 +82,12 @@
 			<AccordionItem open>
 				<svelte:fragment slot="lead">
 					<span
-						class="badge-icon p-4 {signup.status == '📝'
-							? 'variant-filled-secondary'
+						class="badge-icon p-4 fa-solid text-white {signup.status == '📝'
+							? 'variant-filled-secondary fa-pen'
 							: signup.status == '🚫'
-								? 'variant-filled-surface'
-								: ' variant-filled-warning'}"><p class="text-lg">{signup.status}</p></span
-					>
+								? 'variant-filled-error saturate-200 fa-ban'
+								: ' variant-filled-surface fa-question'}">
+					</span>
 				</svelte:fragment>
 				<svelte:fragment slot="summary"
 					>{signup.name} ({signup.verfahren}, {signup.pruefart})</svelte:fragment
