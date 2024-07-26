@@ -22,7 +22,9 @@
 		/>
 	</div>
 	<slot name="header" />
-	<div class="overflow-y-auto {$$slots.header ? 'max-h-safe-screen-with-header' : 'max-h-safe-screen'}">
+	<div
+		class="overflow-y-auto {$$slots.header ? 'max-h-safe-screen-with-header' : 'max-h-safe-screen'}"
+	>
 		<slot />
 	</div>
 </div>
