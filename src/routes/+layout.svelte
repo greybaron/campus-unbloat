@@ -23,7 +23,9 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl">CampusUnbloat</strong>
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<strong on:click={() => {}} class="text-xl">CampusUnbloat</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				{#if $page.url.pathname != '/'}
