@@ -27,3 +27,9 @@ export function getNextWeekday(): Date {
 export function getNextWeekdayString(): string {
 	return getFormattedDate(getNextWeekday());
 }
+
+export function inThirteenWeeks() {
+	const date = new Date();
+	date.setDate(date.getDate() + 13 * 7); // 13 weeks ≙ 1 semester
+	return date;
+}

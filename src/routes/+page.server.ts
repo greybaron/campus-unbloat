@@ -1,6 +1,7 @@
 import { fail, isRedirect, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { env } from '$env/dynamic/private';
+import { inThirteenWeeks } from '$lib/TSHelpers/DateHelper';
 
 export const actions: Actions = {
 	login: async ({ cookies, request }) => {
@@ -26,20 +27,22 @@ export const actions: Actions = {
 					message: 'Nutzer/Passwort ungültig'
 				});
 			} else {
-				const responseData = await response.json();
+				const loginResponse = await response.json();
 
-				cookies.set('jwt', responseData.token, {
+				cookies.set('jwt', loginResponse.token, {
 					path: '/',
 					sameSite: 'strict',
 					httpOnly: true,
-					secure: process.env.NODE_ENV === 'production'
+					secure: process.env.NODE_ENV === 'production',
+					expires: inThirteenWeeks()
 				});
 
-				cookies.set('user_basic', JSON.stringify(responseData.user), {
+				cookies.set('user_basic', JSON.stringify(loginResponse.user), {
 					path: '/',
 					sameSite: 'strict',
 					httpOnly: true,
-					secure: process.env.NODE_ENV === 'production'
+					secure: process.env.NODE_ENV === 'production',
+					expires: inThirteenWeeks()
 				});
 
 				throw redirect(303, '/dashboard');
