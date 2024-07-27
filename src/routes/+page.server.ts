@@ -1,6 +1,7 @@
 import { fail, isRedirect, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { env } from '$env/dynamic/private';
+import { inThirteenWeeks } from '$lib/TSHelpers/DateHelper';
 
 export const actions: Actions = {
 	login: async ({ cookies, request }) => {
@@ -32,14 +33,16 @@ export const actions: Actions = {
 					path: '/',
 					sameSite: 'strict',
 					httpOnly: true,
-					secure: process.env.NODE_ENV === 'production'
+					secure: process.env.NODE_ENV === 'production',
+					expires: inThirteenWeeks()
 				});
 
 				cookies.set('user_basic', JSON.stringify(responseData.user), {
 					path: '/',
 					sameSite: 'strict',
 					httpOnly: true,
-					secure: process.env.NODE_ENV === 'production'
+					secure: process.env.NODE_ENV === 'production',
+					expires: inThirteenWeeks()
 				});
 
 				throw redirect(303, '/dashboard');

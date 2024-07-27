@@ -1,4 +1,5 @@
 import { env } from '$env/dynamic/private';
+import { inThirteenWeeks } from '$lib/TSHelpers/DateHelper';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ cookies }) {
@@ -22,7 +23,8 @@ export async function load({ cookies }) {
 			path: '/',
 			sameSite: 'strict',
 			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production'
+			secure: process.env.NODE_ENV === 'production',
+			expires: inThirteenWeeks()
 		});
 	}
 
