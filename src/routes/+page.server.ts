@@ -27,9 +27,9 @@ export const actions: Actions = {
 					message: 'Nutzer/Passwort ungültig'
 				});
 			} else {
-				const responseData = await response.json();
+				const loginResponse = await response.json();
 
-				cookies.set('jwt', responseData.token, {
+				cookies.set('jwt', loginResponse.token, {
 					path: '/',
 					sameSite: 'strict',
 					httpOnly: true,
@@ -37,7 +37,7 @@ export const actions: Actions = {
 					expires: inThirteenWeeks()
 				});
 
-				cookies.set('user_basic', JSON.stringify(responseData.user), {
+				cookies.set('user_basic', JSON.stringify(loginResponse.user), {
 					path: '/',
 					sameSite: 'strict',
 					httpOnly: true,
