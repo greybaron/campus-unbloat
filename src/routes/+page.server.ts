@@ -25,14 +25,14 @@ export const actions: Actions = {
 			if (!response.ok) {
 				let message;
 				if (response.status === 418) {
-					message = 'CD-API: SSL-Fehler (Wahrscheinlich fehlt GEANT CA)'
+					message = 'CD-API: SSL-Fehler (Wahrscheinlich fehlt GEANT CA)';
 				} else {
-					message = 'Nutzer/Passwort ungültig'
+					message = 'Nutzer/Passwort ungültig';
 				}
 
 				return fail(401, {
 					message
-				})
+				});
 			} else {
 				const loginResponse = await response.json();
 

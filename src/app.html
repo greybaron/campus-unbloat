@@ -23,7 +23,7 @@
 		<link rel="mask-icon" href="%sveltekit.assets%/safari-pinned-tab.svg?v=2" color="#905bd5" />
 		<link rel="shortcut icon" href="%sveltekit.assets%/favicon.ico?v=2" />
 		<meta name="msapplication-TileColor" content="#2d89ef" />
-		<meta name="theme-color" content="#ffffff" />
+		<meta name="theme-color" content="" />
 
 		<meta name="viewport" content="width=device-width" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,9 +33,47 @@
 
 	<body
 		class="select-none touch-manipulation"
+		style="-webkit-tap-highlight-color: transparent"
 		data-sveltekit-preload-data="hover"
 		data-theme="crimson"
 	>
 		<div style="display: contents" class="h-full overflow-hidden">%sveltekit.body%</div>
 	</body>
+
+	<script>
+		// set page theme based on user preference (media query doesnt work?)
+		function onDarkModeToggle(isDarkMode) {
+			const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+			if (themeColorMeta) {
+				if (isDarkMode) {
+					themeColorMeta.setAttribute('content', 'rgb(26,28,38)');
+					console.log('Dark mode is enabled');
+				} else {
+					themeColorMeta.setAttribute('content', 'rgb(213,213,217)');
+					console.log('Dark mode is disabled');
+				}
+			}
+		}
+
+		const observer = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				if (mutation.attributeName === 'class') {
+					const htmlElement = mutation.target;
+					const isDarkMode = htmlElement.classList.contains('dark');
+					onDarkModeToggle(isDarkMode);
+				}
+			});
+		});
+
+		// observe whenever root <html> adds/removes 'dark' class
+		const htmlElement = document.documentElement;
+		observer.observe(htmlElement, {
+			attributes: true // Observe changes to attributes
+		});
+		// Initial check on page load
+		window.addEventListener('DOMContentLoaded', () => {
+			const isDarkMode = htmlElement.classList.contains('dark');
+			onDarkModeToggle(isDarkMode);
+		});
+	</script>
 </html>
