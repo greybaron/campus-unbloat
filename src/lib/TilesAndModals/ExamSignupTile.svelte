@@ -64,7 +64,7 @@
 </script>
 
 <DashboardTile title="Prüfungen" on:click={openModal} ready={Boolean(signupOptions)}>
-	<svelte:fragment slot="body">
+	<svelte:fragment>
 		{#if signUppable || signUppable === 0}
 			Du kannst dich für <p class="font-bold">
 				{signUppable} Prüfung{signUppable != 1 ? 'en' : ''}

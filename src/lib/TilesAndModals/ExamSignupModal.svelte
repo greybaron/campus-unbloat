@@ -49,7 +49,7 @@
 					>Anmeldung</RadioItem
 				>
 				<RadioItem bind:group={signupOrVerfahren} name="radio" value={SignupOrVerfahren.verfahren}
-					>Verfahren</RadioItem
+					>Abmeldung</RadioItem
 				>
 			</RadioGroup>
 		</div>

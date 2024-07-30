@@ -107,7 +107,5 @@
 </script>
 
 <DashboardTile title="Noten" on:click={openModal} ready={Boolean(conicStops && grades)}>
-	<svelte:fragment slot="body">
-		<ConicGradient stops={conicStops} legend></ConicGradient>
-	</svelte:fragment>
+	<ConicGradient stops={conicStops} legend></ConicGradient>
 </DashboardTile>

@@ -50,22 +50,20 @@
 	clickable={false}
 	ready={Boolean(basicUserData && fachsemester && ects)}
 >
-	<svelte:fragment slot="body">
-		<div class="h-full flex flex-col justify-around items-center">
-			{#if basicUserData}
-				<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
-				<p>{basicUserData.seminar_name}</p>
-			{/if}
-			{#if fachsemester && ects}
-				<div class="flex w-full justify-evenly space-x-12">
-					<small>Fachsemester: {fachsemester}</small>
-					<small>ECTS: {ects} / 180</small>
-				</div>
-				<div class="flex w-full justify-between space-x-2">
-					<ProgressBar value={parseInt(fachsemester)} max={6} />
-					<ProgressBar value={parseInt(ects)} max={180} />
-				</div>
-			{/if}
-		</div>
-	</svelte:fragment>
+	<div class="h-full flex flex-col justify-around items-center">
+		{#if basicUserData}
+			<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
+			<p>{basicUserData.seminar_name}</p>
+		{/if}
+		{#if fachsemester && ects}
+			<div class="flex w-full justify-evenly space-x-12">
+				<small>Fachsemester: {fachsemester}</small>
+				<small>ECTS: {ects} / 180</small>
+			</div>
+			<div class="flex w-full justify-between space-x-2">
+				<ProgressBar value={parseInt(fachsemester)} max={6} />
+				<ProgressBar value={parseInt(ects)} max={180} />
+			</div>
+		{/if}
+	</div>
 </DashboardTile>

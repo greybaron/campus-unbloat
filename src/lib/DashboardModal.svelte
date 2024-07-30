@@ -21,7 +21,8 @@
 >
 	<div class="flex w-full items-center">
 		<header class="flex-grow text-2xl font-bold">{title}</header>
-		<button bind:this={closeButton}
+		<button
+			bind:this={closeButton}
 			on:click={() => {
 				parent.onClose();
 			}}
