@@ -19,7 +19,8 @@
 
 	export let parent: SvelteComponent;
 	export let signupOptions: Array<CampusDualSignupOption>;
-	export let signalStore: Writable<boolean>;
+	export let examSignalStore: Writable<boolean>;
+	export let remindersSignalStore: Writable<boolean>;
 
 	let verfahrenOptions: Array<CampusDualVerfahrenOption>;
 
@@ -56,10 +57,18 @@
 	</svelte:fragment>
 
 	{#if signupOrVerfahren === SignupOrVerfahren.signup}
-		<ExamSignupAccordion data={signupOptions} {signupOrVerfahren} {signalStore}
+		<ExamSignupAccordion
+			data={signupOptions}
+			{signupOrVerfahren}
+			{examSignalStore}
+			{remindersSignalStore}
 		></ExamSignupAccordion>
 	{:else}
-		<ExamSignupAccordion data={verfahrenOptions} {signupOrVerfahren} {signalStore}
+		<ExamSignupAccordion
+			data={verfahrenOptions}
+			{signupOrVerfahren}
+			{examSignalStore}
+			{remindersSignalStore}
 		></ExamSignupAccordion>
 	{/if}
 </DashboardModal>

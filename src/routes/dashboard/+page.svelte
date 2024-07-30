@@ -27,12 +27,27 @@
 
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import type { Writable } from 'svelte/store';
 	const drawerStore = getDrawerStore();
 
-	let reminders: CdReminders;
+	let reminders: CdReminders | undefined;
 	let presentNotificationCategories: number = 0;
 
+	let remindersSignalStore: Writable<boolean>;
+	$: if ($remindersSignalStore) fetchStuff();
+
 	onMount(async () => {
+		remindersSignalStore = persistentStore('updateRemindersSignal', false);
+		fetchStuff();
+	});
+
+	async function fetchStuff() {
+		remindersSignalStore.set(false);
+
+		reminders = undefined;
+		presentNotificationCategories = 0;
+
 		console.log('Fetching reminders...');
 		const res = await fetch('/api/reminders');
 
@@ -47,9 +62,9 @@
 			toastStore.trigger(toastSettings);
 		} else {
 			reminders = await res.json();
-			presentNotificationCategories = getPresentNotificationCategories(reminders);
+			presentNotificationCategories = getPresentNotificationCategories(reminders!);
 		}
-	});
+	}
 
 	function notifDrawer() {
 		const drawerSettings: DrawerSettings = {
@@ -127,6 +142,7 @@
 			}}
 		/>
 		<ExamSignupTile
+			bind:remindersSignalStore
 			on:showToast={(e) => {
 				showToast(e.detail);
 			}}

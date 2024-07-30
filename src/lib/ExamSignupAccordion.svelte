@@ -11,7 +11,8 @@
 
 	export let data: Array<CampusDualSignupOption>;
 	export let signupOrVerfahren: SignupOrVerfahren;
-	export let signalStore: Writable<boolean>;
+	export let examSignalStore: Writable<boolean>;
+	export let remindersSignalStore: Writable<boolean>;
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
@@ -60,7 +61,8 @@
 		modalStore.clear();
 		const toastSettings = getToastSettings(toastPayload);
 		toastStore.trigger(toastSettings);
-		signalStore.set(true);
+		examSignalStore.set(true);
+		remindersSignalStore.set(true);
 	}
 </script>
 
