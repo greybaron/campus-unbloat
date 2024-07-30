@@ -120,7 +120,5 @@
 </script>
 
 <DashboardTile title="Kalender" on:click={openModal} ready={options.events.length != 0}>
-	<svelte:fragment slot="body">
-		<Calendar {plugins} {options} />
-	</svelte:fragment>
+	<Calendar {plugins} {options} />
 </DashboardTile>

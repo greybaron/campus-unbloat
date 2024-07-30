@@ -151,3 +151,42 @@ export enum SignupOrVerfahren {
 	signup,
 	verfahren
 }
+
+export interface CdReminders {
+	electives: number;
+	exams: number;
+	latest: Latest[];
+	semester: number;
+	upcoming: Upcoming[];
+}
+
+export interface Latest {
+	acad_session: string;
+	acad_year: string;
+	agrdate: string;
+	agrtype: string;
+	awobject: string;
+	awobject_short: string;
+	awotype: string;
+	awstatus: string;
+	bookdate: string;
+	bookreason: string;
+	cpgraded: string;
+	cpunit: string;
+	gradesymbol: string;
+}
+
+export interface Upcoming {
+	beguz: string;
+	comment: string;
+	enduz: string;
+	evdat: string;
+	instructor: string;
+	location: string;
+	objid: string;
+	room: string;
+	sinstructor: string;
+	sm_short: string;
+	sm_stext: string;
+	sroom: string;
+}

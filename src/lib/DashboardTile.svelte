@@ -27,7 +27,7 @@
 
 	<div class="flex flex-col items-center justify-center w-full h-full">
 		{#if ready}
-			<slot name="body" />
+			<slot />
 		{:else}
 			<ProgressRadial
 				width="w-20"

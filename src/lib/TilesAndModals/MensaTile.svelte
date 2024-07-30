@@ -139,68 +139,66 @@
 	}}
 	ready={Boolean(mensaList)}
 >
-	<svelte:fragment slot="body">
-		<div class="flex flex-col items-stretch space-y-2 w-full">
-			{#if !$showMealsInTile}
-				<p class="pt-4 my-auto text-md font-bold">Klicken, um alle Mensen anzuzeigen.</p>
+	<div class="flex flex-col items-stretch space-y-2 w-full">
+		{#if !$showMealsInTile}
+			<p class="pt-4 my-auto text-md font-bold">Klicken, um alle Mensen anzuzeigen.</p>
+		{/if}
+		<TileInteractiveElementWrapper>
+			{#if $showMealsInTile && mensaList}
+				<select
+					class="select mb-2 transition-none"
+					bind:value={mensaSelectElementValue}
+					on:change={() => {
+						changeMensa(mensaSelectElementValue);
+					}}
+					use:mensalist_populated
+				>
+					{#each mensaList as mensa}
+						<option value={mensa.id}>{mensa.name}</option>
+					{/each}
+				</select>
 			{/if}
-			<TileInteractiveElementWrapper>
-				{#if $showMealsInTile && mensaList}
-					<select
-						class="select mb-2 transition-none"
-						bind:value={mensaSelectElementValue}
-						on:change={() => {
-							changeMensa(mensaSelectElementValue);
-						}}
-						use:mensalist_populated
-					>
-						{#each mensaList as mensa}
-							<option value={mensa.id}>{mensa.name}</option>
-						{/each}
-					</select>
-				{/if}
 
-				{#if $showMealsInTile && mensaMeals}
-					<Accordion>
-						{#each mensaMeals as meal}
-							<AccordionItem
-								regionPanel="bg-primary-50-900"
-								open={$expandedMealCategories.includes(meal.meal_type)}
-								on:toggle={(e) => {
-									expandedMealCategories.update((categories) => {
-										if (e.detail.open) {
-											return [...categories, meal.meal_type];
-										} else {
-											return categories.filter((cat) => cat !== meal.meal_type);
-										}
-									});
-								}}
-							>
-								<svelte:fragment slot="lead">
-									<i class="{getIcon(meal.meal_type)} scale-125"></i>
-								</svelte:fragment>
-								<svelte:fragment slot="summary">{meal.meal_type}</svelte:fragment>
-								<svelte:fragment slot="content">
-									<MealContainer {meal} />
-								</svelte:fragment>
-							</AccordionItem>
-						{/each}
-						{#if mensaMeals.length === 0}
-							<p class="pt-2">Keine Gerichte verfügbar.</p>
-						{/if}
-					</Accordion>
-				{/if}
+			{#if $showMealsInTile && mensaMeals}
+				<Accordion>
+					{#each mensaMeals as meal}
+						<AccordionItem
+							regionPanel="bg-primary-50-900"
+							open={$expandedMealCategories.includes(meal.meal_type)}
+							on:toggle={(e) => {
+								expandedMealCategories.update((categories) => {
+									if (e.detail.open) {
+										return [...categories, meal.meal_type];
+									} else {
+										return categories.filter((cat) => cat !== meal.meal_type);
+									}
+								});
+							}}
+						>
+							<svelte:fragment slot="lead">
+								<i class="{getIcon(meal.meal_type)} scale-125"></i>
+							</svelte:fragment>
+							<svelte:fragment slot="summary">{meal.meal_type}</svelte:fragment>
+							<svelte:fragment slot="content">
+								<MealContainer {meal} />
+							</svelte:fragment>
+						</AccordionItem>
+					{/each}
+					{#if mensaMeals.length === 0}
+						<p class="pt-2">Keine Gerichte verfügbar.</p>
+					{/if}
+				</Accordion>
+			{/if}
 
-				<button>
-					<SlideToggle
-						class="pt-3"
-						size="sm"
-						active="bg-primary-500"
-						name="slide"
-						bind:checked={$showMealsInTile}>Gerichte auch hier anzeigen</SlideToggle
-					>
-				</button>
-			</TileInteractiveElementWrapper>
-		</div>
-	</svelte:fragment>
+			<button>
+				<SlideToggle
+					class="pt-3"
+					size="sm"
+					active="bg-primary-500"
+					name="slide"
+					bind:checked={$showMealsInTile}>Gerichte auch hier anzeigen</SlideToggle
+				>
+			</button>
+		</TileInteractiveElementWrapper>
+	</div>
 </DashboardTile>
