@@ -2,6 +2,7 @@ import { join } from 'path';
 import type { Config } from 'tailwindcss';
 import forms from '@tailwindcss/forms';
 import { skeleton } from '@skeletonlabs/tw-plugin';
+import { customCrimson } from './custom-crimson';
 
 export default {
 	darkMode: 'selector',
@@ -26,12 +27,7 @@ export default {
 		forms,
 		skeleton({
 			themes: {
-				preset: [
-					{
-						name: 'crimson',
-						enhancements: true
-					}
-				]
+				custom: [customCrimson]
 			}
 		})
 	]
