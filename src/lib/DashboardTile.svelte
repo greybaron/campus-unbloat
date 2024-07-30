@@ -13,14 +13,16 @@
 	on:click={() => dispatch('click')}
 	class="{clickable && ready
 		? ''
-		: 'pointer-events-none'} active:scale-95 transition-transform variant-glass-primary flex flex-col items-center w-full sm:w-96 rounded-xl p-4 pt-2 pb-3 space-y-1"
+		: 'pointer-events-none'} variant-glass-primary flex flex-col items-center w-full sm:w-96 rounded-xl p-4 pt-2 pb-3 space-y-1"
 >
 	<div class="flex items-center w-full">
 		{#if clickable}
 			<i class="{ready ? '' : 'opacity-40'} w-4 fa-solid fa-up-right-and-down-left-from-center" />
 		{/if}
 		<header class="flex-grow text-xl font-bold text-center">{title}</header>
-		<div class="w-4" />
+		{#if clickable}
+			<div class="w-4" />
+		{/if}
 	</div>
 
 	<div class="flex flex-col items-center justify-center w-full h-full">

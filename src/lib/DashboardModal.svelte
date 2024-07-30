@@ -1,9 +1,16 @@
 <script lang="ts">
-	import type { SvelteComponent } from 'svelte';
+	import { onMount, type SvelteComponent } from 'svelte';
 
 	export let title: string;
 	export let parent: SvelteComponent;
 	export let dynamicwidth: boolean = false;
+
+	let closeButton: HTMLButtonElement;
+
+	// any browser focuses the button by default, no idea why
+	onMount(() => {
+		closeButton.blur();
+	});
 </script>
 
 <div
@@ -14,7 +21,7 @@
 >
 	<div class="flex w-full items-center">
 		<header class="flex-grow text-2xl font-bold">{title}</header>
-		<button
+		<button bind:this={closeButton}
 			on:click={() => {
 				parent.onClose();
 			}}
