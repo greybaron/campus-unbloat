@@ -9,9 +9,10 @@
 		type ToastPayload
 	} from './types';
 
-	export let data: Array<CampusDualSignupOption>;
+	export let data: Array<CampusDualSignupOption> | undefined;
 	export let signupOrVerfahren: SignupOrVerfahren;
-	export let signalStore: Writable<boolean>;
+	export let examSignalStore: Writable<boolean>;
+	export let remindersSignalStore: Writable<boolean>;
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
@@ -20,6 +21,9 @@
 	const modalStore = getModalStore();
 
 	async function startExamSignup(internal_metadata?: CampusExamMetadata) {
+		// braindead approach
+		data = undefined;
+
 		let url =
 			signupOrVerfahren === SignupOrVerfahren.signup ? '/api/registerexam' : '/api/cancelexam';
 		const response = await fetch(url, {
@@ -60,7 +64,8 @@
 		modalStore.clear();
 		const toastSettings = getToastSettings(toastPayload);
 		toastStore.trigger(toastSettings);
-		signalStore.set(true);
+		examSignalStore.set(true);
+		remindersSignalStore.set(true);
 	}
 </script>
 

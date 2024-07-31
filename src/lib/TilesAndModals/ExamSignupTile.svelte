@@ -18,9 +18,11 @@
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	const dispatch = createEventDispatcher();
 
+	export let remindersSignalStore: Writable<boolean>;
+
 	export async function fetchStuff() {
 		signupOptions = undefined;
-		signalStore.set(false);
+		examSignalStore.set(false);
 
 		console.log('Fetching examsignup...');
 		const res1 = await fetch('/api/examsignup');
@@ -41,7 +43,11 @@
 
 		modalComponent = {
 			ref: ExamSignupModal,
-			props: { signupOptions: signupOptions, signalStore: signalStore }
+			props: {
+				signupOptions: signupOptions,
+				examSignalStore: examSignalStore,
+				remindersSignalStore: remindersSignalStore
+			}
 		};
 
 		modal = {
@@ -50,11 +56,11 @@
 		};
 	}
 
-	let signalStore: Writable<boolean>;
-	$: if ($signalStore) fetchStuff();
+	let examSignalStore: Writable<boolean>;
+	$: if ($examSignalStore) fetchStuff();
 
 	onMount(async () => {
-		signalStore = persistentStore('signal', false);
+		examSignalStore = persistentStore('updateExamsSignal', false);
 		fetchStuff();
 	});
 
