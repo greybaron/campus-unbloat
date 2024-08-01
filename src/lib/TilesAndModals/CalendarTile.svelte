@@ -62,7 +62,7 @@
 				title: element.title.split('-')[1],
 				room: element.room.split(' ')[0],
 				instructor: element.instructor,
-				textColor: luminance < 128 ? "#000000" : "#FFFFFF",
+				textColor: luminance < 128 ? "#FFFFFF" : "#000000",
 				remarks: element.remarks,
 				color: element.color
 			});
