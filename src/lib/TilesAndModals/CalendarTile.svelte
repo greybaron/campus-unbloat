@@ -83,37 +83,24 @@
 				instructor: event.instructor,
 				room: event.room,
 				remarks: event.remarks,
-				color: event.color
+				color: event.color,
 			});
 		});
 
 		return events;
 	}
 
-	function getTodaysEvents(events: Event[]): Array<Event> {
-		let today = new Date();
-
-    	// Setze Uhrzeit auf 0:00:00, um nur das Datum zu vergleichen
-    	today.setHours(0, 0, 0, 0);
-
-
-    	return events.filter(event => {
-    	    let eventStart = new Date(event.start);
-    	    eventStart.setHours(0, 0, 0, 0);
-
-    	    return eventStart.getTime() === today.getTime();
-    	});
-	}
+	
 
 	import { createEventDispatcher } from 'svelte';
-	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
+	import { getCurrentEvents, type ToastPayload, ToastPayloadClass } from '$lib/types';
 	const dispatch = createEventDispatcher();
 	let todaysEvents: Array<Event> = [] ;
 
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
 
-		todaysEvents = getTodaysEvents(unixEventsToEvents($storedEventsUnix));
+		todaysEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix));
 
 		modalComponent = {
 			ref: CalendarModal,
@@ -142,11 +129,9 @@
 		let fetchedCalendar = await res.json();
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
-		todaysEvents = getTodaysEvents(unixEventsToEvents(parsedUnix));
+		todaysEvents = getCurrentEvents(unixEventsToEvents(parsedUnix));
 		
 		storedEventsUnix.set(parsedUnix);
-
-		console.log(todaysEvents);
 	});
 
 	function openModal() {

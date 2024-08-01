@@ -42,6 +42,20 @@ export function getToastSettings(payload: ToastPayload): ToastSettings {
 	}
 }
 
+export function getCurrentEvents(events: Event[], targetDate = new Date()): Array<Event> {
+
+	// Setze Uhrzeit auf 0:00:00, um nur das Datum zu vergleichen
+	targetDate.setHours(0, 0, 0, 0);
+
+
+	return events.filter(event => {
+		let eventStart = new Date(event.start);
+		eventStart.setHours(0, 0, 0, 0);
+
+		return eventStart.getTime() === targetDate.getTime();
+	});
+}
+
 export interface EventUnix {
 	start: number;
 	end: number;
