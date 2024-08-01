@@ -42,20 +42,40 @@ export function getToastSettings(payload: ToastPayload): ToastSettings {
 	}
 }
 
+export function getCurrentEvents(events: Event[], targetDate = new Date()): Array<Event> {
+
+	// Setze Uhrzeit auf 0:00:00, um nur das Datum zu vergleichen
+	targetDate.setHours(0, 0, 0, 0);
+
+
+	return events.filter(event => {
+		const eventStart = new Date(event.start);
+		eventStart.setHours(0, 0, 0, 0);
+
+		return eventStart.getTime() === targetDate.getTime();
+	});
+}
+
 export interface EventUnix {
 	start: number;
 	end: number;
 	title: string;
-	backgroundColor: string;
+	room: string;
+	instructor: string;
 	textColor: string;
+	remarks: string;
+	color: string;
 }
 
 export interface Event {
 	start: Date;
 	end: Date;
 	title: string;
-	backgroundColor: string;
 	textColor: string;
+	room: string;
+	instructor: string;
+	remarks: string;
+	color: string;
 }
 
 //////// API response types

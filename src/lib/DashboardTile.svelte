@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	import { createEventDispatcher } from 'svelte';
 
 	export let title: string;
 	export let clickable: boolean = true;
 	export let ready: boolean = false;
-
-	import { createEventDispatcher } from 'svelte';
+	
 	const dispatch = createEventDispatcher();
 </script>
 
