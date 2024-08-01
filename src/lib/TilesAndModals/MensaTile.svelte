@@ -1,24 +1,23 @@
 <script lang="ts">
 	import DashboardTile from '$lib/DashboardTile.svelte';
-	import { onMount, tick } from 'svelte';
+	import { onMount, SvelteComponent } from 'svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import { browser } from '$app/environment';
 
 	import MensaModal from './MensaModal.svelte';
 	import {
-		Accordion,
-		AccordionItem,
 		getModalStore,
 		SlideToggle,
 		type ModalComponent,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
-	import MealContainer from '$lib/MealContainer.svelte';
+
 	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import type { Writable } from 'svelte/store';
-	import { getNextWeekdayString } from '$lib/TSHelpers/DateHelper';
 	import { createEventDispatcher } from 'svelte';
 	import { ToastPayloadClass, type Mensa, type MensaMeal, type ToastPayload } from '$lib/types';
+	import MealView from '$lib/Mensa/MealView.svelte';
+	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
+	import { fetchMeals } from '$lib/Mensa/MensaFuncs';
 	const dispatch = createEventDispatcher();
 
 	let modalStore = getModalStore();
@@ -33,6 +32,8 @@
 	let showMealsInTile: Writable<boolean>;
 	let expandedMealCategories: Writable<Array<string>>;
 	let selectedMensa: Writable<number>;
+
+	let mensaSelectorComponent: SvelteComponent;
 
 	onMount(async () => {
 		console.log('Fetching mensalist...');
@@ -57,7 +58,11 @@
 
 		modalComponent = {
 			ref: MensaModal,
-			props: { mensaList: mensaList }
+			props: {
+				mensaList: mensaList,
+				expandedMealCategories: expandedMealCategories,
+				selectedMensa: selectedMensa
+			}
 		};
 
 		modal = {
@@ -66,69 +71,28 @@
 		};
 	});
 
-	// called
-	function mensalist_populated(_element: HTMLSelectElement) {
-		// allegedly, svelte actions trigger once an element is created,
-		// but mensaSelectElementValueDropdown is still undefined at this point sooo...
-		tick().then(() => {
-			mensaSelectElementValue = $selectedMensa;
-			fetchMealsWrapper(mensaSelectElementValue);
-		});
-	}
+	$: if ($selectedMensa) handleMealsFetch($selectedMensa);
 
-	function changeMensa(mensaId: number) {
-		selectedMensa.set(mensaId);
-		fetchMealsWrapper(mensaId);
-	}
+	async function handleMealsFetch(mensaId: number) {
+		mensaSelectElementValue = mensaId;
 
-	function fetchMealsWrapper(mensaId: number) {
-		if (browser) {
-			fetchMeals(mensaId).then((meals) => {
-				mensaMeals = meals;
-			});
+		if (mensaSelectorComponent) {
+			mensaSelectorComponent.setMensaSelected(mensaId);
 		}
-	}
 
-	async function fetchMeals(mensaId: number): Promise<Array<MensaMeal> | undefined> {
-		console.log('fetch meals for', mensaId);
-		let date = getNextWeekdayString();
-		const res = await fetch(`/api/get_day_at_mensa/?mensa=${mensaId}&date=${date}`);
+		try {
+			mensaMeals = await fetchMeals(mensaId);
+			modalComponent.props!.mensaMeals = mensaMeals;
+		} catch (e) {
+			if (e instanceof Error) {
+				let payload: ToastPayload = {
+					text: e.message,
+					class: ToastPayloadClass.error
+				};
 
-		if (!res.ok) {
-			let error = await res.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			dispatch('showToast', payload);
-		} else {
-			return res.json();
-		}
-	}
-
-	function getIcon(meal_type: string) {
-		const icons: { [key: string]: string } = {
-			vegan: 'fa-solid fa-leaf',
-			vegetarisch: 'fa-solid fa-egg',
-			fleisch: 'fa-solid fa-drumstick-bite',
-			grill: 'fa-solid fa-burger',
-			fisch: 'fa-solid fa-fish',
-			pastateller: 'fa-solid fa-mortar-pestle',
-			gemüse: 'fa-solid fa-carrot',
-			sättigung: 'fa-solid fa-square-plus',
-			'schneller teller': 'fa-solid fa-wheelchair-move'
-		};
-
-		const lowercasedMealType = meal_type.toLowerCase();
-
-		for (const key in icons) {
-			if (lowercasedMealType.includes(key)) {
-				return icons[key];
+				dispatch('showToast', payload);
 			}
 		}
-
-		return 'fa-solid fa-utensils';
 	}
 </script>
 
@@ -145,49 +109,11 @@
 		{/if}
 		<TileInteractiveElementWrapper>
 			{#if $showMealsInTile && mensaList}
-				<select
-					class="select mb-2 transition-none"
-					bind:value={mensaSelectElementValue}
-					on:change={() => {
-						changeMensa(mensaSelectElementValue);
-					}}
-					use:mensalist_populated
-				>
-					{#each mensaList as mensa}
-						<option value={mensa.id}>{mensa.name}</option>
-					{/each}
-				</select>
+				<MensaSelector bind:mensaSelectElementValue {selectedMensa} {mensaList} />
 			{/if}
 
 			{#if $showMealsInTile && mensaMeals}
-				<Accordion>
-					{#each mensaMeals as meal}
-						<AccordionItem
-							regionPanel="bg-primary-50-900"
-							open={$expandedMealCategories.includes(meal.meal_type)}
-							on:toggle={(e) => {
-								expandedMealCategories.update((categories) => {
-									if (e.detail.open) {
-										return [...categories, meal.meal_type];
-									} else {
-										return categories.filter((cat) => cat !== meal.meal_type);
-									}
-								});
-							}}
-						>
-							<svelte:fragment slot="lead">
-								<i class="{getIcon(meal.meal_type)} scale-125"></i>
-							</svelte:fragment>
-							<svelte:fragment slot="summary">{meal.meal_type}</svelte:fragment>
-							<svelte:fragment slot="content">
-								<MealContainer {meal} />
-							</svelte:fragment>
-						</AccordionItem>
-					{/each}
-					{#if mensaMeals.length === 0}
-						<p class="pt-2">Keine Gerichte verfügbar.</p>
-					{/if}
-				</Accordion>
+				<MealView bind:expandedMealCategories {mensaMeals} />
 			{/if}
 
 			<button>
