@@ -7,10 +7,16 @@
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
 	import type { EventUnix, Event } from '$lib/types';
+	import { createEventDispatcher } from 'svelte';
+	import { getCurrentEvents, type ToastPayload, ToastPayloadClass } from '$lib/types';
 
+	const dispatch = createEventDispatcher();
+
+	let todaysEvents: Array<Event> = [] ;
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
+	let storedEventsUnix: Writable<EventUnix[]>;
 
 	type fetchedCalendar = Array<{
 		title: string;
@@ -26,8 +32,6 @@
 		sinstructor: string;
 		remarks: string;
 	}>;
-
-	let storedEventsUnix: Writable<EventUnix[]>;
 
 	function getTodaysCalendarTitle() : string {
 
@@ -90,12 +94,9 @@
 		return events;
 	}
 
-	
-
-	import { createEventDispatcher } from 'svelte';
-	import { getCurrentEvents, type ToastPayload, ToastPayloadClass } from '$lib/types';
-	const dispatch = createEventDispatcher();
-	let todaysEvents: Array<Event> = [] ;
+	function openModal() {
+		modalStore.trigger(modal);
+	}
 
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
@@ -133,10 +134,6 @@
 		
 		storedEventsUnix.set(parsedUnix);
 	});
-
-	function openModal() {
-		modalStore.trigger(modal);
-	}
 </script>
 
 <DashboardTile title="Kalender" on:click={openModal} ready={(storedEventsUnix && $storedEventsUnix.length != 0)}>

@@ -49,7 +49,7 @@ export function getCurrentEvents(events: Event[], targetDate = new Date()): Arra
 
 
 	return events.filter(event => {
-		let eventStart = new Date(event.start);
+		const eventStart = new Date(event.start);
 		eventStart.setHours(0, 0, 0, 0);
 
 		return eventStart.getTime() === targetDate.getTime();

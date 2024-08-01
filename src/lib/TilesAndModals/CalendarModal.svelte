@@ -11,39 +11,10 @@
 	export let storedEvents: Writable<EventUnix[]>;
 	export let parent: SvelteComponent;
 
-	let view : string = 'week'; // Standardansicht: Wochenansicht
+	let view : string = 'week'; // Default-View (Wochenansicht)
 	let currentDay : Date = new Date();
 	let todaysEvents : Event[] = [];
-
-	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
-		let events: Event[] = [];
-
-		uEvents.forEach((event) => {
-			events.push({
-				start: new Date(event.start),
-				end: new Date(event.end),
-				title: event.title,
-				textColor: event.textColor,
-				instructor: event.instructor,
-				room: event.room,
-				remarks: event.remarks,
-				color: event.color
-		})});
-
-		return events;
-	}
-
-	function getNextMonday(date = new Date()) {
-		const day = date.getDay();
-		const diff = day === 6 ? 2 : day === 0 ? 1 : 0; // 6 = Samstag, 0 = Sonntag
-		if (diff > 0) {
-			date.setDate(date.getDate() + diff);
-		}
-		return date;
-	}
-
 	let eventList: Event[] = [];
-
 	let plugins = [TimeGrid];
 	let options = {
 		view: 'timeGridWeek',
@@ -85,12 +56,38 @@
 
 	$: $storedEvents, run(unixEventsToEvents($storedEvents));
 
+	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
+		let events: Event[] = [];
+
+		uEvents.forEach((event) => {
+			events.push({
+				start: new Date(event.start),
+				end: new Date(event.end),
+				title: event.title,
+				textColor: event.textColor,
+				instructor: event.instructor,
+				room: event.room,
+				remarks: event.remarks,
+				color: event.color
+		})});
+
+		return events;
+	}
+
+	function getNextMonday(date = new Date()) {
+		const day = date.getDay();
+		const diff = day === 6 ? 2 : day === 0 ? 1 : 0; // 6 = Samstag, 0 = Sonntag
+		if (diff > 0) {
+			date.setDate(date.getDate() + diff);
+		}
+		return date;
+	}
+
 	function run(events: Event[]) {
 		if (events) {
 			options.events = events;
 		}
 	}
-
 
 </script>
 

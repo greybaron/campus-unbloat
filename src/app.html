@@ -41,6 +41,28 @@
 	</body>
 
 	<script>
+	
+		const observer = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				if (mutation.attributeName === 'class' && !nonObserverChange) {
+					onDarkModeToggle(mutation.target);
+				}
+			});
+		});
+	
+		// observe whenever root <html> adds/removes 'dark' class
+		const htmlElement = document.documentElement;
+		observer.observe(htmlElement, {
+			attributes: true // Observe changes to attributes
+		});
+	
+		let nonObserverChange = false;
+	
+		// Initial check on page load
+		window.addEventListener('DOMContentLoaded', () => {
+			onDarkModeToggle(htmlElement);
+		});
+
 		function switchEcDark(htmlElement) {
 
 			nonObserverChange = true;
@@ -72,27 +94,6 @@
 				switchEcDark(htmlElement);
 			}
 		}
-	
-		let nonObserverChange = false;
-	
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (mutation.attributeName === 'class' && !nonObserverChange) {
-					onDarkModeToggle(mutation.target);
-				}
-			});
-		});
-	
-		// observe whenever root <html> adds/removes 'dark' class
-		const htmlElement = document.documentElement;
-		observer.observe(htmlElement, {
-			attributes: true // Observe changes to attributes
-		});
-	
-		// Initial check on page load
-		window.addEventListener('DOMContentLoaded', () => {
-			onDarkModeToggle(htmlElement);
-		});
 	
 	</script>
 </html>
