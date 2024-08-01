@@ -44,7 +44,7 @@
 					name="password"
 					type="password"
 					required
-					placeholder="das normale, nicht die Hash"
+					placeholder="das normale, nicht den Hash"
 				/>
 				<div class="h-4">
 					{#if form?.message}

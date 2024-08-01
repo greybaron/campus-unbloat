@@ -26,7 +26,7 @@ export async function POST({ request, cookies }) {
 
 		return response;
 	} catch (error) {
-		console.error('Error at examstats:');
+		console.error('Error at registerexam:');
 		if (error instanceof Error) {
 			console.error(error.message);
 		}
