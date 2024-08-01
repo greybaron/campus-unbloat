@@ -41,37 +41,58 @@
 	</body>
 
 	<script>
+		function switchEcDark(htmlElement) {
+
+			nonObserverChange = true;
+
+			if (!htmlElement.classList.contains('ec-dark')) {
+				htmlElement.classList.add('ec-dark');
+			} else {
+				htmlElement.classList.remove('ec-dark');
+			}
+			nonObserverChange = false;
+		}
+	
 		// set page theme based on user preference (media query doesnt work?)
-		function onDarkModeToggle(isDarkMode) {
+		function onDarkModeToggle(mutationTarget) {
+
+			const htmlElement = mutationTarget;
+			const isDarkMode = htmlElement.classList.contains('dark');
+	
 			const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+			
 			if (themeColorMeta) {
-				if (isDarkMode) {
-					themeColorMeta.setAttribute('content', 'rgb(27,27,27)');
-				} else {
-					themeColorMeta.setAttribute('content', 'rgb(213,213,217)');
-				}
+				themeColorMeta.setAttribute('content', isDarkMode ? 'rgb(27,27,27)' : 'rgb(213,213,217)');
+			}
+	
+			// Check if the mode is in desired state
+			if (isDarkMode && !htmlElement.classList.contains('ec-dark')) {
+				switchEcDark(htmlElement);
+			} else if (!isDarkMode && htmlElement.classList.contains('ec-dark')) {
+				switchEcDark(htmlElement);
 			}
 		}
-
+	
+		let nonObserverChange = false;
+	
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
-				if (mutation.attributeName === 'class') {
-					const htmlElement = mutation.target;
-					const isDarkMode = htmlElement.classList.contains('dark');
-					onDarkModeToggle(isDarkMode);
+				if (mutation.attributeName === 'class' && !nonObserverChange) {
+					onDarkModeToggle(mutation.target);
 				}
 			});
 		});
-
+	
 		// observe whenever root <html> adds/removes 'dark' class
 		const htmlElement = document.documentElement;
 		observer.observe(htmlElement, {
 			attributes: true // Observe changes to attributes
 		});
+	
 		// Initial check on page load
 		window.addEventListener('DOMContentLoaded', () => {
-			const isDarkMode = htmlElement.classList.contains('dark');
-			onDarkModeToggle(isDarkMode);
+			onDarkModeToggle(htmlElement);
 		});
+	
 	</script>
 </html>
