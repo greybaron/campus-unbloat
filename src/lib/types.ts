@@ -46,16 +46,22 @@ export interface EventUnix {
 	start: number;
 	end: number;
 	title: string;
-	backgroundColor: string;
+	room: string;
+	instructor: string;
 	textColor: string;
+	remarks: string;
+	color: string;
 }
 
 export interface Event {
 	start: Date;
 	end: Date;
 	title: string;
-	backgroundColor: string;
 	textColor: string;
+	room: string;
+	instructor: string;
+	remarks: string;
+	color: string;
 }
 
 //////// API response types

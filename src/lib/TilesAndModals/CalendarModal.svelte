@@ -17,8 +17,11 @@
 				start: new Date(event.start),
 				end: new Date(event.end),
 				title: event.title,
-				backgroundColor: event.backgroundColor,
-				textColor: event.textColor
+				textColor: event.textColor,
+				instructor: event.instructor,
+				room: event.room,
+				remarks: event.remarks,
+				color: event.color
 			});
 		});
 
