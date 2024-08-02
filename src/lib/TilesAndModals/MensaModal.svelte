@@ -3,6 +3,7 @@
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import { fetchMeals } from '$lib/Mensa/MensaFuncs';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
+	import { dateIsToday, getAltDayString } from '$lib/TSHelpers/DateHelper';
 	import {
 		getToastSettings,
 		ToastPayloadClass,
@@ -20,16 +21,21 @@
 	export let selectedMensa: Writable<number>;
 	export let expandedMealCategories: Writable<Array<string>>;
 	export let mensaMeals: Array<MensaMeal> | undefined = undefined;
+	export let selectedDate: Date;
 
 	function showToast(payload: ToastPayload) {
 		const toastSettings = getToastSettings(payload);
 		toastStore.trigger(toastSettings);
 	}
 
-	$: if ($selectedMensa) handleMealsFetch($selectedMensa);
+	function handleSelectedDateChange(e: CustomEvent<Date>) {
+		selectedDate = e.detail;
+	}
+
+	$: if ($selectedMensa && selectedDate) handleMealsFetch($selectedMensa);
 	async function handleMealsFetch(mensaId: number) {
 		try {
-			mensaMeals = await fetchMeals(mensaId);
+			mensaMeals = await fetchMeals(selectedDate, mensaId);
 		} catch (e) {
 			if (e instanceof Error) {
 				let payload: ToastPayload = {
@@ -43,9 +49,17 @@
 	}
 </script>
 
-<DashboardModal bind:parent title="Mensa">
+<DashboardModal
+	bind:parent
+	title="Mensa{dateIsToday(selectedDate) ? '' : ` (${getAltDayString(selectedDate)})`}"
+>
 	<svelte:fragment slot="header">
-		<MensaSelector {selectedMensa} {mensaList} />
+		<MensaSelector
+			on:dateChanged={handleSelectedDateChange}
+			{selectedMensa}
+			{mensaList}
+			{selectedDate}
+		/>
 	</svelte:fragment>
 
 	{#if mensaMeals}

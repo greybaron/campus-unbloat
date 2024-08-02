@@ -18,6 +18,7 @@
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
 	import { fetchMeals } from '$lib/Mensa/MensaFuncs';
+	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 	const dispatch = createEventDispatcher();
 
 	let modalStore = getModalStore();
@@ -34,6 +35,7 @@
 	let selectedMensa: Writable<number>;
 
 	let mensaSelectorComponent: SvelteComponent;
+	let selectedDate: Date = getNextWeekday();
 
 	onMount(async () => {
 		console.log('Fetching mensalist...');
@@ -61,7 +63,8 @@
 			props: {
 				mensaList: mensaList,
 				expandedMealCategories: expandedMealCategories,
-				selectedMensa: selectedMensa
+				selectedMensa: selectedMensa,
+				selectedDate: selectedDate
 			}
 		};
 
@@ -71,7 +74,7 @@
 		};
 	});
 
-	$: if ($selectedMensa) handleMealsFetch($selectedMensa);
+	$: if ($selectedMensa && selectedDate) handleMealsFetch($selectedMensa);
 
 	async function handleMealsFetch(mensaId: number) {
 		mensaSelectElementValue = mensaId;
@@ -81,7 +84,7 @@
 		}
 
 		try {
-			mensaMeals = await fetchMeals(mensaId);
+			mensaMeals = await fetchMeals(selectedDate, mensaId);
 			modalComponent.props!.mensaMeals = mensaMeals;
 		} catch (e) {
 			if (e instanceof Error) {
@@ -94,10 +97,14 @@
 			}
 		}
 	}
+	function handleSelectedDateChange(e: CustomEvent<Date>) {
+		selectedDate = e.detail;
+		modalComponent.props!.selectedDate = selectedDate;
+	}
 </script>
 
 <DashboardTile
-	title="Mensa"
+	title="Mensa{dateIsToday(selectedDate) ? '' : ` (${getAltDayString(selectedDate)})`}"
 	on:click={() => {
 		modalStore.trigger(modal);
 	}}
@@ -109,7 +116,12 @@
 		{/if}
 		<TileInteractiveElementWrapper>
 			{#if $showMealsInTile && mensaList}
-				<MensaSelector bind:mensaSelectElementValue {selectedMensa} {mensaList} />
+				<MensaSelector
+					on:dateChanged={handleSelectedDateChange}
+					bind:mensaSelectElementValue
+					{selectedMensa}
+					{mensaList}
+				/>
 			{/if}
 
 			{#if $showMealsInTile && mensaMeals}

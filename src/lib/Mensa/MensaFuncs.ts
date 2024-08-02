@@ -1,11 +1,11 @@
 import { browser } from '$app/environment';
-import { getNextWeekdayString } from '$lib/TSHelpers/DateHelper';
+import { getDateAsUrlParam } from '$lib/TSHelpers/DateHelper';
 import type { MensaMeal } from '$lib/types';
 
-export async function fetchMeals(mensaId: number): Promise<MensaMeal[] | undefined> {
+export async function fetchMeals(date: Date, mensaId: number): Promise<MensaMeal[] | undefined> {
 	if (browser) {
-		const date = getNextWeekdayString();
-		const res = await fetch(`/api/get_day_at_mensa/?mensa=${mensaId}&date=${date}`);
+		const date_str = getDateAsUrlParam(date);
+		const res = await fetch(`/api/get_day_at_mensa/?mensa=${mensaId}&date=${date_str}`);
 
 		if (!res.ok) {
 			throw new Error(await res.text());
