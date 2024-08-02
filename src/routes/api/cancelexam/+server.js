@@ -10,8 +10,6 @@ export async function POST({ request, cookies }) {
 
 	try {
 		let text = await request.text();
-		console.error(text);
-
 		const response = await fetch(`${env.CD_API_URL}/cancelexam`, {
 			method: 'POST',
 			headers: {
@@ -27,7 +25,7 @@ export async function POST({ request, cookies }) {
 
 		return response;
 	} catch (error) {
-		console.error('Error at examstats:');
+		console.error('Error at cancelexam:');
 		if (error instanceof Error) {
 			console.error(error.message);
 		}

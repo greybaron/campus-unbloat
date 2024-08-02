@@ -112,7 +112,7 @@
 					on:click={notifDrawer}
 					class="transition-none btn-icon {reminders
 						? 'variant-filled-primary'
-						: 'variant-ghost-surface'}"
+						: 'variant-ghost-surface pointer-events-none'}"
 				>
 					{#if reminders}
 						<i class="fa-solid fa-bell"></i>

@@ -5,7 +5,7 @@
 	export let title: string;
 	export let clickable: boolean = true;
 	export let ready: boolean = false;
-	
+
 	const dispatch = createEventDispatcher();
 </script>
 
