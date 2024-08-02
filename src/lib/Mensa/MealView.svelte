@@ -7,7 +7,7 @@
 	export let expandedMealCategories: Writable<Array<string>>;
 	export let mensaMeals: Array<MensaMeal>;
 
-	function getIcon(meal_type: string) {
+	function getGroupIcon(meal_type: string) {
 		const icons: { [key: string]: string } = {
 			vegan: 'fa-solid fa-leaf',
 			vegetarisch: 'fa-solid fa-egg',
@@ -30,12 +30,34 @@
 
 		return 'fa-solid fa-utensils';
 	}
+
+	function getGroupColour(meal_type: string) {
+		const icons: { [key: string]: string } = {
+			vegan: 'bg-green-400/40',
+			vegetarisch: 'bg-green-400/40',
+			gemüse: 'bg-green-400/40',
+			fleisch: 'bg-red-400/40',
+			fisch: 'bg-blue-400/40',
+			pastateller: 'bg-yellow-300/40'
+		};
+
+		const lowercasedMealType = meal_type.toLowerCase();
+
+		for (const key in icons) {
+			if (lowercasedMealType.includes(key)) {
+				return icons[key];
+			}
+		}
+
+		return 'bg-surface-100-800-token';
+	}
 </script>
 
 <Accordion>
 	{#each mensaMeals as meal}
 		<AccordionItem
-			regionPanel="bg-primary-50-900"
+			hover="hover:dark:backdrop-brightness-200 hover:backdrop-brightness-90 transition-[backdrop-filter]"
+			regionControl="{getGroupColour(meal.meal_type)} border border-surface-900-50-token"
 			open={$expandedMealCategories.includes(meal.meal_type)}
 			on:toggle={(e) => {
 				expandedMealCategories.update((categories) => {
@@ -48,7 +70,7 @@
 			}}
 		>
 			<svelte:fragment slot="lead">
-				<i class="{getIcon(meal.meal_type)} scale-125"></i>
+				<i class="{getGroupIcon(meal.meal_type)} scale-125"></i>
 			</svelte:fragment>
 			<svelte:fragment slot="summary">{meal.meal_type}</svelte:fragment>
 			<svelte:fragment slot="content">
