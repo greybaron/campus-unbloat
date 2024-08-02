@@ -54,12 +54,6 @@ function getDiffInDays(date1: Date, date2: Date): number {
 	return Math.round(diffInDays);
 }
 
-export function inThirteenWeeks() {
-	const date = new Date();
-	date.setDate(date.getDate() + 13 * 7); // 13 weeks ≙ 1 semester
-	return date;
-}
-
 export function dateIsToday(date: Date): boolean {
 	const today = new Date();
 	return (
