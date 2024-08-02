@@ -29,26 +29,49 @@
 			<hr />
 
 			{#if submeal.additional_ingredients.length > 0}
-				<div class="flex justify-center">
-					<div class="text-left">
-						<ul class="list-disc list-inside">
-							{#each submeal.additional_ingredients as ingredient}
-								<li class="">{ingredient}</li>
-							{/each}
-						</ul>
+				<div class="flex flex-row space-x-2">
+					<div>
+						<span class="badge-icon p-3 variant-outline">
+							<i class="fa-solid fa-plus"></i>
+						</span>
+					</div>
+					<div class="flex flex-grow justify-center items-center">
+						<div class="text-left">
+							<ul class="list-disc list-inside">
+								{#each submeal.additional_ingredients as ingredient}
+									<li>{ingredient}</li>
+								{/each}
+							</ul>
+						</div>
 					</div>
 				</div>
 				<hr />
 			{/if}
 
 			{#if submeal.allergens}
-				<div>
-					<strong>Allergene: </strong><span>{submeal.allergens}</span>
+				<div class="flex flex-row space-x-2">
+					<div>
+						<span class="badge-icon p-3 variant-outline">
+							<i class="fa-solid fa-info"></i>
+						</span>
+					</div>
+
+					<div class="text-center flex-grow">
+						<strong>Allergene: </strong><span>{submeal.allergens}</span>
+					</div>
 				</div>
 				<hr />
 			{/if}
-			<div class="h-0"></div>
-			<i>{submeal.price}</i>
+			<div class="flex flex-row space-x-2">
+				<div>
+					<span class="badge-icon p-3 variant-outline">
+						<i class="fa-solid fa-coins"></i>
+					</span>
+				</div>
+				<div class="flex-grow">
+					<i>{submeal.price}</i>
+				</div>
+			</div>
 		</div>
 
 		{#if submeal.variations}
