@@ -28,9 +28,10 @@ export function getAltDayString(selectedDate: Date): string {
 	// date is guaranteed to not be today
 	const today = new Date();
 
-	// get day difference
-	const diff = selectedDate.getDate() - today.getDate();
-	switch (diff) {
+	const diffInDays = getDiffInDays(selectedDate, today);
+
+	console.log(diffInDays);
+	switch (diffInDays) {
 		case -2:
 			return 'Vorgestern';
 		case -1:
@@ -42,6 +43,15 @@ export function getAltDayString(selectedDate: Date): string {
 		default:
 			return `${String(selectedDate.getDate()).padStart(2, '0')}.${String(selectedDate.getMonth() + 1).padStart(2, '0')}.`;
 	}
+}
+
+function getDiffInDays(date1: Date, date2: Date): number {
+	// Get the difference in milliseconds
+	const diffInMs = date1.getTime() - date2.getTime();
+	// Convert milliseconds to days
+	const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+	// Return the difference in days, rounded to the nearest integer
+	return Math.round(diffInDays);
 }
 
 export function inThirteenWeeks() {
