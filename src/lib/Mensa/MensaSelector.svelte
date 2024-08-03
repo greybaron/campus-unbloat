@@ -44,7 +44,7 @@
 <div class="flex mb-2 space-x-1 items-center">
 	<button
 		on:click={() => handleDaySelection(false)}
-		class="btn-icon variant-filled-primary size-10"
+		class="flex-shrink-0 btn-icon variant-filled-primary size-10"
 	>
 		<i class="fa-solid fa-arrow-left" />
 	</button>
@@ -60,7 +60,7 @@
 			<option value={mensa.id}>{mensa.name}</option>
 		{/each}
 	</select>
-	<button on:click={() => handleDaySelection(true)} class="btn-icon variant-filled-primary size-10">
+	<button on:click={() => handleDaySelection(true)} class="flex-shrink-0 btn-icon variant-filled-primary size-10">
 		<i class="fa-solid fa-arrow-right" />
 	</button>
 </div>
