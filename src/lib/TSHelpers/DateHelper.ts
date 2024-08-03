@@ -31,14 +31,10 @@ export function getAltDayString(selectedDate: Date): string {
 	const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
 
 	switch (diffInDays) {
-		case -2:
-			return 'Vorgestern';
 		case -1:
 			return 'Gestern';
 		case 1:
 			return 'Morgen';
-		case 2:
-			return 'Übermorgen';
 		default:
 			return `${weekDays[selectedDate.getDay()]}, ${String(selectedDate.getDate()).padStart(2, '0')}.${String(selectedDate.getMonth() + 1).padStart(2, '0')}.`;
 	}
