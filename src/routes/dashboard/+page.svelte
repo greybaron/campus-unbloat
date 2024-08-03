@@ -6,7 +6,14 @@
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 
-	import { getToastStore, ProgressRadial, type DrawerSettings } from '@skeletonlabs/skeleton';
+	import {
+		getModalStore,
+		getToastStore,
+		ProgressRadial,
+		type DrawerSettings,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 	import {
 		getToastSettings,
@@ -20,7 +27,15 @@
 
 	let basicUserData: BasicUserData = JSON.parse(data.user_basic!);
 
-	function showToast(payload: ToastPayload) {
+	function showToast(data: ToastPayload | CustomEvent) {
+		let payload: ToastPayload;
+
+		if (data instanceof CustomEvent) {
+			payload = data.detail;
+		} else {
+			payload = data;
+		}
+
 		const toastSettings = getToastSettings(payload);
 		toastStore.trigger(toastSettings);
 	}
@@ -31,7 +46,7 @@
 	import type { Writable } from 'svelte/store';
 	const drawerStore = getDrawerStore();
 
-	const componentMap: Record<string, any> = {
+	const componentMap: Record<string, object> = {
 		BasicInfoTile,
 		GradesTile,
 		ExamSignupTile,
@@ -39,13 +54,18 @@
 		CalendarTile
 	};
 	let componentOrder: Writable<string[]>;
-	let componentProps: Record<string, any>;
+	let componentProps: Record<string, object>;
 
 	let reminders: CdReminders | undefined;
 	let presentNotificationCategories: number = 0;
 
 	let remindersSignalStore: Writable<boolean>;
 	$: if ($remindersSignalStore) fetchReminders();
+
+	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
+	let modalStore = getModalStore();
+	let modalComponent: ModalComponent;
+	let modal: ModalSettings;
 
 	onMount(async () => {
 		const components: string[] = [
@@ -57,6 +77,16 @@
 		];
 
 		componentOrder = persistentStore('compOrder', components);
+
+		modalComponent = {
+			ref: DashReorderModal,
+			props: { componentOrder: componentOrder }
+		};
+
+		modal = {
+			type: 'component',
+			component: modalComponent
+		};
 
 		componentProps = {
 			BasicInfoTile: { basicUserData },
@@ -120,12 +150,21 @@
 
 		return presentNotificationCategories;
 	}
+
+	function openTileReorder() {
+		modalStore.trigger(modal);
+	}
 </script>
 
 <PageContainer>
 	{#if basicUserData}
-		<div class="w-[98%] sm:w-96 lg:w-[49rem] mx-auto flex items-center">
+		<div class="w-[98%] sm:w-96 lg:w-[49rem] mx-auto space-x-1 flex items-center">
 			<h1 class="text-3xl font-bold flex-grow">Hallo, {basicUserData.first_name}.</h1>
+
+			<button on:click={openTileReorder} class="transition-none btn-icon variant-filled-secondary">
+				<i class="fa-solid fa-up-down-left-right"></i>
+			</button>
+
 			<div class="relative inline-block">
 				{#if presentNotificationCategories != 0}
 					<span class="size-6 badge-icon variant-filled-secondary absolute -top-1 -right-1 z-10"
@@ -156,7 +195,11 @@
 	{#if componentOrder}
 		<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
 			{#each $componentOrder as component}
-				<svelte:component this={componentMap[component]} {...componentProps[component]} />
+				<svelte:component
+					this={componentMap[component]}
+					{...componentProps[component]}
+					on:showToast={showToast}
+				/>
 			{/each}
 		</div>
 	{/if}
