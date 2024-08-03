@@ -49,9 +49,9 @@
 	const componentMap: Record<string, object> = {
 		BasicInfoTile,
 		GradesTile,
-		ExamSignupTile,
 		MensaTile,
-		CalendarTile
+		CalendarTile,
+		ExamSignupTile
 	};
 	let componentOrder: Writable<string[]>;
 	let componentProps: Record<string, object>;
@@ -71,9 +71,9 @@
 		const components: string[] = [
 			'BasicInfoTile',
 			'GradesTile',
-			'ExamSignupTile',
 			'MensaTile',
-			'CalendarTile'
+			'CalendarTile',
+			'ExamSignupTile'
 		];
 
 		componentOrder = persistentStore('compOrder', components);
