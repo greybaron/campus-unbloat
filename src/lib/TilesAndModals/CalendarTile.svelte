@@ -25,6 +25,7 @@
 		allDay: boolean;
 		description: string;
 		color: string;
+		font_color: string;
 		editable: boolean;
 		room: string;
 		sroom: string;
@@ -48,23 +49,13 @@
 		let newEventsUnix: EventUnix[] = [];
 
 		fetched.forEach((element) => {
-			let colorNoHex = element.color.replace('#', '');
-
-			// Convert to RGB values
-			let r = parseInt(colorNoHex.substr(0, 2), 16);
-			let g = parseInt(colorNoHex.substr(2, 2), 16);
-			let b = parseInt(colorNoHex.substr(4, 2), 16);
-
-			// Calculate luminance
-			let luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-
 			newEventsUnix.push({
 				start: element.start,
 				end: element.end,
 				title: element.title.split('-')[1],
 				room: element.room.split(' ')[0],
 				instructor: element.instructor,
-				textColor: luminance < 128 ? '#FFFFFF' : '#000000',
+				textColor: element.font_color,
 				remarks: element.remarks,
 				color: element.color
 			});
