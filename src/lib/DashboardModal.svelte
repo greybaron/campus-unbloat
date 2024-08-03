@@ -16,10 +16,10 @@
 <div
 	class="{dynamicwidth
 		? ''
-		: 'w-modal'} modal block bg-surface-100-800-token h-auto p-4 space-y-4 rounded-container-token shadow-xl"
+		: 'w-modal'} modal block bg-surface-100-800-token h-auto px-1 py-4 space-y-4 rounded-container-token shadow-xl"
 	role="dialog"
 >
-	<div class="flex w-full items-center">
+	<div class="px-3 flex w-full items-center">
 		<header class="flex-grow text-2xl font-bold">{title}</header>
 		<button
 			bind:this={closeButton}
@@ -29,9 +29,11 @@
 			class="size-8 fa-solid fa-xmark scale-150"
 		/>
 	</div>
-	<slot name="header" />
+	<div class="px-3">
+		<slot name="header" />
+	</div>
 	<div
-		class="overflow-y-auto {$$slots.header ? 'max-h-safe-screen-with-header' : 'max-h-safe-screen'}"
+		class="px-3 overflow-y-auto {$$slots.header ? 'max-h-safe-screen-with-header' : 'max-h-safe-screen'}"
 	>
 		<slot />
 	</div>
