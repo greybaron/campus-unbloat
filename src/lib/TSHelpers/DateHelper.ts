@@ -27,10 +27,9 @@ export function getNextWeekday(): Date {
 export function getAltDayString(selectedDate: Date): string {
 	// date is guaranteed to not be today
 	const today = new Date();
-
 	const diffInDays = getDiffInDays(selectedDate, today);
+	const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
 
-	console.log(diffInDays);
 	switch (diffInDays) {
 		case -2:
 			return 'Vorgestern';
@@ -41,7 +40,7 @@ export function getAltDayString(selectedDate: Date): string {
 		case 2:
 			return 'Übermorgen';
 		default:
-			return `${String(selectedDate.getDate()).padStart(2, '0')}.${String(selectedDate.getMonth() + 1).padStart(2, '0')}.`;
+			return `${weekDays[selectedDate.getDay()]}, ${String(selectedDate.getDate()).padStart(2, '0')}.${String(selectedDate.getMonth() + 1).padStart(2, '0')}.`;
 	}
 }
 
