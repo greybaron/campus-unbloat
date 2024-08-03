@@ -18,7 +18,7 @@
 
 	export let data;
 
-	let deserData: BasicUserData = JSON.parse(data.user_basic!);
+	let basicUserData: BasicUserData = JSON.parse(data.user_basic!);
 
 	function showToast(payload: ToastPayload) {
 		const toastSettings = getToastSettings(payload);
@@ -31,18 +31,43 @@
 	import type { Writable } from 'svelte/store';
 	const drawerStore = getDrawerStore();
 
+	const componentMap: Record<string, any> = {
+		BasicInfoTile,
+		GradesTile,
+		ExamSignupTile,
+		MensaTile,
+		CalendarTile
+	};
+	let componentOrder: Writable<string[]>;
+	let componentProps: Record<string, any>;
+
 	let reminders: CdReminders | undefined;
 	let presentNotificationCategories: number = 0;
 
 	let remindersSignalStore: Writable<boolean>;
-	$: if ($remindersSignalStore) fetchStuff();
+	$: if ($remindersSignalStore) fetchReminders();
 
 	onMount(async () => {
+		const components: string[] = [
+			'BasicInfoTile',
+			'GradesTile',
+			'ExamSignupTile',
+			'MensaTile',
+			'CalendarTile'
+		];
+
+		componentOrder = persistentStore('compOrder', components);
+
+		componentProps = {
+			BasicInfoTile: { basicUserData },
+			ExamSignupTile: { remindersSignalStore }
+		};
+
 		remindersSignalStore = persistentStore('updateRemindersSignal', false);
-		fetchStuff();
+		fetchReminders();
 	});
 
-	async function fetchStuff() {
+	async function fetchReminders() {
 		remindersSignalStore.set(false);
 
 		reminders = undefined;
@@ -98,10 +123,9 @@
 </script>
 
 <PageContainer>
-	{#if deserData}
+	{#if basicUserData}
 		<div class="w-[98%] sm:w-96 lg:w-[49rem] mx-auto flex items-center">
-			<h1 class="text-3xl font-bold flex-grow">Hallo, {deserData.first_name}.</h1>
-
+			<h1 class="text-3xl font-bold flex-grow">Hallo, {basicUserData.first_name}.</h1>
 			<div class="relative inline-block">
 				{#if presentNotificationCategories != 0}
 					<span class="size-6 badge-icon variant-filled-secondary absolute -top-1 -right-1 z-10"
@@ -129,33 +153,11 @@
 			</div>
 		</div>
 	{/if}
-	<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
-		<BasicInfoTile
-			basicUserData={deserData}
-			on:showToast={(e) => {
-				showToast(e.detail);
-			}}
-		/>
-		<GradesTile
-			on:showToast={(e) => {
-				showToast(e.detail);
-			}}
-		/>
-		<ExamSignupTile
-			bind:remindersSignalStore
-			on:showToast={(e) => {
-				showToast(e.detail);
-			}}
-		/>
-		<MensaTile
-			on:showToast={(e) => {
-				showToast(e.detail);
-			}}
-		/>
-		<CalendarTile
-			on:showToast={(e) => {
-				showToast(e.detail);
-			}}
-		/>
-	</div>
+	{#if componentOrder}
+		<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
+			{#each $componentOrder as component}
+				<svelte:component this={componentMap[component]} {...componentProps[component]} />
+			{/each}
+		</div>
+	{/if}
 </PageContainer>
