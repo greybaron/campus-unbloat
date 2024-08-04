@@ -44,6 +44,8 @@
 	import { onMount } from 'svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import type { Writable } from 'svelte/store';
+	import Portal from 'svelte-portal';
+
 	const drawerStore = getDrawerStore();
 
 	const componentMap: Record<string, object> = {
@@ -63,20 +65,18 @@
 	$: if ($remindersSignalStore) fetchReminders();
 
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
+	import { components, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder.js';
+
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
 	onMount(async () => {
-		const components: string[] = [
-			'BasicInfoTile',
-			'GradesTile',
-			'MensaTile',
-			'CalendarTile',
-			'ExamSignupTile'
-		];
-
 		componentOrder = persistentStore('compOrder', components);
+		if (!validateComponentOrder($componentOrder)) {
+			console.error('Component order is fucked, resetting');
+			componentOrder.set(components);
+		}
 
 		modalComponent = {
 			ref: DashReorderModal,
@@ -194,12 +194,20 @@
 	{/if}
 	{#if componentOrder}
 		<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
-			{#each $componentOrder as component}
-				<svelte:component
-					this={componentMap[component]}
-					{...componentProps[component]}
-					on:showToast={showToast}
-				/>
+			<!-- create portals -->
+			{#each components as _, idx}
+				<div id="portal{idx}" />
+			{/each}
+
+			<!-- create tiles -->
+			{#each components as component}
+				<Portal target="#portal{$componentOrder.indexOf(component)}">
+					<svelte:component
+						this={componentMap[component]}
+						{...componentProps[component]}
+						on:showToast={showToast}
+					/>
+				</Portal>
 			{/each}
 		</div>
 	{/if}
