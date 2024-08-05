@@ -2,7 +2,14 @@
 	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import '../app.postcss';
 
-	import { AppShell, AppBar, LightSwitch, getDrawerStore } from '@skeletonlabs/skeleton';
+	import {
+		AppShell,
+		AppBar,
+		LightSwitch,
+		getDrawerStore,
+		type PopupSettings,
+		popup
+	} from '@skeletonlabs/skeleton';
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
@@ -26,7 +33,38 @@
 	const drawerStore = getDrawerStore();
 
 	import CookieConsentComponent from '$lib/cookieconsent.svelte';
+
+	const popupRechtliches: PopupSettings = {
+		// Represents the type of event that opens/closed the popup
+		event: 'click',
+		// Matches the data-popup value on your popup element
+		target: 'popupRechtliches',
+		// Defines which side of your trigger the popup will appear
+		placement: 'bottom'
+	};
 </script>
+
+<div
+	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500"
+	data-popup="popupRechtliches"
+>
+	<div class="flex space-x-2">
+		<button
+			on:click={() => {
+				goto('/impressum');
+			}}
+			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-secondary-500"
+			>Impressum</button
+		>
+		<button
+			on:click={() => {
+				goto('/datenschutz');
+			}}
+			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-secondary-500"
+			>Datenschutz</button
+		>
+	</div>
+</div>
 
 <CookieConsentComponent />
 <Toast buttonDismiss="btn-icon btn-icon-sm variant-filled transition-none" />
@@ -93,25 +131,44 @@
 			<svelte:fragment slot="lead">
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<strong on:click={() => {}} class="text-xl">CampusUnbloat</strong>
+				<strong on:click={() => {}} class="text-lg sm:text-xl">CampusUnbloat</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				{#if $page.url.pathname != '/'}
-					<button
-						on:click={async () => {
-							await fetch('/logout', {
-								method: 'POST'
-							});
-							goto('/');
-						}}
-						class="btn btn-sm variant-ghost-primary"
-					>
-						Abmelden
-					</button>
-				{:else}
-					<div class="h-8" />
-				{/if}
-				<LightSwitch />
+				<div class="flex items-center justify-end space-x-1">
+					<LightSwitch />
+
+					{#if $page.url.pathname == '/impressum' || $page.url.pathname == '/datenschutz'}
+						<button
+							on:click={async () => {
+								goto('/');
+							}}
+							class="h-6 btn btn-sm variant-ghost-secondary text-xs"
+						>
+							<p>Zurück</p>
+						</button>
+					{:else}
+						<button
+							use:popup={popupRechtliches}
+							class="h-6 btn btn-sm variant-ghost-secondary text-xs"
+						>
+							<p>Rechtliches</p>
+						</button>
+					{/if}
+
+					{#if $page.url.pathname == '/dashboard'}
+						<button
+							on:click={async () => {
+								await fetch('/logout', {
+									method: 'POST'
+								});
+								goto('/');
+							}}
+							class="h-6 btn btn-sm variant-ghost-primary"
+						>
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					{/if}
+				</div>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
