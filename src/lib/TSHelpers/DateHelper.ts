@@ -28,7 +28,7 @@ export function getAltDayString(selectedDate: Date): string {
 	// date is guaranteed to not be today
 	const today = new Date();
 	const diffInDays = getDiffInDays(selectedDate, today);
-	const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+	const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
 	switch (diffInDays) {
 		case -1:

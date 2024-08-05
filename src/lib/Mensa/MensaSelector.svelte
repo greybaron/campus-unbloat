@@ -60,7 +60,10 @@
 			<option value={mensa.id}>{mensa.name}</option>
 		{/each}
 	</select>
-	<button on:click={() => handleDaySelection(true)} class="flex-shrink-0 btn-icon variant-filled-primary size-10">
+	<button
+		on:click={() => handleDaySelection(true)}
+		class="flex-shrink-0 btn-icon variant-filled-primary size-10"
+	>
 		<i class="fa-solid fa-arrow-right" />
 	</button>
 </div>
