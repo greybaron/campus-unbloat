@@ -196,7 +196,7 @@
 		<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
 			<!-- create portals -->
 			{#each components as _, idx}
-				<div id="portal{idx}" />
+				<div class="flex" id="portal{idx}" />
 			{/each}
 
 			<!-- create tiles -->
