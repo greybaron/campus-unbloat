@@ -33,7 +33,9 @@
 		<slot name="header" />
 	</div>
 	<div
-		class="px-3 overflow-y-auto {$$slots.header ? 'max-h-safe-screen-with-header' : 'max-h-safe-screen'}"
+		class="px-3 overflow-y-auto {$$slots.header
+			? 'max-h-safe-screen-with-header'
+			: 'max-h-safe-screen'}"
 	>
 		<slot />
 	</div>
