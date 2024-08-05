@@ -24,9 +24,13 @@
 	}
 
 	const drawerStore = getDrawerStore();
+
+	import CookieConsentComponent from '$lib/cookieconsent.svelte';
 </script>
 
+<CookieConsentComponent />
 <Toast buttonDismiss="btn-icon btn-icon-sm variant-filled transition-none" />
+
 <Drawer
 	on:drawer={() => drawerStore.close()}
 	position="right"
