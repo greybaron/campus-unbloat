@@ -137,6 +137,13 @@
 				<div class="flex items-center justify-end space-x-1">
 					<LightSwitch />
 
+					<button
+						use:popup={popupRechtliches}
+						class="h-6 btn btn-sm variant-ghost-secondary text-xs"
+					>
+						<p>Rechtliches</p>
+					</button>
+
 					{#if $page.url.pathname == '/impressum' || $page.url.pathname == '/datenschutz'}
 						<button
 							on:click={async () => {
@@ -145,13 +152,6 @@
 							class="h-6 btn btn-sm variant-ghost-secondary text-xs"
 						>
 							<p>Zurück</p>
-						</button>
-					{:else}
-						<button
-							use:popup={popupRechtliches}
-							class="h-6 btn btn-sm variant-ghost-secondary text-xs"
-						>
-							<p>Rechtliches</p>
 						</button>
 					{/if}
 
