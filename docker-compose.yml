@@ -1,23 +1,34 @@
 services:
-  debloat-frontend:
-    image: docker.io/flschmidt/campusdebloat-webapp
+  unbloat-frontend:
+    image: docker.io/flschmidt/campusunbloat-webapp
     environment:
-      - CD_API_URL=http://debloat-api-campus:8080
-      - MENSA_API_URL=http://debloat-api-mensa:9090
+      - CD_API_URL=http://unbloat-api-campus:8080
+      - MENSA_API_URL=http://unbloat-api-mensa:9090
+
+      # Impressum data
+      - PUBLIC_IMPRESS_FULLNAME= # your full name
+      - PUBLIC_IMPRESS_STRASSE_HAUSNR= # your street and house number
+      #- PUBLIC_IMPRESS_ADDRZUSATZ= Optional Adresszusatz
+      - PUBLIC_IMPRESS_ORT_PLZ=placeholder_city_zip # your city and zip code
+      - PUBLIC_IMPRESS_TELEFON=placeholder_phone # your phone number
+      - PUBLIC_IMPRESS_EMAIL=placeholder_email # your email address
     ports:
       - '3000:3000'
     networks:
       - eduroam
 
-  debloat-api-campus:
-    image: docker.io/flschmidt/campusdebloat-api-campus
+  unbloat-api-campus:
+    image: docker.io/flschmidt/campusunbloat-api-campus
+    environment:
+      - JWT_SECRET= # your JWT secret. The longer the better
+      - AES_KEY= # your AES key. Has to be 32 bytes or longer (only the first 32 bytes will be used)
     networks:
       - eduroam
 
-  debloat-api-mensa:
-    image: docker.io/flschmidt/campusdebloat-api-mensa
+  unbloat-api-mensa:
+    image: docker.io/flschmidt/campusunbloat-api-mensa
     volumes:
-      - mensa_volume:/app/data
+      - mensa_volume:/app/data # used for caching mensa data, technically optional
     networks:
       - eduroam
 
