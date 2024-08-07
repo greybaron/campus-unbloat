@@ -31,8 +31,8 @@
 	}
 
 	const drawerStore = getDrawerStore();
-
-	import CookieConsentComponent from '$lib/cookieconsent.svelte';
+	import { load_cc } from '$lib/cc';
+	load_cc();
 
 	const popupRechtliches: PopupSettings = {
 		// Represents the type of event that opens/closed the popup
@@ -66,7 +66,6 @@
 	</div>
 </div>
 
-<CookieConsentComponent />
 <Toast buttonDismiss="btn-icon btn-icon-sm variant-filled transition-none" />
 
 <Drawer
