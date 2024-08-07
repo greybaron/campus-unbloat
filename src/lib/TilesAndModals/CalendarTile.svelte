@@ -13,10 +13,13 @@
 	const dispatch = createEventDispatcher();
 
 	let todaysEvents: Array<Event> = [];
+	let lastEventUpdate: Date;
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 	let storedEventsUnix: Writable<EventUnix[]>;
+	let lastEventUpdateDate: Writable<Date>;
+	let isReloading: boolean = false;
 
 	type fetchedCalendar = Array<{
 		title: string;
@@ -87,22 +90,21 @@
 		modalStore.trigger(modal);
 	}
 
-	onMount(async () => {
-		storedEventsUnix = persistentStore('storedEvents', []);
+	function olderThanOneHour(currDate: Date, selectedDate: Date): boolean {
+		if (selectedDate == null || selectedDate == undefined) {
+			return true;
+		}
+		const diffInMs = currDate.getTime() - new Date(selectedDate).getTime();
+		const diffTime = diffInMs / (1000 * 60 * 60);
+		if (diffTime > 1 || diffTime == 0) {
+			return true
+		}
+		return false;
+	}
 
-		todaysEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix));
+	async function fetchCalendar() {
 
-		modalComponent = {
-			ref: CalendarModal,
-			props: { storedEvents: storedEventsUnix }
-		};
-
-		modal = {
-			type: 'component',
-			component: modalComponent
-		};
-
-		console.log('Fetching calendar');
+		console.log('Fetching new Calendar');
 		const res = await fetch('/api/stundenplan');
 
 		if (!res.ok) {
@@ -122,13 +124,45 @@
 		todaysEvents = getCurrentEvents(unixEventsToEvents(parsedUnix));
 
 		storedEventsUnix.set(parsedUnix);
+		lastEventUpdateDate.set(new Date);
+
+		console.log('Fetched New Calendar Successfully');
+		isReloading = false;
+	}
+
+	onMount(async () => {
+		storedEventsUnix = persistentStore('storedEvents', []);
+		lastEventUpdateDate = persistentStore('lastEventUpdate', new Date());
+
+		todaysEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix));
+		lastEventUpdate = $lastEventUpdateDate;
+
+		modalComponent = {
+			ref: CalendarModal,
+			props: { storedEvents: storedEventsUnix }
+		};
+
+		modal = {
+			type: 'component',
+			component: modalComponent
+		};
+
+		if (olderThanOneHour(new Date(), lastEventUpdate)) {
+			console.log('Calendar older than one hour');
+			fetchCalendar();
+		} else {
+			console.log('No New Calendar Was Fetched');
+		}
 	});
 </script>
 
 <DashboardTile
 	title="Kalender"
 	on:click={openModal}
+	on:reload={() => {fetchCalendar(); isReloading = true;}}
 	ready={storedEventsUnix && $storedEventsUnix.length != 0}
+	reloadable={true}
+	reloading={isReloading}
 >
 	<p class="font-semibold">{getTodaysCalendarTitle()}</p>
 

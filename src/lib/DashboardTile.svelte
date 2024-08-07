@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher } from 'svelte';
+	import TileInteractiveElementWrapper from './TileInteractiveElementWrapper.svelte';
 
 	export let title: string;
 	export let clickable: boolean = true;
+	export let reloadable: boolean = false;
+	export let reloading: boolean = false;
 	export let ready: boolean = false;
 
 	const dispatch = createEventDispatcher();
@@ -20,7 +23,24 @@
 			<i class="{ready ? '' : 'opacity-40'} w-4 fa-solid fa-up-right-and-down-left-from-center" />
 		{/if}
 		<header class="flex-grow text-xl font-bold text-center">{title}</header>
-		{#if clickable}
+		{#if reloadable}
+		<TileInteractiveElementWrapper>
+			{#if reloading}
+				<ProgressRadial
+					
+					width="w-4 scale-125"
+					stroke={80}
+					value={undefined}
+					strokeLinecap="round"
+					track="stroke-surface-500/30 dark:stroke-surface-300/30"
+				/>
+			{:else}
+				<button class="flex-shrink-0 btn-icon fa-solid fa-rotate-right size-4 scale-110"
+					on:click={() => dispatch('reload')}
+				/>
+			{/if}
+		</TileInteractiveElementWrapper>
+		{:else if clickable}
 			<div class="w-4" />
 		{/if}
 	</div>
