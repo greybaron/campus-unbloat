@@ -208,3 +208,18 @@ export interface Upcoming {
 	sm_stext: string;
 	sroom: string;
 }
+
+export type Timeline = {
+	fachsemester: TimelineEvent[];
+	theoriesemester: TimelineEvent[];
+	praxissemester: TimelineEvent[];
+	specials: TimelineEvent[];
+};
+
+export type TimelineEvent = {
+	name: string;
+	description: string;
+	color: string;
+	start: string;
+	end: string;
+};

@@ -5,6 +5,7 @@
 	import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
+	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 
 	import {
 		getModalStore,
@@ -51,9 +52,10 @@
 	const componentMap: Record<string, object> = {
 		BasicInfoTile,
 		GradesTile,
+		ExamSignupTile,
 		MensaTile,
 		CalendarTile,
-		ExamSignupTile
+		BlockplanTile
 	};
 	let componentOrder: Writable<string[]>;
 	let componentProps: Record<string, object>;
