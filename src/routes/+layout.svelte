@@ -146,7 +146,13 @@
 					{#if $page.url.pathname == '/impressum' || $page.url.pathname == '/datenschutz'}
 						<button
 							on:click={async () => {
-								goto('/');
+								const response = await fetch('/');
+
+								if (response.redirected) {
+									window.location.href = response.url;
+								} else {
+									goto('/');
+								}
 							}}
 							class="h-6 btn btn-sm variant-ghost-secondary text-xs"
 						>
