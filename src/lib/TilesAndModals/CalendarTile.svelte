@@ -105,6 +105,7 @@
 	async function fetchCalendar() {
 
 		console.log('Fetching new Calendar');
+		isReloading = true;
 		const res = await fetch('/api/stundenplan');
 
 		if (!res.ok) {
@@ -159,7 +160,7 @@
 <DashboardTile
 	title="Kalender"
 	on:click={openModal}
-	on:reload={() => {fetchCalendar(); isReloading = true;}}
+	on:reload={() => {fetchCalendar()}}
 	ready={storedEventsUnix && $storedEventsUnix.length != 0}
 	reloadable={true}
 	reloading={isReloading}
