@@ -104,7 +104,7 @@
 
 	async function fetchCalendar() {
 
-		console.log('Fetching new Calendar');
+		console.log('Fetching New Calendar');
 		isReloading = true;
 		const res = await fetch('/api/stundenplan');
 
@@ -149,7 +149,7 @@
 		};
 
 		if (olderThanOneHour(new Date(), lastEventUpdate)) {
-			console.log('Calendar older than one hour');
+			console.log('Calendar Older Than One Hour');
 			fetchCalendar();
 		} else {
 			console.log('No New Calendar Was Fetched');
