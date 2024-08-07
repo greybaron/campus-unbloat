@@ -3,7 +3,8 @@ export const components: string[] = [
 	'GradesTile',
 	'MensaTile',
 	'CalendarTile',
-	'ExamSignupTile'
+	'ExamSignupTile',
+	'BlockplanTile'
 ];
 
 export const tileNames: Map<string, string> = new Map([
@@ -11,7 +12,8 @@ export const tileNames: Map<string, string> = new Map([
 	['GradesTile', 'Noten'],
 	['ExamSignupTile', 'Prüfungen'],
 	['MensaTile', 'Mensa'],
-	['CalendarTile', 'Kalender']
+	['CalendarTile', 'Kalender'],
+	['BlockplanTile', 'Blockplan']
 ]);
 
 export function validateComponentOrder(order: string[]): boolean {
