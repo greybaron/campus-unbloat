@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, type SvelteComponent } from 'svelte';
+	import { onDestroy, onMount, type SvelteComponent } from 'svelte';
 
 	export let title: string;
 	export let parent: SvelteComponent;
@@ -10,6 +10,19 @@
 	// any browser focuses the button by default, no idea why
 	onMount(() => {
 		closeButton.blur();
+	});
+
+	const htmlElement = document.documentElement;
+	const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+	onMount(() => {
+		const isDarkMode = htmlElement.classList.contains('dark');
+		themeColorMeta?.setAttribute('content', isDarkMode ? 'rgb(23,23,23)' : 'rgb(139,139,139)');
+	});
+
+	onDestroy(() => {
+		const isDarkMode = htmlElement.classList.contains('dark');
+		themeColorMeta?.setAttribute('content', isDarkMode ? 'rgb(27,27,27)' : 'rgb(213,213,217)');
 	});
 </script>
 
