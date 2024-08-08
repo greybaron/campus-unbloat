@@ -90,12 +90,13 @@
 			component: modalComponent
 		};
 
+		remindersSignalStore = persistentStore('updateRemindersSignal', false);
+		
 		componentProps = {
 			BasicInfoTile: { basicUserData },
 			ExamSignupTile: { remindersSignalStore }
 		};
 
-		remindersSignalStore = persistentStore('updateRemindersSignal', false);
 		fetchReminders();
 	});
 
@@ -194,7 +195,7 @@
 			</div>
 		</div>
 	{/if}
-	{#if componentOrder}
+	{#if componentOrder && componentProps}
 		<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
 			<!-- create portals -->
 			{#each components as _, idx}
