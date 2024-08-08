@@ -6,12 +6,6 @@
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
-	let unused_error = "unused";
-
-
-	
-
-
 
 	import {
 		getModalStore,
