@@ -42,6 +42,18 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
+
+	function doesHttpOnlyCookieExist(name: string) {
+		var d = new Date();
+		d.setTime(d.getTime() + 1000);
+		var expires = 'expires=' + d.toUTCString();
+
+		document.cookie = name + '=new_value;path=/;' + expires;
+
+		const exists = document.cookie.indexOf(name + '=') == -1;
+		console.log('cookie exists:', exists);
+		return exists;
+	}
 </script>
 
 <div
@@ -146,10 +158,12 @@
 					{#if $page.url.pathname == '/impressum' || $page.url.pathname == '/datenschutz'}
 						<button
 							on:click={async () => {
-								const response = await fetch('/');
-
-								if (response.redirected) {
-									window.location.href = response.url;
+								if (process.env.NODE_ENV === 'production') {
+									if (doesHttpOnlyCookieExist('jwt')) {
+										goto('/dashboard');
+									} else {
+										goto('/');
+									}
 								} else {
 									goto('/');
 								}
