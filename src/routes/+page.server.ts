@@ -4,7 +4,6 @@ import { env } from '$env/dynamic/private';
 
 export const actions: Actions = {
 	login: async ({ cookies, request }) => {
-		console.log(`fetch ${env.CD_API_URL}/signin`);
 		const form = await request.formData();
 		const username = form.get('username');
 		const password = form.get('password');
@@ -23,8 +22,8 @@ export const actions: Actions = {
 
 			if (!response.ok) {
 				let message;
-				if (response.status === 418) {
-					message = 'CD-API: SSL-Fehler (Wahrscheinlich fehlt GEANT CA)';
+				if (response.status === 429) {
+					message = 'Zu viele Anfragen';
 				} else {
 					message = 'Nutzer/Passwort ungültig';
 				}

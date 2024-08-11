@@ -91,7 +91,7 @@
 		};
 
 		remindersSignalStore = persistentStore('updateRemindersSignal', false);
-		
+
 		componentProps = {
 			BasicInfoTile: { basicUserData },
 			ExamSignupTile: { remindersSignalStore }
