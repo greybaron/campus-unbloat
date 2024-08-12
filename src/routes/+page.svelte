@@ -22,9 +22,9 @@
 			}}
 			action="?/login"
 			method="POST"
-			class="bg-surface-100-800-token dark:bg-gray-800 shadow-md rounded-token p-6 pb-4"
+			class="bg-surface-100-800-token dark:bg-gray-800 shadow-md rounded-token p-6 pb-4 space-y-4"
 		>
-			<div class="mb-4">
+			<div>
 				<label class="block text-token text-sm font-bold mb-2" for="username">
 					CampusDual-Benutzername
 				</label>
@@ -47,7 +47,7 @@
 					required
 					placeholder="das normale, nicht den Hash"
 				/>
-				<div class="h-4">
+				<div class="h-6 -mb-3">
 					{#if form?.message}
 						<small class="text-red-500">{form.message}</small>
 					{/if}
@@ -55,7 +55,7 @@
 			</div>
 
 			<div class="bg-surface-200-700-token p-2 rounded-md space-y-2 outline-dashed outline-1">
-				<div class="flex items-center space-x-2">
+				<label class="flex items-center space-x-2">
 					<input
 						type="checkbox"
 						class="checkbox outline variant-outline-surface outline-2"
@@ -72,7 +72,7 @@
 						<br />
 						Daten werden nur lokal gespeichert.
 					</p>
-				</div>
+				</label>
 
 				<div class="flex justify-center space-x-2">
 					<button
@@ -80,14 +80,14 @@
 							goto('/impressum');
 						}}
 						type="button"
-						class="transition-none variant-filled btn text-sm h-7">Impressum</button
+						class="variant-filled btn text-sm h-7 transition-transform">Impressum</button
 					>
 					<button
 						on:click={() => {
 							goto('/datenschutz');
 						}}
 						type="button"
-						class="transition-none variant-filled btn text-sm h-7">Datenschutzerklärung</button
+						class="variant-filled btn text-sm h-7 transition-transform">Datenschutzerklärung</button
 					>
 				</div>
 			</div>
