@@ -16,11 +16,18 @@ export async function GET({ cookies }) {
 		});
 
 		if (!response.ok) {
+			if (response.status === 429) {
+				throw new ReferenceError();
+			}
 			throw new Error();
 		}
 
 		return response;
 	} catch (error) {
+		if (error instanceof ReferenceError) {
+			return new Response('Zu viele Anfragen', { status: 429 });
+		}
+
 		console.error('Error at examstats:');
 		if (error instanceof Error) {
 			console.error(error.message);
