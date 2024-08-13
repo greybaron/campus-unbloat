@@ -223,3 +223,31 @@ export type TimelineEvent = {
 	start: string;
 	end: string;
 };
+
+export interface CampusExamDetails {
+	ev_agrtype_text: string;
+	ev_audtype_text: string;
+	ev_continue_indicator: string;
+	ev_dereg_end: string;
+	ev_dereg_endtime: string;
+	ev_duration: string;
+	ev_durunit: string;
+	ev_exambegtime: string;
+	ev_examdate: string;
+	ev_examendtime: string;
+	ev_examorg_text: string;
+	ev_examorg_longtext: string;
+	ev_instructor: string;
+	ev_location_short: string;
+	ev_location_stext: string;
+	ev_obtype_text: string;
+	ev_reason: string;
+	ev_regis_begin: string;
+	ev_regis_begtime: string;
+	ev_regis_end: string;
+	ev_regis_endtime: string;
+	ev_room_short: string;
+	ev_room_stext: string;
+	ev_short: string;
+	ev_stext: string;
+}

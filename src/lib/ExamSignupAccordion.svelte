@@ -1,15 +1,25 @@
 <script lang="ts">
-	import { Accordion, AccordionItem, getModalStore, ProgressRadial } from '@skeletonlabs/skeleton';
+	import {
+		Accordion,
+		AccordionItem,
+		getModalStore,
+		popup,
+		ProgressRadial,
+		type PopupSettings
+	} from '@skeletonlabs/skeleton';
 	import {
 		getToastSettings,
 		SignupOrVerfahren,
 		ToastPayloadClass,
 		type CampusDualSignupOption,
+		type CampusExamDetails,
 		type CampusExamMetadata,
 		type ToastPayload
 	} from './types';
 
 	export let data: Array<CampusDualSignupOption> | undefined;
+	let examDetails: CampusExamDetails | null = null;
+
 	export let signupOrVerfahren: SignupOrVerfahren;
 	export let examSignalStore: Writable<boolean>;
 	export let remindersSignalStore: Writable<boolean>;
@@ -19,6 +29,28 @@
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
+
+	async function getExamDetails(internal_metadata?: CampusExamMetadata) {
+		examDetails = null;
+		const response = await fetch('/api/examdetails', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(internal_metadata)
+		});
+
+		if (!response.ok) {
+			const toastSettings = getToastSettings({
+				text: await response.text(),
+				class: ToastPayloadClass.error
+			});
+			toastStore.trigger(toastSettings);
+			return;
+		} else {
+			examDetails = await response.json();
+		}
+	}
 
 	async function startExamSignup(internal_metadata?: CampusExamMetadata) {
 		// braindead approach
@@ -67,7 +99,86 @@
 		examSignalStore.set(true);
 		remindersSignalStore.set(true);
 	}
+
+	const popupExamDetails: PopupSettings = {
+		event: 'click',
+		target: 'popupExamDetails',
+		placement: 'top'
+	};
 </script>
+
+<div class="card p-2 w-80 shadow-2xl" data-popup="popupExamDetails">
+	{#if !examDetails}
+		<div class="flex h-56 items-center justify-center">
+			<ProgressRadial
+				width="w-20"
+				stroke={80}
+				value={undefined}
+				strokeLinecap="round"
+				track="stroke-surface-500/30 dark:stroke-surface-300/30"
+			/>
+		</div>
+	{:else}
+		<dl class="list-dl">
+			{#if examDetails.ev_examorg_longtext || examDetails.ev_examorg_text}
+				<div>
+					<span class="badge-icon p-4 variant-soft-secondary"><i class="fa-solid fa-info"></i></span
+					>
+					<span class="flex-auto">
+						<dt class="font-bold">
+							{examDetails.ev_examorg_longtext
+								? examDetails.ev_examorg_longtext
+								: examDetails.ev_examorg_text}
+						</dt>
+						<dd class="text-sm opacity-50">Prüfungsart</dd>
+					</span>
+				</div>
+			{/if}
+
+			{#if examDetails.ev_reason}
+				<div>
+					<span class="badge-icon p-4 variant-soft-secondary"
+						><i class="fa-solid fa-recycle"></i></span
+					>
+					<span class="flex-auto">
+						<dt class="font-bold">{examDetails.ev_reason}</dt>
+						<dd class="text-sm opacity-50">Versuch</dd>
+					</span>
+				</div>
+			{/if}
+
+			{#if examDetails.ev_examdate}
+				<div>
+					<span class="badge-icon p-4 variant-soft-secondary"
+						><i class="fa-solid fa-calendar"></i></span
+					>
+					<span class="flex-auto">
+						<dt class="font-bold">
+							{examDetails.ev_examdate.split('-').reverse().join('.')} ({examDetails.ev_exambegtime.slice(
+								0,
+								5
+							)}-{examDetails.ev_examendtime.slice(0, 5)})
+						</dt>
+						<dd class="text-sm opacity-50">Prüfungstermin</dd>
+					</span>
+				</div>
+			{/if}
+
+			{#if examDetails.ev_instructor}
+				<div>
+					<span class="badge-icon p-4 variant-soft-secondary"
+						><i class="fa-solid fa-user-tie"></i></span
+					>
+					<span class="flex-auto">
+						<dt class="font-bold">{examDetails.ev_instructor}</dt>
+						<dd class="text-sm opacity-50">Prüfer</dd>
+					</span>
+				</div>
+			{/if}
+		</dl>
+	{/if}
+	<div class="arrow bg-surface-100-800-token" />
+</div>
 
 <Accordion>
 	{#if !data}
@@ -137,6 +248,17 @@
 							{/if}
 							{#if signup.internal_metadata}
 								<div class="flex justify-center">
+									<button
+										class="btn-icon variant-ghost-secondary flex-shrink-0"
+										use:popup={popupExamDetails}
+										on:click={() => {
+											getExamDetails(signup.internal_metadata);
+										}}
+										type="button"
+									>
+										<i class="fa-solid fa-info" />
+									</button>
+
 									<button
 										on:click={() => {
 											startExamSignup(signup.internal_metadata);
