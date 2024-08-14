@@ -34,7 +34,7 @@
 <DashboardModal bind:parent title="Anordnung ändern">
 	<section
 		class="space-y-2"
-		use:dndzone={{ items, dropTargetStyle }}
+		use:dndzone={{ items, dropTargetStyle, flipDurationMs: 200 }}
 		on:consider={handleSort}
 		on:finalize={finalize}
 	>
