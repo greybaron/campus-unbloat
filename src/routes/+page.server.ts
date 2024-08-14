@@ -8,11 +8,16 @@ export const actions: Actions = {
 		const username = form.get('username');
 		const password = form.get('password');
 
+		// forward client IP (passed by reverse proxy) to API for rate limiting
+		// never stored, only a hashed form is kept in memory for up to 2 mins since last login
+		let x_fwd_for = request.headers.get('x-forwarded-for');
+
 		try {
 			const response = await fetch(`${env.CD_API_URL}/signin`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					...(x_fwd_for ? { 'X-Forwarded-For': x_fwd_for } : {})
 				},
 				body: JSON.stringify({
 					username: username,
