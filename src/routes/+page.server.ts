@@ -10,7 +10,7 @@ export const actions: Actions = {
 
 		// forward client IP (passed by reverse proxy) to API for rate limiting
 		// never stored, only a hashed form is kept in memory for up to 2 mins since last login
-		let x_fwd_for = request.headers.get('x-forwarded-for');
+		const x_fwd_for = request.headers.get('x-forwarded-for');
 
 		try {
 			const response = await fetch(`${env.CD_API_URL}/signin`, {
