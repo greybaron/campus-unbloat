@@ -4,16 +4,25 @@
 	import TimeGrid from '@event-calendar/time-grid';
 	import type { EventContentArg } from '@fullcalendar/core';
 	import type { Writable } from 'svelte/store';
-	import { type EventUnix, type Event, getCurrentEvents } from '$lib/types';
-	import type { SvelteComponent } from 'svelte';
+	import { type EventUnix, type Event } from '$lib/types';
+	import { onMount, type SvelteComponent } from 'svelte';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
+	import { getCurrentEvents } from '$lib/Calendar/CalendarFuncs';
+	import { dateIsToday, getAltDayString, padIt } from '$lib/TSHelpers/DateHelper';
+	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
+	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
+	import CalendarView from '$lib/Calendar/CalendarView.svelte';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 
 	export let storedEvents: Writable<EventUnix[]>;
+	export let selectedDate: Date;
 	export let parent: SvelteComponent;
 
+
+	let titleString: string = "Kalender";
 	let view: string = 'week'; // Default-View (Wochenansicht)
-	let currentDay: Date = new Date();
-	let todaysEvents: Event[] = [];
+	let storedEventsUnix: Writable<EventUnix[]>;
+	let currentDayEvents: Event[] = [];
 	let eventList: Event[] = [];
 	let plugins = [TimeGrid];
 	let options = {
@@ -40,13 +49,13 @@
 				arg.event.title +
 				' </p> </div>' +
 				'<div class="flex justify-center"> <p class="md:text-sm md:visible invisible">' +
-				(arg.event.start?.getHours().toString().padStart(2, '0') +
+				(padIt(arg.event.start?.getHours().toString()) +
 					':' +
-					arg.event.start?.getMinutes().toString().padStart(2, '0') +
+					padIt(arg.event.start?.getMinutes().toString()) +
 					' - ' +
-					arg.event.end?.getHours().toString().padStart(2, '0') +
+					padIt(arg.event.end?.getHours().toString()) +
 					':' +
-					arg.event.end?.getMinutes().toString().padStart(2, '0')) +
+					padIt(arg.event.end?.getMinutes().toString())) +
 				' </p> </div>' +
 				'</div>';
 
@@ -55,9 +64,9 @@
 				if (element) {
 					element.addEventListener('click', () => {
 						view = 'day';
-						currentDay = arg.event.start as Date;
-						todaysEvents = getCurrentEvents(unixEventsToEvents($storedEvents), currentDay);
-						options.date = getNextMonday(currentDay);
+						selectedDate = arg.event.start as Date;
+						currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEvents), selectedDate);
+						options.date = getNextMonday(selectedDate);
 					});
 				}
 			}, 0);
@@ -67,6 +76,7 @@
 	};
 
 	$: $storedEvents, run(unixEventsToEvents($storedEvents));
+	storedEventsUnix = persistentStore('storedEvents', []);
 
 	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
 		let events: Event[] = [];
@@ -87,7 +97,7 @@
 		return events;
 	}
 
-	function getNextMonday(date = new Date()) {
+	function getNextMonday(date = selectedDate) {
 		const day = date.getDay();
 		const diff = day === 6 ? 2 : day === 0 ? 1 : 0; // 6 = Samstag, 0 = Sonntag
 		if (diff > 0) {
@@ -101,9 +111,28 @@
 			options.events = events;
 		}
 	}
+
+	function handleSelectedDateChange(e: CustomEvent<Date>) {
+		selectedDate = e.detail;
+		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	}
+
+	function setToToday() {
+		selectedDate = new Date();
+		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	}
+
+	$: if(selectedDate || view) refreshTitle(selectedDate); 
+	function refreshTitle(date: Date) {
+		if (view == 'week' || dateIsToday(date)) {
+			titleString = "Kalender";
+		} else {
+			titleString = "Kalender (" + getAltDayString(date) + ")";
+		}
+	}
 </script>
 
-<DashboardModal bind:parent title="Kalender">
+<DashboardModal bind:parent title={titleString}>
 	<div class="radio-group-container w-full flex justify-center pb-2">
 		<RadioGroup
 			bind:group={view}
@@ -120,54 +149,20 @@
 	</div>
 
 	{#if view === 'day'}
-		<div class="space-y-3 pr-1 pl-1 pt-2 w-full pb-1 flex-col items-center">
-			{#if todaysEvents.length == 0}
-				<p class="font-semibold">Heute findet keine Vorlesungen statt! 🚀</p>
-			{:else}
-				{#each todaysEvents as { start, end, title, room, instructor, remarks, color }}
-					<div
-						class="flex flex-row justify-start rounded-xl space-x-1 pr-4 bg-surface-200-700-token"
-					>
-						<div class="min-w-3 h-auto rounded-l-3xl" style="background-color: {color};" />
-						<div class="w-full flex flex-col items-center">
-							<div>
-								<p class="text-sm pt-1">
-									{start.getHours().toString().padStart(2, '0') +
-										':' +
-										start.getMinutes().toString().padStart(2, '0') +
-										' - ' +
-										end.getHours().toString().padStart(2, '0') +
-										':' +
-										end.getMinutes().toString().padStart(2, '0')}
-								</p>
-							</div>
-							<div>
-								<p class="font-semibold">
-									{title}
-								</p>
-							</div>
-							<div>
-								{#if remarks != ''}
-									<p class="text-xs italic">
-										{'(' + remarks + ')'}
-									</p>
-								{/if}
-							</div>
-							<div>
-								<p class="italic">
-									{#if instructor != '' && room != ''}
-										{instructor + ', Raum ' + room}
-									{:else if instructor != ''}
-										{instructor}
-									{:else if room != ''}
-										{'Raum: ' + room}
-									{/if}
-								</p>
-							</div>
-						</div>
-					</div>
-				{/each}
-			{/if}
+		<div class="w-full h-full flex justify-center">
+			<div class="flex flex-col items-center justify-center w-3/5">
+				<button class="w-full" on:click|stopPropagation={() => {}}>
+					<CalendarSelector 
+						on:dateChanged={handleSelectedDateChange}
+						on:setToToday={setToToday}
+						selectedDate = {selectedDate}
+					/>
+				</button>
+				<CalendarView
+					currentEvents = {currentDayEvents}
+					selectedDate = {selectedDate}
+				/>
+			</div>
 		</div>
 	{:else if view === 'week'}
 		<Calendar {plugins} {options} />

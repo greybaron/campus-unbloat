@@ -1,7 +1,7 @@
 export function getDateAsUrlParam(date: Date): string {
 	const year = date.getFullYear();
-	const month = (date.getMonth() + 1).toString().padStart(2, '0');
-	const day = date.getDate().toString().padStart(2, '0');
+	const month = padIt((date.getMonth() + 1).toString());
+	const day = padIt(date.getDate().toString());
 	return `${year}-${month}-${day}`;
 }
 
@@ -25,8 +25,13 @@ export function getNextWeekday(): Date {
 }
 
 export function getAltDayString(selectedDate: Date): string {
+
 	// date is guaranteed to not be today
-	const today = new Date();
+	let today = new Date();
+	// dates have to be set to YYYY-MM-DD only, so that the rounding in getDiffInDays won't get mixed up in hours/minutes/seconds from events
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+
 	const diffInDays = getDiffInDays(selectedDate, today);
 	const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
@@ -36,11 +41,19 @@ export function getAltDayString(selectedDate: Date): string {
 		case 1:
 			return 'Morgen';
 		default:
-			return `${weekDays[selectedDate.getDay()]}, ${String(selectedDate.getDate()).padStart(2, '0')}.${String(selectedDate.getMonth() + 1).padStart(2, '0')}.`;
+			return `${weekDays[selectedDate.getDay()]}, ${padIt(String((selectedDate.getDate())))}.${padIt(String(selectedDate.getMonth() + 1))}.`;
 	}
 }
 
-function getDiffInDays(date1: Date, date2: Date): number {
+export function padIt(toBePadded?: string) : string {
+	if(toBePadded == null || toBePadded == undefined) {
+		return "";
+	}
+	
+	return toBePadded.padStart(2, '0');
+}
+
+export function getDiffInDays(date1: Date, date2: Date): number {
 	// Get the difference in milliseconds
 	const diffInMs = date1.getTime() - date2.getTime();
 	// Convert milliseconds to days
