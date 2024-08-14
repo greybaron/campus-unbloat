@@ -22,10 +22,19 @@ export const actions: Actions = {
 
 			if (!response.ok) {
 				let message;
-				if (response.status === 429) {
-					message = 'Zu viele Anfragen';
-				} else {
-					message = 'Nutzer/Passwort ungültig';
+				switch (response.status) {
+					case 429:
+						message = 'Zu viele Anfragen';
+						break;
+					case 401:
+						message = 'Nutzer/Passwort ungültig';
+						break;
+					case 500:
+						message = `Interner Fehler (500): ${await response.text()}`;
+						break;
+					default:
+						message = `Unbekannter Fehler (${response.status}): (${await response.text()})`;
+						break;
 				}
 
 				return fail(401, {
