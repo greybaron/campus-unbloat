@@ -5,6 +5,7 @@
 	import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
+	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 
 	import {
 		getModalStore,
@@ -51,9 +52,10 @@
 	const componentMap: Record<string, object> = {
 		BasicInfoTile,
 		GradesTile,
+		ExamSignupTile,
 		MensaTile,
 		CalendarTile,
-		ExamSignupTile
+		BlockplanTile
 	};
 	let componentOrder: Writable<string[]>;
 	let componentProps: Record<string, object>;
@@ -88,12 +90,13 @@
 			component: modalComponent
 		};
 
+		remindersSignalStore = persistentStore('updateRemindersSignal', false);
+
 		componentProps = {
 			BasicInfoTile: { basicUserData },
 			ExamSignupTile: { remindersSignalStore }
 		};
 
-		remindersSignalStore = persistentStore('updateRemindersSignal', false);
 		fetchReminders();
 	});
 
@@ -192,7 +195,7 @@
 			</div>
 		</div>
 	{/if}
-	{#if componentOrder}
+	{#if componentOrder && componentProps}
 		<div class="w-[98%] sm:w-auto grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto">
 			<!-- create portals -->
 			{#each components as _, idx}

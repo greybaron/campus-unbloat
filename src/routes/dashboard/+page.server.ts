@@ -10,11 +10,14 @@ export async function load({ cookies }) {
 		}
 	});
 
-	const loginResponse = await response.json();
-
 	if (!response.ok) {
-		return error(response.status, loginResponse.error);
+		if (response.status === 429) {
+			return error(429, 'Zu viele Anfragen');
+		}
+		return error(response.status, await response.text());
 	}
+
+	const loginResponse = await response.json();
 
 	// status is ok, got LR = session was refreshed
 	if (loginResponse) {
