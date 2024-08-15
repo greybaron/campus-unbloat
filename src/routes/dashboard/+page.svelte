@@ -52,9 +52,9 @@
 	const componentMap: Record<string, object> = {
 		BasicInfoTile,
 		GradesTile,
-		ExamSignupTile,
-		MensaTile,
 		CalendarTile,
+		MensaTile,
+		ExamSignupTile,
 		BlockplanTile
 	};
 	let componentOrder: Writable<string[]>;
