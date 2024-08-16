@@ -30,6 +30,14 @@
 
 		dispatch('dateChanged', selectedDate);
 	}
+
+	function dateIsInInterval(week: boolean, selectedDate: Date) : boolean {
+		if (week) {
+			return dateIsThisWeek(selectedDate);
+		}
+			return dateIsToday(selectedDate);
+	}
+
 </script>
 
 <div class="flex flex-row mb-2 space-x-1 w-full justify-between">
@@ -41,29 +49,20 @@
 			<i class="fa-solid fa-arrow-left" />
 		</button>
 	</TileInteractiveElementWrapper>
-	{#if weeklySkibbers}
-		<button
-			on:click|stopPropagation={() => {
+	<button
+		on:click|stopPropagation={() => {
+			if (weeklySkibbers) {
 				if (!dateIsThisWeek(selectedDate)) dispatch('setToToday');
-			}}
-			class="{dateIsThisWeek(selectedDate)
-				? 'opacity-40 pointer-events-none'
-				: ''} btn-icon flex-shrink-0 bg-surface-200-700-token border border-surface-400-500-token transition-transform size-10 w-1/3"
-		>
-			<p>Diese Woche</p>
-		</button>
-	{:else}
-		<button
-			on:click|stopPropagation={() => {
+			} else {
 				if (!dateIsToday(selectedDate)) dispatch('setToToday');
-			}}
-			class="{dateIsToday(selectedDate)
-				? 'opacity-40 pointer-events-none'
-				: ''} btn-icon flex-shrink-0 bg-surface-200-700-token border border-surface-400-500-token transition-transform size-10 w-1/3"
-		>
-			<p>Heute</p>
-		</button>
-	{/if}
+			}
+		}}
+		class="{dateIsInInterval(weeklySkibbers, selectedDate)
+			? 'opacity-40 pointer-events-none'
+			: ''} btn-icon flex-shrink-0 bg-surface-200-700-token border border-surface-400-500-token transition-transform size-10 w-1/3"
+	>
+		<p>{weeklySkibbers ? 'Diese Woche' : 'Heute'}</p>
+	</button>
 
 	<TileInteractiveElementWrapper>
 		<button
