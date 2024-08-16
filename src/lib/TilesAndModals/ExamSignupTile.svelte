@@ -76,6 +76,7 @@
 				{signUppable} Prüfung{signUppable != 1 ? 'en' : ''}
 			</p>
 			anmelden.
+			<p class="text-2xl pt-2">{signUppable === 0 ? '✅' : '⚠️'}</p>
 		{/if}
 	</svelte:fragment>
 </DashboardTile>
