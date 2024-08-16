@@ -110,33 +110,36 @@
 	}}
 	ready={Boolean(mensaList)}
 >
-	<div class="flex flex-col items-stretch space-y-2 w-full">
+	<svelte:fragment slot="header">
+		{#if $showMealsInTile && mensaList}
+			<MensaSelector
+				on:dateChanged={handleSelectedDateChange}
+				bind:mensaSelectElementValue
+				{selectedMensa}
+				{mensaList}
+			/>
+		{/if}
+	</svelte:fragment>
+	<svelte:fragment slot="footer">
+		<button>
+			<SlideToggle
+				class="pt-3"
+				size="sm"
+				active="bg-primary-500"
+				name="slide"
+				bind:checked={$showMealsInTile}>Gerichte auch hier anzeigen</SlideToggle
+			>
+		</button>
+	</svelte:fragment>
+
+	<div class="flex flex-col space-y-2 w-full">
 		{#if !$showMealsInTile}
 			<p class="pt-4 my-auto text-md font-bold">Klicken, um alle Mensen anzuzeigen.</p>
 		{/if}
 		<TileInteractiveElementWrapper>
-			{#if $showMealsInTile && mensaList}
-				<MensaSelector
-					on:dateChanged={handleSelectedDateChange}
-					bind:mensaSelectElementValue
-					{selectedMensa}
-					{mensaList}
-				/>
-			{/if}
-
 			{#if $showMealsInTile && mensaMeals}
 				<MealView bind:expandedMealCategories {mensaMeals} />
 			{/if}
-
-			<button>
-				<SlideToggle
-					class="pt-3"
-					size="sm"
-					active="bg-primary-500"
-					name="slide"
-					bind:checked={$showMealsInTile}>Gerichte auch hier anzeigen</SlideToggle
-				>
-			</button>
 		</TileInteractiveElementWrapper>
 	</div>
 </DashboardTile>

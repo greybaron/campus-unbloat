@@ -5,13 +5,31 @@
 	import { type SvelteComponent } from 'svelte';
 
 	export let grades: Array<CampusDualGrade>;
+	let filteredGrades: Array<CampusDualGrade> = grades;
 	export let parent: SvelteComponent;
+
+	let filter: string;
+	$: filterGrades(filter);
+
+	function filterGrades(filter: string) {
+		if (filter == '') {
+			filteredGrades = grades;
+		} else if (filter) {
+			filteredGrades = grades.filter((grade) =>
+				grade.name.toLowerCase().includes(filter.toLowerCase())
+			);
+		}
+	}
 </script>
 
 <DashboardModal bind:parent title="Noten">
-	{#if grades}
+	<svelte:fragment slot="header">
+		<input bind:value={filter} class="input" type="text" placeholder="Suchen..." />
+	</svelte:fragment>
+
+	{#if filteredGrades && filteredGrades.length > 0}
 		<Accordion>
-			{#each grades as grade}
+			{#each filteredGrades as grade}
 				<AccordionItem>
 					<svelte:fragment slot="lead">
 						<span
@@ -74,5 +92,9 @@
 				</AccordionItem>
 			{/each}
 		</Accordion>
+	{:else}
+		<div class="flex justify-center">
+			<p class="text-token text-lg">Keine Noten gefunden.</p>
+		</div>
 	{/if}
 </DashboardModal>

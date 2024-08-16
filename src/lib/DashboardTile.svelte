@@ -53,6 +53,11 @@
 			<div class="w-4" />
 		{/if}
 	</div>
+	{#if ready}
+		<TileInteractiveElementWrapper>
+			<slot name="header" />
+		</TileInteractiveElementWrapper>
+	{/if}
 
 	<div class="flex flex-col items-center justify-center w-full h-full">
 		{#if ready}
@@ -67,4 +72,10 @@
 			/>
 		{/if}
 	</div>
+
+	{#if ready}
+		<TileInteractiveElementWrapper>
+			<slot name="footer" />
+		</TileInteractiveElementWrapper>
+	{/if}
 </button>

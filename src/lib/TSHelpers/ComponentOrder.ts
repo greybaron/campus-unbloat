@@ -1,8 +1,8 @@
 export const components: string[] = [
 	'BasicInfoTile',
 	'GradesTile',
-	'MensaTile',
 	'CalendarTile',
+	'MensaTile',
 	'ExamSignupTile',
 	'BlockplanTile'
 ];
@@ -10,9 +10,9 @@ export const components: string[] = [
 export const tileNames: Map<string, string> = new Map([
 	['BasicInfoTile', 'Deine Infos'],
 	['GradesTile', 'Noten'],
-	['ExamSignupTile', 'Prüfungen'],
-	['MensaTile', 'Mensa'],
 	['CalendarTile', 'Kalender'],
+	['MensaTile', 'Mensa'],
+	['ExamSignupTile', 'Prüfungen'],
 	['BlockplanTile', 'Blockplan']
 ]);
 
