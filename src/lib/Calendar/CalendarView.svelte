@@ -1,56 +1,58 @@
 <script lang="ts">
-	import { padIt } from "$lib/TSHelpers/DateHelper";
-	import type { Event } from "$lib/types";
-	import { getAltNoEventString } from "./CalendarFuncs";
+	import { padIt } from '$lib/TSHelpers/DateHelper';
+	import type { Event } from '$lib/types';
+	import { getAltNoEventString } from './CalendarFuncs';
 
-    export let currentEvents: Array<Event>;
-    export let selectedDate: Date;
+	export let currentEvents: Array<Event>;
+	export let selectedDate: Date;
 </script>
 
 <div class="space-y-3 pr-1 pl-1 pt-2 w-full pb-1 flex-col justify-center">
-    {#if currentEvents.length == 0}
-        <p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
-    {:else}
-        {#each currentEvents as { start, end, title, room, instructor, remarks, color }}
-            <div class="flex flex-row rounded-xl space-x-1 pr-4 bg-surface-100-800-token border border-surface-300-600-token">
-                <div class="min-w-3 h-auto rounded-l-3xl" style="background-color: {color};" />
-                <div class="w-full flex flex-col justify-center items-center">
-                    <div>
-                        <p class="text-sm pt-1">
-                            {padIt(start.getHours().toString()) +
-                                ':' +
-                                padIt(start.getMinutes().toString()) +
-                                ' - ' +
-                                padIt(end.getHours().toString()) +
-                                ':' +
-                                padIt(end.getMinutes().toString())}
-                        </p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">
-                            {title}
-                        </p>
-                    </div>
-                    <div>
-                        {#if remarks != ''}
-                            <p class="text-xs italic">
-                                {'(' + remarks + ')'}
-                            </p>
-                        {/if}
-                    </div>
-                    <div>
-                        <p class="italic">
-                            {#if instructor != '' && room != ''}
-                                {instructor + ', Raum ' + room}
-                            {:else if instructor != ''}
-                                {instructor}
-                            {:else if room != ''}
-                                {'Raum: ' + room}
-                            {/if}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        {/each}
-    {/if}
+	{#if currentEvents.length == 0}
+		<p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
+	{:else}
+		{#each currentEvents as { start, end, title, room, instructor, remarks, color }}
+			<div
+				class="flex flex-row rounded-xl space-x-1 pr-4 bg-surface-100-800-token border border-surface-300-600-token"
+			>
+				<div class="min-w-3 h-auto rounded-l-3xl" style="background-color: {color};" />
+				<div class="w-full flex flex-col justify-center items-center">
+					<div>
+						<p class="text-sm pt-1">
+							{padIt(start.getHours().toString()) +
+								':' +
+								padIt(start.getMinutes().toString()) +
+								' - ' +
+								padIt(end.getHours().toString()) +
+								':' +
+								padIt(end.getMinutes().toString())}
+						</p>
+					</div>
+					<div>
+						<p class="font-semibold">
+							{title}
+						</p>
+					</div>
+					<div>
+						{#if remarks != ''}
+							<p class="text-xs italic">
+								{'(' + remarks + ')'}
+							</p>
+						{/if}
+					</div>
+					<div>
+						<p class="italic">
+							{#if instructor != '' && room != ''}
+								{instructor + ', Raum ' + room}
+							{:else if instructor != ''}
+								{instructor}
+							{:else if room != ''}
+								{'Raum: ' + room}
+							{/if}
+						</p>
+					</div>
+				</div>
+			</div>
+		{/each}
+	{/if}
 </div>

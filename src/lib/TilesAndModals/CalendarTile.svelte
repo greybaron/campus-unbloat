@@ -15,6 +15,8 @@
 
 	const dispatch = createEventDispatcher();
 
+	export let isReloading: boolean = false;
+
 	let currentEvents: Array<Event> = [];
 	let lastEventUpdate: Date;
 	let modalStore = getModalStore();
@@ -23,7 +25,6 @@
 	let storedEventsUnix: Writable<EventUnix[]>;
 	let lastEventUpdateDate: Writable<Date>;
 	let selectedDate: Date = getNextWeekday();
-	export let isReloading: boolean = false;
 
 	type fetchedCalendar = Array<{
 		title: string;
@@ -71,13 +72,12 @@
 		const diffInMs = currDate.getTime() - new Date(selectedDate).getTime();
 		const diffTime = diffInMs / (1000 * 60 * 60);
 		if (diffTime > 1 || diffTime == 0) {
-			return true
+			return true;
 		}
 		return false;
 	}
 
 	async function fetchCalendar() {
-
 		console.log('Fetching New Calendar');
 		isReloading = true;
 		const res = await fetch('/api/stundenplan');
@@ -97,7 +97,7 @@
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
 		storedEventsUnix.set(parsedUnix);
-		lastEventUpdateDate.set(new Date);
+		lastEventUpdateDate.set(new Date());
 
 		console.log('Fetched New Calendar Successfully');
 		isReloading = false;
@@ -112,9 +112,9 @@
 
 		modalComponent = {
 			ref: CalendarModal,
-			props: { 
+			props: {
 				storedEvents: storedEventsUnix,
-				selectedDate: selectedDate 
+				selectedDate: selectedDate
 			}
 		};
 
@@ -144,33 +144,28 @@
 		modalComponent.props!.selectedDate = new Date();
 		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 	}
-	
 </script>
 
 <DashboardTile
 	title="Kalender{dateIsToday(selectedDate) ? '' : ` (${getAltDayString(selectedDate)})`}"
 	on:click={openModal}
-	on:reload={() => {fetchCalendar();}}
+	on:reload={() => {
+		fetchCalendar();
+	}}
 	ready={storedEventsUnix && $storedEventsUnix.length != 0}
 	reloadable={true}
 	reloading={isReloading}
 >
-<div class="flex flex-col justify-start h-full items-center w-full pt-1">
-	<!-- content of TileInteractiveElementWrapper but with w-full -->
-	<button class="w-full" on:click|stopPropagation={() => {}}>
-			<div class="w-full">
-				<CalendarSelector 
-					on:dateChanged={handleSelectedDateChange}
-					on:setToToday={setToToday}
-					selectedDate = {selectedDate}
-				/>
-			</div>
-	</button>
-	<div class="w-full h-full flex flex-col justify-center items-center mb-10">
-		<CalendarView
-			currentEvents = {currentEvents}
-			selectedDate = {selectedDate}
+	<svelte:fragment slot="header">
+		<CalendarSelector
+			on:dateChanged={handleSelectedDateChange}
+			on:setToToday={setToToday}
+			{selectedDate}
 		/>
+	</svelte:fragment>
+	<div class="flex flex-col justify-start h-full items-center w-full pt-1">
+		<div class="w-full h-full flex flex-col justify-center items-center mb-10">
+			<CalendarView {currentEvents} {selectedDate} />
+		</div>
 	</div>
-</div>
 </DashboardTile>

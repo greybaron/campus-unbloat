@@ -112,12 +112,14 @@
 >
 	<svelte:fragment slot="header">
 		{#if $showMealsInTile && mensaList}
-			<MensaSelector
-				on:dateChanged={handleSelectedDateChange}
-				bind:mensaSelectElementValue
-				{selectedMensa}
-				{mensaList}
-			/>
+			<TileInteractiveElementWrapper>
+				<MensaSelector
+					on:dateChanged={handleSelectedDateChange}
+					bind:mensaSelectElementValue
+					{selectedMensa}
+					{mensaList}
+				/>
+			</TileInteractiveElementWrapper>
 		{/if}
 	</svelte:fragment>
 	<svelte:fragment slot="footer">

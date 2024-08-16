@@ -7,9 +7,8 @@
 	import { type EventUnix, type Event } from '$lib/types';
 	import { onMount, type SvelteComponent } from 'svelte';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
-	import { getCurrentEvents } from '$lib/Calendar/CalendarFuncs';
+	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
 	import { dateIsToday, getAltDayString, padIt } from '$lib/TSHelpers/DateHelper';
-	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
 	import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
@@ -18,8 +17,8 @@
 	export let selectedDate: Date;
 	export let parent: SvelteComponent;
 
-
-	let titleString: string = "Kalender";
+	let ec: SvelteComponent;
+	let titleString: string = 'Kalender';
 	let view: string = 'week'; // Default-View (Wochenansicht)
 	let storedEventsUnix: Writable<EventUnix[]>;
 	let currentDayEvents: Event[] = [];
@@ -27,7 +26,7 @@
 	let plugins = [TimeGrid];
 	let options = {
 		view: 'timeGridWeek',
-		date: getNextMonday(),
+		date: selectedDate,
 		events: eventList,
 		firstDay: 1,
 		hiddenDays: [0, 6],
@@ -39,6 +38,7 @@
 		slotWidth: 60,
 		buttonText: { today: 'Heute' },
 		nowIndicator: true,
+		headerToolbar: { start: '', center: '', end: '' },
 		eventContent: function (arg: EventContentArg) {
 			let eventId = 'custom-event-' + arg.event.id;
 			let customHtml =
@@ -76,26 +76,12 @@
 	};
 
 	$: $storedEvents, run(unixEventsToEvents($storedEvents));
+
 	storedEventsUnix = persistentStore('storedEvents', []);
 
-	function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
-		let events: Event[] = [];
-
-		uEvents.forEach((event) => {
-			events.push({
-				start: new Date(event.start),
-				end: new Date(event.end),
-				title: event.title,
-				textColor: event.textColor,
-				instructor: event.instructor,
-				room: event.room,
-				remarks: event.remarks,
-				color: event.color
-			});
-		});
-
-		return events;
-	}
+	onMount(() => {
+		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	});
 
 	function getNextMonday(date = selectedDate) {
 		const day = date.getDay();
@@ -114,20 +100,34 @@
 
 	function handleSelectedDateChange(e: CustomEvent<Date>) {
 		selectedDate = e.detail;
+		if (ec) {
+			ec.setOption('date', selectedDate);
+		}
 		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 	}
 
 	function setToToday() {
 		selectedDate = new Date();
+		if (ec) {
+			ec.setOption('date', selectedDate);
+		}
 		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 	}
 
-	$: if(selectedDate || view) refreshTitle(selectedDate); 
+	$: if (selectedDate || view) {
+		if (ec) {
+			ec.date = selectedDate;
+			ec.setOption('date', selectedDate);
+			console.log(selectedDate);
+			console.log(ec.getOption('date'));
+		}
+		refreshTitle(selectedDate);
+	}
 	function refreshTitle(date: Date) {
 		if (view == 'week' || dateIsToday(date)) {
-			titleString = "Kalender";
+			titleString = 'Kalender';
 		} else {
-			titleString = "Kalender (" + getAltDayString(date) + ")";
+			titleString = 'Kalender (' + getAltDayString(date) + ')';
 		}
 	}
 </script>
@@ -150,21 +150,24 @@
 
 	{#if view === 'day'}
 		<div class="w-full h-full flex justify-center">
-			<div class="flex flex-col items-center justify-center w-3/5">
+			<div class="flex flex-col items-center justify-center md:w-3/5 w-4/5">
 				<button class="w-full" on:click|stopPropagation={() => {}}>
-					<CalendarSelector 
+					<CalendarSelector
 						on:dateChanged={handleSelectedDateChange}
 						on:setToToday={setToToday}
-						selectedDate = {selectedDate}
+						{selectedDate}
 					/>
 				</button>
-				<CalendarView
-					currentEvents = {currentDayEvents}
-					selectedDate = {selectedDate}
-				/>
+				<CalendarView currentEvents={currentDayEvents} {selectedDate} />
 			</div>
 		</div>
 	{:else if view === 'week'}
-		<Calendar {plugins} {options} />
+		<CalendarSelector
+			on:dateChanged={handleSelectedDateChange}
+			on:setToToday={setToToday}
+			{selectedDate}
+			weeklySkibbers={true}
+		/>
+		<Calendar bind:this={ec} {plugins} {options} />
 	{/if}
 </DashboardModal>

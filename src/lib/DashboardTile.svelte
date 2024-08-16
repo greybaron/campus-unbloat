@@ -19,44 +19,45 @@
 		? ''
 		: 'pointer-events-none'} h-full bg-[#ddb8c1] dark:bg-[#3b1725] flex flex-col items-center w-full sm:w-96 rounded-xl p-4 pt-2 pb-3 space-y-1"
 >
-	<div class="flex flex-row w-full h-10 items-center">
+	<div class="flex flex-row w-full h-10 items-center justify-between">
 		{#if clickable}
 			<i class="{ready ? '' : 'opacity-40'} w-4 fa-solid fa-up-right-and-down-left-from-center" />
 		{/if}
-		<header class="flex-grow w-full text-xl font-bold text-center ">{title}</header>
+		<header class="flex-grow w-full text-xl font-bold text-center">{title}</header>
 		{#if reloadable}
-		<TileInteractiveElementWrapper>
-			{#if reloading}
-				<ProgressRadial
-					
-					width="w-4 scale-125"
-					stroke={80}
-					value={undefined}
-					strokeLinecap="round"
-					track="stroke-surface-500/30 dark:stroke-surface-300/30"
-				/>
-			{:else}
-					<button id="calendarReloadButton" class=" flex-shrink-0 btn-icon fa-solid fa-check size-4 scale-110"
+			<TileInteractiveElementWrapper>
+				{#if reloading}
+					<ProgressRadial
+						width="w-4 scale-125"
+						stroke={80}
+						value={undefined}
+						strokeLinecap="round"
+						track="stroke-surface-500/30 dark:stroke-surface-300/30"
+					/>
+				{:else}
+					<button
+						id="calendarReloadButton"
+						class=" flex-shrink-0 btn-icon fa-solid fa-check size-4 scale-110"
 						on:click={() => dispatch('reload')}
 						on:mouseenter={() => {
-							document.getElementById("calendarReloadButton")?.classList.remove("fa-check")
-							document.getElementById("calendarReloadButton")?.classList.add("fa-rotate-right")
+							document.getElementById('calendarReloadButton')?.classList.remove('fa-check');
+							document.getElementById('calendarReloadButton')?.classList.add('fa-rotate-right');
 						}}
 						on:mouseleave={() => {
-							document.getElementById("calendarReloadButton")?.classList.add("fa-check")
-							document.getElementById("calendarReloadButton")?.classList.remove("fa-rotate-right")
+							document.getElementById('calendarReloadButton')?.classList.add('fa-check');
+							document.getElementById('calendarReloadButton')?.classList.remove('fa-rotate-right');
 						}}
 					/>
-			{/if}
-		</TileInteractiveElementWrapper>
+				{/if}
+			</TileInteractiveElementWrapper>
 		{:else if clickable}
 			<div class="w-4" />
 		{/if}
 	</div>
 	{#if ready}
-		<TileInteractiveElementWrapper>
+		<div class="w-full">
 			<slot name="header" />
-		</TileInteractiveElementWrapper>
+		</div>
 	{/if}
 
 	<div class="flex flex-col items-center justify-center w-full h-full">
