@@ -30,7 +30,6 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		console.log('Fetching examstats...');
 		const res1 = await fetch('/api/examstats');
 
 		if (!res1.ok) {

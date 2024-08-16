@@ -38,7 +38,6 @@
 	let selectedDate: Date = getNextWeekday();
 
 	onMount(async () => {
-		console.log('Fetching mensalist...');
 		const res = await fetch('/api/mensalist');
 
 		if (!res.ok) {

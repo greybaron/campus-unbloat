@@ -118,8 +118,6 @@
 		if (ec) {
 			ec.date = selectedDate;
 			ec.setOption('date', selectedDate);
-			console.log(selectedDate);
-			console.log(ec.getOption('date'));
 		}
 		refreshTitle(selectedDate);
 	}

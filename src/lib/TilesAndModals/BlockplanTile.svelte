@@ -10,7 +10,6 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		console.log('Fetching timeline...');
 		const res = await fetch('/api/timeline');
 
 		if (!res.ok) {

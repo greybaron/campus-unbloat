@@ -78,7 +78,6 @@
 	}
 
 	async function fetchCalendar() {
-		console.log('Fetching New Calendar');
 		isReloading = true;
 		const res = await fetch('/api/stundenplan');
 
@@ -99,7 +98,6 @@
 		storedEventsUnix.set(parsedUnix);
 		lastEventUpdateDate.set(new Date());
 
-		console.log('Fetched New Calendar Successfully');
 		isReloading = false;
 	}
 
@@ -124,12 +122,9 @@
 		};
 
 		if (olderThanOneHour(new Date(), lastEventUpdate)) {
-			console.log('Calendar Older Than One Hour');
 			fetchCalendar();
 
 			currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix));
-		} else {
-			console.log('No New Calendar Was Fetched');
 		}
 	});
 
