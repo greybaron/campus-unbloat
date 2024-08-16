@@ -31,13 +31,12 @@
 		dispatch('dateChanged', selectedDate);
 	}
 
-	function dateIsInInterval(week: boolean, selectedDate: Date) : boolean {
+	function dateIsInInterval(week: boolean, selectedDate: Date): boolean {
 		if (week) {
 			return dateIsThisWeek(selectedDate);
 		}
-			return dateIsToday(selectedDate);
+		return dateIsToday(selectedDate);
 	}
-
 </script>
 
 <div class="flex flex-row mb-2 space-x-1 w-full justify-between">
