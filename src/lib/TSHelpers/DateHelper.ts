@@ -5,7 +5,7 @@ export function getDateAsUrlParam(date: Date): string {
 	return `${year}-${month}-${day}`;
 }
 
-function getNextMonday(date: Date): Date {
+export function getNextMonday(date: Date): Date {
 	const day = date.getDay();
 	const daysToAdd = day === 0 ? 1 : 7 - day + 1;
 	date.setDate(date.getDate() + daysToAdd);
@@ -62,7 +62,8 @@ export function getDiffInDays(date1: Date, date2: Date): number {
 }
 
 export function dateIsToday(date: Date): boolean {
-	const today = new Date();
+	const today = getNextWeekday();
+
 	date = new Date(date);
 	return (
 		date.getDate() === today.getDate() &&
@@ -72,7 +73,7 @@ export function dateIsToday(date: Date): boolean {
 }
 
 export function dateIsThisWeek(date: Date): boolean {
-	const today = new Date();
+	const today = getNextWeekday();
 	const dayOfWeek = today.getDay(); // Sonntag = 0, Montag = 1, ..., Samstag = 6
 
 	// Berechne den Anfang der Woche (Montag)

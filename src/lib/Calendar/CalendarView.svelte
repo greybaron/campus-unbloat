@@ -7,7 +7,7 @@
 	export let selectedDate: Date;
 </script>
 
-<div class="space-y-3 pr-1 pl-1 pt-2 w-full pb-1 flex-col justify-center">
+<div class="space-y-3 w-full flex-col justify-center">
 	{#if currentEvents.length == 0}
 		<p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
 	{:else}

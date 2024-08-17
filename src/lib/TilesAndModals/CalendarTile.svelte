@@ -5,7 +5,7 @@
 	import CalendarModal from './CalendarModal.svelte';
 	import { type Writable } from 'svelte/store';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import { getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 	import type { EventUnix, Event } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
@@ -66,7 +66,7 @@
 	}
 
 	function olderThanOneHour(currDate: Date, selectedDate: Date): boolean {
-		if (selectedDate == null || selectedDate == undefined) {
+		if (!selectedDate) {
 			return true;
 		}
 		const diffInMs = currDate.getTime() - new Date(selectedDate).getTime();
@@ -93,10 +93,12 @@
 		}
 
 		let fetchedCalendar = await res.json();
+		console.log(fetchedCalendar);
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
 		storedEventsUnix.set(parsedUnix);
 		lastEventUpdateDate.set(new Date());
+		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 
 		isReloading = false;
 	}
@@ -105,7 +107,7 @@
 		storedEventsUnix = persistentStore('storedEvents', []);
 		lastEventUpdateDate = persistentStore('lastEventUpdate', new Date());
 
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix));
+		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 		lastEventUpdate = $lastEventUpdateDate;
 
 		modalComponent = {
@@ -123,8 +125,6 @@
 
 		if (olderThanOneHour(new Date(), lastEventUpdate)) {
 			fetchCalendar();
-
-			currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix));
 		}
 	});
 
@@ -135,14 +135,16 @@
 	}
 
 	function setToToday() {
-		selectedDate = new Date();
-		modalComponent.props!.selectedDate = new Date();
+		selectedDate = getNextWeekday();
+		modalComponent.props!.selectedDate = selectedDate;
 		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 	}
 </script>
 
 <DashboardTile
-	title="Kalender{dateIsToday(selectedDate) ? '' : ` (${getAltDayString(selectedDate)})`}"
+	title="Kalender{!(new Date().getDay() == 0 || new Date().getDay() == 6)
+		? ''
+		: ` (${getAltDayString(selectedDate)})`}"
 	on:click={openModal}
 	on:reload={() => {
 		fetchCalendar();
@@ -158,9 +160,7 @@
 			{selectedDate}
 		/>
 	</svelte:fragment>
-	<div class="flex flex-col justify-start h-full items-center w-full pt-1">
-		<div class="w-full h-full flex flex-col justify-center items-center mb-10">
-			<CalendarView {currentEvents} {selectedDate} />
-		</div>
+	<div class="w-full h-full flex flex-col justify-center items-center">
+		<CalendarView {currentEvents} {selectedDate} />
 	</div>
 </DashboardTile>

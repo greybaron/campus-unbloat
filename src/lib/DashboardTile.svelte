@@ -20,7 +20,7 @@
 		? ''
 		: 'pointer-events-none'} h-full bg-[#ddb8c1] dark:bg-[#3b1725] flex flex-col items-center w-full sm:w-96 rounded-xl p-4 pt-2 pb-3 space-y-1"
 >
-	<div class="flex flex-row w-full h-10 items-center justify-between">
+	<div class="flex flex-row w-full items-center justify-between">
 		{#if clickable}
 			<i class="{ready ? '' : 'opacity-40'} w-4 fa-solid fa-up-right-and-down-left-from-center" />
 		{/if}
@@ -56,9 +56,7 @@
 		{/if}
 	</div>
 	{#if ready}
-		<div class="w-full">
-			<slot name="header" />
-		</div>
+		<slot name="header" />
 	{/if}
 
 	<div class="flex flex-col items-center justify-center w-full h-full">

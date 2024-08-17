@@ -8,13 +8,13 @@
 	import { onMount, type SvelteComponent } from 'svelte';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
-	import { dateIsToday, getAltDayString, padIt } from '$lib/TSHelpers/DateHelper';
+	import { getAltDayString, getNextWeekday, padIt } from '$lib/TSHelpers/DateHelper';
 	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
 	import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 
 	export let storedEvents: Writable<EventUnix[]>;
-	export let selectedDate: Date;
+	export let selectedDate: Date = getNextWeekday();
 	export let parent: SvelteComponent;
 
 	let ec: SvelteComponent;
@@ -107,7 +107,7 @@
 	}
 
 	function setToToday() {
-		selectedDate = new Date();
+		selectedDate = getNextWeekday();
 		if (ec) {
 			ec.setOption('date', selectedDate);
 		}
@@ -122,7 +122,7 @@
 		refreshTitle(selectedDate);
 	}
 	function refreshTitle(date: Date) {
-		if (view == 'week' || dateIsToday(date)) {
+		if (view == 'week' || !(new Date().getDay() == 0 || new Date().getDay() == 6)) {
 			titleString = 'Kalender';
 		} else {
 			titleString = 'Kalender (' + getAltDayString(date) + ')';
