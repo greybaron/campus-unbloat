@@ -39,3 +39,4 @@
 		<GradeStatColumn label={5} value={gradeStats.ronmodus} {maxValue} isMyGrade={myGrade == 5} />
 	</div>
 {/if}
+<div class="arrow bg-surface-100-800-token" />
