@@ -26,11 +26,28 @@
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
+	import ExamDetailsPopup from './Popups/ExamDetailsPopup.svelte';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
+	let popupOpen = false;
+	const popupExamDetails: PopupSettings = {
+		state(event) {
+			// dirty workaround for race condition
+			setTimeout(() => {
+				console.log('state was', popupOpen, 'now', event.state);
+				popupOpen = event.state;
+			}, 100);
+		},
+		event: 'click',
+		target: 'popupExamDetails',
+		placement: 'top'
+	};
+
 	async function getExamDetails(internal_metadata?: CampusExamMetadata) {
+		if (popupOpen) return;
+
 		examDetails = null;
 		const response = await fetch('/api/examdetails', {
 			method: 'POST',
@@ -99,85 +116,10 @@
 		examSignalStore.set(true);
 		remindersSignalStore.set(true);
 	}
-
-	const popupExamDetails: PopupSettings = {
-		event: 'click',
-		target: 'popupExamDetails',
-		placement: 'top'
-	};
 </script>
 
 <div class="card p-2 w-80 shadow-2xl" data-popup="popupExamDetails">
-	{#if !examDetails}
-		<div class="flex h-56 items-center justify-center">
-			<ProgressRadial
-				width="w-20"
-				stroke={80}
-				value={undefined}
-				strokeLinecap="round"
-				track="stroke-surface-500/30 dark:stroke-surface-300/30"
-			/>
-		</div>
-	{:else}
-		<dl class="list-dl">
-			{#if examDetails.ev_examorg_longtext || examDetails.ev_examorg_text}
-				<div>
-					<span class="badge-icon p-4 variant-soft-secondary"><i class="fa-solid fa-info"></i></span
-					>
-					<span class="flex-auto">
-						<dt class="font-bold">
-							{examDetails.ev_examorg_longtext
-								? examDetails.ev_examorg_longtext
-								: examDetails.ev_examorg_text}
-						</dt>
-						<dd class="text-sm opacity-50">Prüfungsart</dd>
-					</span>
-				</div>
-			{/if}
-
-			{#if examDetails.ev_reason}
-				<div>
-					<span class="badge-icon p-4 variant-soft-secondary"
-						><i class="fa-solid fa-recycle"></i></span
-					>
-					<span class="flex-auto">
-						<dt class="font-bold">{examDetails.ev_reason}</dt>
-						<dd class="text-sm opacity-50">Versuch</dd>
-					</span>
-				</div>
-			{/if}
-
-			{#if examDetails.ev_examdate}
-				<div>
-					<span class="badge-icon p-4 variant-soft-secondary"
-						><i class="fa-solid fa-calendar"></i></span
-					>
-					<span class="flex-auto">
-						<dt class="font-bold">
-							{examDetails.ev_examdate.split('-').reverse().join('.')} ({examDetails.ev_exambegtime.slice(
-								0,
-								5
-							)}-{examDetails.ev_examendtime.slice(0, 5)})
-						</dt>
-						<dd class="text-sm opacity-50">Prüfungstermin</dd>
-					</span>
-				</div>
-			{/if}
-
-			{#if examDetails.ev_instructor}
-				<div>
-					<span class="badge-icon p-4 variant-soft-secondary"
-						><i class="fa-solid fa-user-tie"></i></span
-					>
-					<span class="flex-auto">
-						<dt class="font-bold">{examDetails.ev_instructor}</dt>
-						<dd class="text-sm opacity-50">Prüfer</dd>
-					</span>
-				</div>
-			{/if}
-		</dl>
-	{/if}
-	<div class="arrow bg-surface-100-800-token" />
+	<ExamDetailsPopup bind:examDetails />
 </div>
 
 <Accordion>
