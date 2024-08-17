@@ -43,6 +43,7 @@
 	<TileInteractiveElementWrapper>
 		<button
 			on:click={() => handleDaySelection(false)}
+			aria-label={weeklySkibbers ? 'vorherige Woche' : 'vorherige Tag'}
 			class="flex-shrink-0 btn-icon variant-filled-primary size-10"
 		>
 			<i class="fa-solid fa-arrow-left" />
@@ -66,6 +67,7 @@
 	<TileInteractiveElementWrapper>
 		<button
 			on:click={() => handleDaySelection(true)}
+			aria-label={weeklySkibbers ? 'nächste Woche' : 'nächster Tag'}
 			class="flex-shrink-0 self-end btn-icon variant-filled-primary size-10"
 		>
 			<i class="fa-solid fa-arrow-right" />

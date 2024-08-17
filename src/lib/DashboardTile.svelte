@@ -38,6 +38,7 @@
 				{:else}
 					<button
 						id="calendarReloadButton"
+						aria-label="Daten neu laden"
 						class=" flex-shrink-0 btn-icon fa-solid fa-check size-4 scale-110"
 						on:click={() => dispatch('reload')}
 						on:mouseenter={() => {
