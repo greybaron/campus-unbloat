@@ -91,9 +91,9 @@
 	</svelte:fragment>
 
 	{#if filteredGrades && filteredGrades.length > 0}
-		<Accordion>
-			{#each filteredGrades as grade}
-				<AccordionItem open>
+		<Accordion autocollapse>
+			{#each filteredGrades as grade, idx}
+				<AccordionItem open={idx == 0}>
 					<svelte:fragment slot="lead">
 						<span
 							class="badge-icon p-4 {grade.total_passed === undefined
