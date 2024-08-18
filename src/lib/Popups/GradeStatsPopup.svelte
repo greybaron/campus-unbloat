@@ -31,7 +31,7 @@
 			gradeStats.ronmodus}
 	</h4>
 
-	<div class="flex justify-evenly h-48 space-x-8 px-8 mt-2 pt-1 bg-secondary-500/10 rounded-xl">
+	<div class="flex justify-evenly h-48 space-x-8 px-8 mt-2 pt-1 bg-secondary-500/10 rounded-2xl">
 		<GradeStatColumn label={1} value={gradeStats.one} {maxValue} isMyGrade={myGrade == 1} />
 		<GradeStatColumn label={2} value={gradeStats.two} {maxValue} isMyGrade={myGrade == 2} />
 		<GradeStatColumn label={3} value={gradeStats.three} {maxValue} isMyGrade={myGrade == 3} />
