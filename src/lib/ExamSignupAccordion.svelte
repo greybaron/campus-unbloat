@@ -36,7 +36,6 @@
 		state(event) {
 			// dirty workaround for race condition
 			setTimeout(() => {
-				console.log('state was', popupOpen, 'now', event.state);
 				popupOpen = event.state;
 			}, 100);
 		},
