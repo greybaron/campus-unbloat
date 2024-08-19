@@ -164,7 +164,11 @@
 		<div class="w-[98%] sm:w-96 lg:w-[49rem] mx-auto space-x-1 flex items-center">
 			<h1 class="text-3xl font-bold flex-grow">Hallo, {basicUserData.first_name}.</h1>
 
-			<button on:click={openTileReorder} class="transition-none btn-icon variant-filled-secondary">
+			<button
+				aria-label="Anordnung ändern"
+				on:click={openTileReorder}
+				class="transition-none btn-icon variant-filled-secondary"
+			>
 				<i class="fa-solid fa-up-down-left-right"></i>
 			</button>
 
@@ -175,6 +179,7 @@
 					>
 				{/if}
 				<button
+					aria-label="Benachrichtigungen"
 					on:click={notifDrawer}
 					class="transition-none btn-icon {reminders
 						? 'variant-filled-primary'

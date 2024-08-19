@@ -162,6 +162,7 @@
 
 					{#if $page.url.pathname == '/dashboard'}
 						<button
+							aria-label="Abmelden"
 							on:click={async () => {
 								await fetch('/logout', {
 									method: 'POST'
