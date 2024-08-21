@@ -106,7 +106,6 @@
 		reminders = undefined;
 		presentNotificationCategories = 0;
 
-		console.log('Fetching reminders...');
 		const res = await fetch('/api/reminders');
 
 		if (!res.ok) {

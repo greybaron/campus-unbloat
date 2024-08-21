@@ -24,7 +24,6 @@
 		signupOptions = undefined;
 		examSignalStore.set(false);
 
-		console.log('Fetching examsignup...');
 		const res1 = await fetch('/api/examsignup');
 
 		if (!res1.ok) {

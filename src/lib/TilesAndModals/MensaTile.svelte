@@ -38,7 +38,6 @@
 	let selectedDate: Date = getNextWeekday();
 
 	onMount(async () => {
-		console.log('Fetching mensalist...');
 		const res = await fetch('/api/mensalist');
 
 		if (!res.ok) {
@@ -112,12 +111,14 @@
 >
 	<svelte:fragment slot="header">
 		{#if $showMealsInTile && mensaList}
-			<MensaSelector
-				on:dateChanged={handleSelectedDateChange}
-				bind:mensaSelectElementValue
-				{selectedMensa}
-				{mensaList}
-			/>
+			<TileInteractiveElementWrapper>
+				<MensaSelector
+					on:dateChanged={handleSelectedDateChange}
+					bind:mensaSelectElementValue
+					{selectedMensa}
+					{mensaList}
+				/>
+			</TileInteractiveElementWrapper>
 		{/if}
 	</svelte:fragment>
 	<svelte:fragment slot="footer">
