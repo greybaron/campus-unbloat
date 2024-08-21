@@ -59,12 +59,12 @@
 		{#if fachsemester && ects}
 			<div class="flex space-x-2">
 				<div class="card rounded-xl w-full p-2 space-y-2 justify-center flex flex-col">
-					<small>Fachsemester: {fachsemester}</small>
-					<ProgressBar value={parseInt(fachsemester)} max={6} />
+					<small id="fachsem">Fachsemester: {fachsemester}</small>
+					<ProgressBar labelledby="fachsem" value={parseInt(fachsemester)} max={6} />
 				</div>
 				<div class="card rounded-xl w-full p-2 space-y-2 justify-center flex flex-col">
-					<small>ECTS: {ects} / 180</small>
-					<ProgressBar value={parseInt(ects)} max={180} />
+					<small id="ects">ECTS: {ects} / 180</small>
+					<ProgressBar labelledby="ects" value={parseInt(ects)} max={180} />
 				</div>
 			</div>
 		{/if}

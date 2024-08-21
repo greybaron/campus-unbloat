@@ -31,7 +31,9 @@
 				<input
 					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					name="username"
+					id="username"
 					type="text"
+					autocomplete="username"
 					required
 					placeholder="500xxxx"
 				/>
@@ -43,7 +45,9 @@
 				<input
 					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
 					name="password"
+					id="password"
 					type="password"
+					autocomplete="current-password"
 					required
 					placeholder="das normale, nicht den Hash"
 				/>

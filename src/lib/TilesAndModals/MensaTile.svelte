@@ -122,15 +122,13 @@
 		{/if}
 	</svelte:fragment>
 	<svelte:fragment slot="footer">
-		<button>
-			<SlideToggle
-				class="pt-3"
-				size="sm"
-				active="bg-primary-500"
-				name="slide"
-				bind:checked={$showMealsInTile}>Gerichte auch hier anzeigen</SlideToggle
-			>
-		</button>
+		<SlideToggle
+			class="pt-3"
+			size="sm"
+			active="bg-primary-500"
+			name="slide"
+			bind:checked={$showMealsInTile}>Gerichte auch hier anzeigen</SlideToggle
+		>
 	</svelte:fragment>
 
 	<div class="flex flex-col space-y-2 w-full">

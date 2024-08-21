@@ -43,12 +43,14 @@
 
 <div class="flex mb-2 space-x-1 items-center">
 	<button
+		aria-label="Vorheriger Tag"
 		on:click={() => handleDaySelection(false)}
 		class="flex-shrink-0 btn-icon variant-filled-primary size-10"
 	>
 		<i class="fa-solid fa-arrow-left" />
 	</button>
 	<select
+		aria-label="Mensa auswählen"
 		class="select transition-none"
 		bind:value={mensaSelectElementValue}
 		on:change={() => {
@@ -61,6 +63,7 @@
 		{/each}
 	</select>
 	<button
+		aria-label="Nächster Tag"
 		on:click={() => handleDaySelection(true)}
 		class="flex-shrink-0 btn-icon variant-filled-primary size-10"
 	>

@@ -15,6 +15,7 @@
 
 <button
 	on:click={() => dispatch('click')}
+	aria-label={title}
 	class="{add_class} {ready
 		? ''
 		: 'pointer-events-none'} h-full bg-[#ddb8c1] dark:bg-[#3b1725] flex flex-col items-center w-full sm:w-96 rounded-xl p-4 pt-2 pb-3 space-y-1"

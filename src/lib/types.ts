@@ -151,6 +151,21 @@ export type CampusDualSubGrade = {
 	bekanntgabe: string;
 	wiederholung?: string;
 	akad_period: string;
+	internal_metadata?: CampusGradeMetadata;
+};
+
+export type CampusGradeMetadata = {
+	module: string;
+	peryr: string;
+	perid: string;
+};
+
+export type CampusGradeStats = {
+	one: number;
+	two: number;
+	three: number;
+	four: number;
+	ronmodus: number;
 };
 
 export enum SignupOrVerfahren {
