@@ -42,55 +42,36 @@
 	</body>
 
 	<script>
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (mutation.attributeName === 'class' && !nonObserverChange) {
-					onDarkModeToggle(mutation.target);
-				}
-			});
-		});
-
-		// observe whenever root <html> adds/removes 'dark' class
-		const htmlElement = document.documentElement;
-		observer.observe(htmlElement, {
-			attributes: true // Observe changes to attributes
-		});
-
-		let nonObserverChange = false;
-
-		// Initial check on page load
-		window.addEventListener('DOMContentLoaded', () => {
-			onDarkModeToggle(htmlElement);
-		});
-
-		function switchEcDark(htmlElement) {
-			nonObserverChange = true;
-
-			if (!htmlElement.classList.contains('ec-dark')) {
+		function switchEcDark(htmlElement, state) {
+			if (state) {
 				htmlElement.classList.add('ec-dark');
 			} else {
 				htmlElement.classList.remove('ec-dark');
 			}
-			nonObserverChange = false;
 		}
 
-		// set page theme based on user preference (media query doesnt work?)
-		function onDarkModeToggle(mutationTarget) {
-			const htmlElement = mutationTarget;
-			const isDarkMode = htmlElement.classList.contains('dark');
-
+		function setDarkMode(state) {
 			const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+			const rootElement = document.documentElement;
 
-			if (themeColorMeta) {
-				themeColorMeta.setAttribute('content', isDarkMode ? 'rgb(27,27,27)' : 'rgb(213,213,217)');
-			}
+			switchEcDark(rootElement, state);
 
-			// Check if the mode is in desired state
-			if (isDarkMode && !htmlElement.classList.contains('ec-dark')) {
-				switchEcDark(htmlElement);
-			} else if (!isDarkMode && htmlElement.classList.contains('ec-dark')) {
-				switchEcDark(htmlElement);
+			if (state) {
+				document.documentElement.classList.add('dark');
+				themeColorMeta.setAttribute('content', 'rgb(27,27,27)');
+			} else {
+				document.documentElement.classList.remove('dark');
+				themeColorMeta.setAttribute('content', 'rgb(213,213,217)');
 			}
 		}
+
+		// Initialize dark mode based on the current preference
+		const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		setDarkMode(darkModeMediaQuery.matches);
+
+		// Listen for changes in the prefers-color-scheme media query
+		darkModeMediaQuery.addEventListener('change', (event) => {
+			setDarkMode(event.matches);
+		});
 	</script>
 </html>

@@ -5,7 +5,6 @@
 	import {
 		AppShell,
 		AppBar,
-		LightSwitch,
 		getDrawerStore,
 		type PopupSettings,
 		popup
@@ -134,8 +133,6 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="flex items-center justify-end space-x-1">
-					<LightSwitch />
-
 					<button
 						use:popup={popupRechtliches}
 						class="h-6 btn btn-sm variant-ghost-secondary text-xs"
