@@ -5,7 +5,7 @@
 	import CalendarModal from './CalendarModal.svelte';
 	import { type Writable } from 'svelte/store';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import { getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 	import type { EventUnix, Event } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
@@ -93,7 +93,6 @@
 		}
 
 		let fetchedCalendar = await res.json();
-		console.log(fetchedCalendar);
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
 		storedEventsUnix.set(parsedUnix);
@@ -142,7 +141,7 @@
 </script>
 
 <DashboardTile
-	title="Kalender{!(new Date().getDay() == 0 || new Date().getDay() == 6)
+	title="Kalender{!(new Date().getDay() == 0 || new Date().getDay() == 6) && dateIsToday(selectedDate)
 		? ''
 		: ` (${getAltDayString(selectedDate)})`}"
 	on:click={openModal}
