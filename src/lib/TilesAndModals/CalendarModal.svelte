@@ -122,7 +122,10 @@
 		refreshTitle(selectedDate);
 	}
 	function refreshTitle(date: Date) {
-		if (view == 'week' || (!(new Date().getDay() == 0 || new Date().getDay() == 6) && dateIsToday(selectedDate))) {
+		if (
+			view == 'week' ||
+			(!(new Date().getDay() == 0 || new Date().getDay() == 6) && dateIsToday(selectedDate))
+		) {
 			titleString = 'Kalender';
 		} else {
 			titleString = 'Kalender (' + getAltDayString(date) + ')';
