@@ -16,6 +16,7 @@
 	export let storedEvents: Writable<EventUnix[]>;
 	export let selectedDate: Date = getNextWeekday();
 	export let parent: SvelteComponent;
+	export let onUpdateSelectedDate: (newDate: Date) => void;
 
 	let ec: SvelteComponent;
 	let titleString: string = 'Kalender';
@@ -67,6 +68,9 @@
 						selectedDate = arg.event.start as Date;
 						currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEvents), selectedDate);
 						options.date = getNextMonday(selectedDate);
+						if (onUpdateSelectedDate) {
+							onUpdateSelectedDate(selectedDate);
+						}
 					});
 				}
 			}, 0);
@@ -104,6 +108,9 @@
 			ec.setOption('date', selectedDate);
 		}
 		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		if (onUpdateSelectedDate) {
+			onUpdateSelectedDate(selectedDate);
+		}
 	}
 
 	function setToToday() {
@@ -112,6 +119,9 @@
 			ec.setOption('date', selectedDate);
 		}
 		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		if (onUpdateSelectedDate) {
+			onUpdateSelectedDate(selectedDate);
+		}
 	}
 
 	$: if (selectedDate || view) {
