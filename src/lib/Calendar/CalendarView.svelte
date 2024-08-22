@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { padIt } from '$lib/TSHelpers/DateHelper';
-	import type { Event } from '$lib/types';
 	import { getAltNoEventString } from './CalendarFuncs';
+	import type { Event } from '$lib/types';
 
 	export let currentEvents: Array<Event>;
 	export let selectedDate: Date;

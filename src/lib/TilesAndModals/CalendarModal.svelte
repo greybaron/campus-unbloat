@@ -2,19 +2,19 @@
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
-	import type { EventContentArg } from '@fullcalendar/core';
-	import type { Writable } from 'svelte/store';
-	import { type EventUnix, type Event } from '$lib/types';
-	import { onMount, type SvelteComponent } from 'svelte';
+	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
+	import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
 	import { dateIsToday, getAltDayString, getNextWeekday, padIt } from '$lib/TSHelpers/DateHelper';
-	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
-	import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import { type SvelteComponent, onMount } from 'svelte';
+	import type { EventContentArg } from '@fullcalendar/core';
+	import type { Writable } from 'svelte/store';
+	import type { EventUnix, Event } from '$lib/types';
 
 	export let storedEvents: Writable<EventUnix[]>;
-	export let selectedDate: Date = getNextWeekday();
+	export let selectedDate: Date;
 	export let parent: SvelteComponent;
 	export let onUpdateSelectedDate: (newDate: Date) => void;
 
@@ -67,7 +67,6 @@
 						view = 'day';
 						selectedDate = arg.event.start as Date;
 						currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEvents), selectedDate);
-						options.date = getNextMonday(selectedDate);
 						if (onUpdateSelectedDate) {
 							onUpdateSelectedDate(selectedDate);
 						}
@@ -79,28 +78,20 @@
 		}
 	};
 
-	$: $storedEvents, run(unixEventsToEvents($storedEvents));
-
 	storedEventsUnix = persistentStore('storedEvents', []);
+
+	$: $storedEvents, run(unixEventsToEvents($storedEvents));
+	$: if (selectedDate || view) {
+		if (ec) {
+			ec.date = selectedDate;
+			ec.setOption('date', selectedDate);
+		}
+		refreshTitle(selectedDate);
+	}
 
 	onMount(() => {
 		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 	});
-
-	function getNextMonday(date = selectedDate) {
-		const day = date.getDay();
-		const diff = day === 6 ? 2 : day === 0 ? 1 : 0; // 6 = Samstag, 0 = Sonntag
-		if (diff > 0) {
-			date.setDate(date.getDate() + diff);
-		}
-		return date;
-	}
-
-	function run(events: Event[]) {
-		if (events) {
-			options.events = events;
-		}
-	}
 
 	function handleSelectedDateChange(e: CustomEvent<Date>) {
 		selectedDate = e.detail;
@@ -124,13 +115,6 @@
 		}
 	}
 
-	$: if (selectedDate || view) {
-		if (ec) {
-			ec.date = selectedDate;
-			ec.setOption('date', selectedDate);
-		}
-		refreshTitle(selectedDate);
-	}
 	function refreshTitle(date: Date) {
 		if (
 			view == 'week' ||
@@ -139,6 +123,12 @@
 			titleString = 'Kalender';
 		} else {
 			titleString = 'Kalender (' + getAltDayString(date) + ')';
+		}
+	}
+
+	function run(events: Event[]) {
+		if (events) {
+			options.events = events;
 		}
 	}
 </script>
