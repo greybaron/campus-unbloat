@@ -113,7 +113,8 @@
 			ref: CalendarModal,
 			props: {
 				storedEvents: storedEventsUnix,
-				selectedDate: selectedDate
+				selectedDate: selectedDate,
+				onUpdateSelectedDate: updateSelectedDate
 			}
 		};
 
@@ -126,6 +127,11 @@
 			fetchCalendar();
 		}
 	});
+
+	function updateSelectedDate(newDate: Date) {
+		selectedDate = newDate;
+		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	}
 
 	function handleSelectedDateChange(e: CustomEvent<Date>) {
 		selectedDate = e.detail;
