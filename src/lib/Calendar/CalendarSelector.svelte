@@ -1,12 +1,19 @@
 <script lang="ts">
+	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { dateIsThisWeek, dateIsToday, getNextWeekday } from '$lib/TSHelpers/DateHelper';
-	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 
 	export let selectedDate: Date = getNextWeekday();
 	export let weeklySkibbers: boolean = false;
 
 	const dispatch = createEventDispatcher();
+
+	function dateIsInInterval(week: boolean, selectedDate: Date): boolean {
+		if (week) {
+			return dateIsThisWeek(selectedDate);
+		}
+		return dateIsToday(selectedDate);
+	}
 
 	function handleDaySelection(forward: boolean) {
 		if (weeklySkibbers) {
@@ -29,13 +36,6 @@
 		}
 
 		dispatch('dateChanged', selectedDate);
-	}
-
-	function dateIsInInterval(week: boolean, selectedDate: Date): boolean {
-		if (week) {
-			return dateIsThisWeek(selectedDate);
-		}
-		return dateIsToday(selectedDate);
 	}
 </script>
 
