@@ -15,12 +15,10 @@
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
 	import { onMount, type SvelteComponent } from 'svelte';
 	import ExamSignupAccordion from '$lib/ExamSignupAccordion.svelte';
-	import type { Writable } from 'svelte/store';
 
 	export let parent: SvelteComponent;
 	export let signupOptions: Array<CampusDualSignupOption>;
-	export let examSignalStore: Writable<boolean>;
-	export let remindersSignalStore: Writable<boolean>;
+	export let onExamSignupOrCancel: () => void;
 
 	let verfahrenOptions: Array<CampusDualVerfahrenOption>;
 
@@ -57,18 +55,10 @@
 	</svelte:fragment>
 
 	{#if signupOrVerfahren === SignupOrVerfahren.signup}
-		<ExamSignupAccordion
-			data={signupOptions}
-			{signupOrVerfahren}
-			{examSignalStore}
-			{remindersSignalStore}
+		<ExamSignupAccordion data={signupOptions} {signupOrVerfahren} {onExamSignupOrCancel}
 		></ExamSignupAccordion>
 	{:else}
-		<ExamSignupAccordion
-			data={verfahrenOptions}
-			{signupOrVerfahren}
-			{examSignalStore}
-			{remindersSignalStore}
+		<ExamSignupAccordion data={verfahrenOptions} {signupOrVerfahren} {onExamSignupOrCancel}
 		></ExamSignupAccordion>
 	{/if}
 </DashboardModal>

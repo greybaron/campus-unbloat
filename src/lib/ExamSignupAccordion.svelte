@@ -21,11 +21,9 @@
 	let examDetails: CampusExamDetails | null = null;
 
 	export let signupOrVerfahren: SignupOrVerfahren;
-	export let examSignalStore: Writable<boolean>;
-	export let remindersSignalStore: Writable<boolean>;
+	export let onExamSignupOrCancel: () => void;
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import type { Writable } from 'svelte/store';
 	import ExamDetailsPopup from './Popups/ExamDetailsPopup.svelte';
 
 	const toastStore = getToastStore();
@@ -112,8 +110,7 @@
 		modalStore.clear();
 		const toastSettings = getToastSettings(toastPayload);
 		toastStore.trigger(toastSettings);
-		examSignalStore.set(true);
-		remindersSignalStore.set(true);
+		onExamSignupOrCancel();
 	}
 </script>
 

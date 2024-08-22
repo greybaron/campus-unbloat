@@ -60,11 +60,8 @@
 	let componentOrder: Writable<string[]>;
 	let componentProps: Record<string, object>;
 
-	let reminders: CdReminders | undefined;
+	let reminders: CdReminders | null;
 	let presentNotificationCategories: number = 0;
-
-	let remindersSignalStore: Writable<boolean>;
-	$: if ($remindersSignalStore) fetchReminders();
 
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import { components, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder.js';
@@ -90,20 +87,15 @@
 			component: modalComponent
 		};
 
-		remindersSignalStore = persistentStore('updateRemindersSignal', false);
-
 		componentProps = {
-			BasicInfoTile: { basicUserData },
-			ExamSignupTile: { remindersSignalStore }
+			BasicInfoTile: { basicUserData }
 		};
 
 		fetchReminders();
 	});
 
 	async function fetchReminders() {
-		remindersSignalStore.set(false);
-
-		reminders = undefined;
+		reminders = null;
 		presentNotificationCategories = 0;
 
 		const res = await fetch('/api/reminders');
@@ -213,6 +205,7 @@
 						this={componentMap[component]}
 						{...componentProps[component]}
 						on:showToast={showToast}
+						on:updateReminders={fetchReminders}
 					/>
 				</Portal>
 			{/each}
