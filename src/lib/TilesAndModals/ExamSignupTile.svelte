@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import { onMount } from 'svelte';
-	import { type Writable } from 'svelte/store';
 
 	import ExamSignupModal from './ExamSignupModal.svelte';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
@@ -10,19 +9,15 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let signupOptions: Array<CampusDualSignupOption> | undefined;
+	let signupOptions: Array<CampusDualSignupOption> | null;
 	let signUppable: number;
 
 	import { createEventDispatcher } from 'svelte';
 	import { ToastPayloadClass, type CampusDualSignupOption, type ToastPayload } from '$lib/types';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	const dispatch = createEventDispatcher();
 
-	export let remindersSignalStore: Writable<boolean>;
-
-	export async function fetchStuff() {
-		signupOptions = undefined;
-		examSignalStore.set(false);
+	async function fetchStuff() {
+		signupOptions = null;
 
 		const res1 = await fetch('/api/examsignup');
 
@@ -44,8 +39,7 @@
 			ref: ExamSignupModal,
 			props: {
 				signupOptions: signupOptions,
-				examSignalStore: examSignalStore,
-				remindersSignalStore: remindersSignalStore
+				onExamSignupOrCancel: examSignupOrCancel
 			}
 		};
 
@@ -55,11 +49,12 @@
 		};
 	}
 
-	let examSignalStore: Writable<boolean>;
-	$: if ($examSignalStore) fetchStuff();
+	async function examSignupOrCancel() {
+		dispatch('updateReminders');
+		await fetchStuff();
+	}
 
 	onMount(async () => {
-		examSignalStore = persistentStore('updateExamsSignal', false);
 		fetchStuff();
 	});
 
