@@ -39,7 +39,7 @@
 	}
 </script>
 
-<div class="flex flex-row mb-2 space-x-1 w-full justify-between">
+<div class="flex flex-row mb-2 space-x-1 w-full justify-between items-center">
 	<TileInteractiveElementWrapper>
 		<button
 			on:click={() => handleDaySelection(false)}
