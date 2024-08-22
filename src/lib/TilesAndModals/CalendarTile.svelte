@@ -1,17 +1,17 @@
 <script lang="ts">
 	import DashboardTile from '$lib/DashboardTile.svelte';
-	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
 	import CalendarModal from './CalendarModal.svelte';
-	import { type Writable } from 'svelte/store';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
-	import type { EventUnix, Event } from '$lib/types';
-	import { createEventDispatcher } from 'svelte';
-	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
 	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
 	import CalendarView from '$lib/Calendar/CalendarView.svelte';
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import { createEventDispatcher } from 'svelte';
 	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
+	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
+	import { type Writable } from 'svelte/store';
+	import type { EventUnix, Event } from '$lib/types';
 
 	const dispatch = createEventDispatcher();
 
@@ -42,66 +42,6 @@
 		remarks: string;
 	}>;
 
-	function fetchedToUnixEvents(fetched: fetchedCalendar): EventUnix[] {
-		let newEventsUnix: EventUnix[] = [];
-
-		fetched.forEach((element) => {
-			newEventsUnix.push({
-				start: element.start,
-				end: element.end,
-				title: element.title.split('-')[1],
-				room: element.room.split(' ')[0],
-				instructor: element.instructor,
-				textColor: element.font_color,
-				remarks: element.remarks,
-				color: element.color
-			});
-		});
-
-		return newEventsUnix;
-	}
-
-	function openModal() {
-		modalStore.trigger(modal);
-	}
-
-	function olderThanOneHour(currDate: Date, selectedDate: Date): boolean {
-		if (!selectedDate) {
-			return true;
-		}
-		const diffInMs = currDate.getTime() - new Date(selectedDate).getTime();
-		const diffTime = diffInMs / (1000 * 60 * 60);
-		if (diffTime > 1 || diffTime == 0) {
-			return true;
-		}
-		return false;
-	}
-
-	async function fetchCalendar() {
-		isReloading = true;
-		const res = await fetch('/api/stundenplan');
-
-		if (!res.ok) {
-			let error = await res.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			dispatch('showToast', payload);
-			return;
-		}
-
-		let fetchedCalendar = await res.json();
-		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
-
-		storedEventsUnix.set(parsedUnix);
-		lastEventUpdateDate.set(new Date());
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
-
-		isReloading = false;
-	}
-
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
 		lastEventUpdateDate = persistentStore('lastEventUpdate', new Date());
@@ -128,9 +68,23 @@
 		}
 	});
 
-	function updateSelectedDate(newDate: Date) {
-		selectedDate = newDate;
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	function fetchedToUnixEvents(fetched: fetchedCalendar): EventUnix[] {
+		let newEventsUnix: EventUnix[] = [];
+
+		fetched.forEach((element) => {
+			newEventsUnix.push({
+				start: element.start,
+				end: element.end,
+				title: element.title.split('-')[1],
+				room: element.room.split(' ')[0],
+				instructor: element.instructor,
+				textColor: element.font_color,
+				remarks: element.remarks,
+				color: element.color
+			});
+		});
+
+		return newEventsUnix;
 	}
 
 	function handleSelectedDateChange(e: CustomEvent<Date>) {
@@ -139,10 +93,57 @@
 		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 	}
 
+	function openModal() {
+		modalStore.trigger(modal);
+	}
+
+	function olderThanOneHour(currDate: Date, selectedDate: Date): boolean {
+		if (!selectedDate) {
+			return true;
+		}
+		const diffInMs = currDate.getTime() - new Date(selectedDate).getTime();
+		const diffTime = diffInMs / (1000 * 60 * 60);
+		if (diffTime > 1 || diffTime == 0) {
+			return true;
+		}
+		return false;
+	}
+
 	function setToToday() {
 		selectedDate = getNextWeekday();
 		modalComponent.props!.selectedDate = selectedDate;
 		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	}
+
+	function updateSelectedDate(newDate: Date) {
+		selectedDate = newDate;
+		modalComponent.props!.selectedDate = selectedDate;
+		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+	}
+
+	async function fetchCalendar() {
+		isReloading = true;
+		const res = await fetch('/api/stundenplan');
+
+		if (!res.ok) {
+			let error = await res.text();
+			let payload: ToastPayload = {
+				text: error,
+				class: ToastPayloadClass.error
+			};
+
+			dispatch('showToast', payload);
+			return;
+		}
+
+		let fetchedCalendar = await res.json();
+		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
+
+		storedEventsUnix.set(parsedUnix);
+		lastEventUpdateDate.set(new Date());
+		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+
+		isReloading = false;
 	}
 </script>
 
