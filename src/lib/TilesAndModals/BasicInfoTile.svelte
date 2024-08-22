@@ -51,11 +51,13 @@
 	add_class="pointer-events-none"
 	ready={Boolean(basicUserData && fachsemester && ects)}
 >
-	<div class="w-full space-y-2">
+	<div class="w-full space-y-2 h-full max-h-40 min-h-32 flex flex-col justify-between">
+		<div class="flex-grow" />
 		{#if basicUserData}
 			<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
 			<p>{basicUserData.seminar_name}</p>
 		{/if}
+		<div class="flex-grow" />
 		{#if fachsemester && ects}
 			<div class="flex space-x-2">
 				<div class="card rounded-xl w-full p-2 space-y-2 justify-center flex flex-col">

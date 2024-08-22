@@ -27,7 +27,11 @@
 		type ExamStats,
 		type ToastPayload
 	} from '$lib/types';
+	import type { Writable } from 'svelte/store';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	const dispatch = createEventDispatcher();
+
+	let gradesCountStore: Writable<number>;
 
 	onMount(async () => {
 		const res1 = await fetch('/api/examstats');
@@ -46,6 +50,8 @@
 		const res2 = await fetch('/api/grades');
 		if (res2.ok) {
 			grades = await res2.json();
+			// always show "new grades" on first use
+			gradesCountStore = persistentStore('gradesCount', 0);
 		} else {
 			let error = await res2.text();
 
@@ -101,10 +107,18 @@
 	});
 
 	function openModal() {
+		gradesCountStore.set(grades.length);
 		modalStore.trigger(modal);
 	}
 </script>
 
 <DashboardTile title="Noten" on:click={openModal} ready={Boolean(conicStops && grades)}>
+	{#if $gradesCountStore != grades.length}
+		<div class="w-full flex justify-end">
+			<span class="badge variant-filled-secondary relative -top-8 left-2 rounded-xl -mb-6"
+				>Neue Noten</span
+			>
+		</div>
+	{/if}
 	<ConicGradient stops={conicStops} legend></ConicGradient>
 </DashboardTile>
