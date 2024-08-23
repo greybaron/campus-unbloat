@@ -31,8 +31,14 @@
 
 	const drawerStore = getDrawerStore();
 	import { load_cc } from '$lib/cc';
-	import { browser } from '$app/environment';
 	load_cc();
+
+	import { browser } from '$app/environment';
+	import iosPWASplash from 'ios-pwa-splash';
+
+	if (browser) {
+		iosPWASplash('/splash-icon.png', '#e0e0e0');
+	}
 
 	const popupRechtliches: PopupSettings = {
 		// Represents the type of event that opens/closed the popup
