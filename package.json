@@ -53,6 +53,7 @@
 		"@fullcalendar/timegrid": "^6.1.15",
 		"@types/chart.js": "^2.9.41",
 		"chart.js": "^4.4.4",
+		"ios-pwa-splash": "^1.0.0",
 		"svelte-portal": "^2.2.1",
 		"vanilla-cookieconsent": "^3.0.1"
 	}
