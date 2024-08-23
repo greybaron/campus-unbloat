@@ -1,17 +1,21 @@
 <script lang="ts">
-	import DashboardTile from '$lib/DashboardTile.svelte';
-	import {
-		ConicGradient,
-		getModalStore,
-		type ConicStop,
-		type ModalComponent,
-		type ModalSettings
-	} from '@skeletonlabs/skeleton';
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
-	let conicStops: ConicStop[];
+	import {
+		ToastPayloadClass,
+		type CampusDualGrade,
+		type ExamStats,
+		type ToastPayload
+	} from '$lib/types';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 
+	import DashboardTile from '$lib/DashboardTile.svelte';
 	import GradesModal from '$lib/TilesAndModals/GradesModal.svelte';
+	import PieChart from '$lib/Grades/PieChart.svelte';
+	import ChartLabel from '$lib/Grades/ChartLabel.svelte';
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -20,18 +24,10 @@
 	let stats: ExamStats;
 	let grades: Array<CampusDualGrade>;
 
-	import { createEventDispatcher } from 'svelte';
-	import {
-		ToastPayloadClass,
-		type CampusDualGrade,
-		type ExamStats,
-		type ToastPayload
-	} from '$lib/types';
-	import type { Writable } from 'svelte/store';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	const dispatch = createEventDispatcher();
 
 	let gradesCountStore: Writable<number>;
+	let total: number;
 
 	onMount(async () => {
 		const res1 = await fetch('/api/examstats');
@@ -46,6 +42,7 @@
 			return;
 		}
 		stats = await res1.json();
+		total = stats.successful + stats.unsuccessful + stats.unassessed;
 
 		const res2 = await fetch('/api/grades');
 		if (res2.ok) {
@@ -72,38 +69,6 @@
 			type: 'component',
 			component: modalComponent
 		};
-
-		let total = stats.successful + stats.unsuccessful + stats.unassessed;
-		if (total === 0) {
-			conicStops = [{ color: 'rgba(0,0,255,1)', start: 0, end: 100 }];
-		} else {
-			let success_ratio = stats.successful / total;
-			let unsuccessful_ratio = success_ratio + stats.unsuccessful / total;
-
-			conicStops = [
-				{
-					label: 'Erfolg',
-					color: 'rgb(var(--color-secondary-500))',
-					start: 0,
-					end: success_ratio * 100
-				},
-				{
-					label: '5.0 Abfahrt',
-					color: 'rgb(var(--color-primary-500))',
-					start: success_ratio * 100,
-					end: unsuccessful_ratio * 100
-				}
-			];
-
-			if (stats.unassessed > 0) {
-				conicStops.push({
-					label: 'Ausstehend',
-					color: 'rgba(255,255,255,0.5)',
-					start: unsuccessful_ratio * 100,
-					end: 100
-				});
-			}
-		}
 	});
 
 	function openModal() {
@@ -112,7 +77,7 @@
 	}
 </script>
 
-<DashboardTile title="Noten" on:click={openModal} ready={Boolean(conicStops && grades)}>
+<DashboardTile title="Noten" on:click={openModal} ready={Boolean(stats && grades)}>
 	{#if $gradesCountStore != grades.length}
 		<div class="w-full flex justify-end">
 			<span class="badge variant-filled-secondary relative -top-8 left-2 rounded-xl -mb-6"
@@ -120,5 +85,29 @@
 			>
 		</div>
 	{/if}
-	<ConicGradient stops={conicStops} legend></ConicGradient>
+
+	<PieChart {stats} />
+	<div class="flex mt-4">
+		<ul class="conic-list list text-sm w-full">
+			{#if stats.successful > 0}
+				<ChartLabel
+					label="Erfolg"
+					value={stats.successful}
+					{total}
+					color="rgb(var(--color-secondary-500))"
+				/>
+			{/if}
+			{#if stats.unsuccessful > 0}
+				<ChartLabel
+					label="5.0 Abfahrt"
+					value={stats.unsuccessful}
+					{total}
+					color="rgb(var(--color-primary-500))"
+				/>
+			{/if}
+			{#if stats.unassessed > 0}
+				<ChartLabel label="Ausstehend" value={stats.unassessed} {total} color="#c1c1c1" />
+			{/if}
+		</ul>
+	</div>
 </DashboardTile>
