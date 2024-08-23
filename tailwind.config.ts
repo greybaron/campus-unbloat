@@ -10,6 +10,18 @@ export default {
 		'./src/**/*.{html,js,svelte,ts}',
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
+	safelist: [
+		'translate-x-6',
+		'translate-x-12',
+		'translate-x-45',
+		'translate-y-6',
+		'translate-y-12',
+		'translate-y-45',
+		'rotate-6',
+		'rotate-8',
+		'rotate-12',
+		'rotate-20'
+	],
 	theme: {
 		extend: {
 			maxHeight: {

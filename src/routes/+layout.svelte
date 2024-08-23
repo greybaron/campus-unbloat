@@ -31,6 +31,8 @@
 
 	const drawerStore = getDrawerStore();
 	import { load_cc } from '$lib/cc';
+	import OsterEi from '$lib/osterEi.svelte';
+	import type { SvelteComponent } from 'svelte';
 	load_cc();
 
 	const popupRechtliches: PopupSettings = {
@@ -41,6 +43,8 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
+
+	let osterEi: SvelteComponent;
 </script>
 
 <div
@@ -65,8 +69,8 @@
 	</div>
 </div>
 
+<OsterEi bind:this={osterEi} />
 <Toast buttonDismiss="btn-icon btn-icon-sm variant-filled transition-none" />
-
 <Drawer
 	on:drawer={() => drawerStore.close()}
 	position="right"
@@ -129,7 +133,9 @@
 			<svelte:fragment slot="lead">
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<strong on:click={() => {}} class="text-lg sm:text-xl">CampusUnbloat</strong>
+				<strong on:click={() => osterEi.runOsterEi()} class="text-lg sm:text-xl"
+					>CampusUnbloat</strong
+				>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="flex items-center justify-end space-x-1">
