@@ -31,6 +31,7 @@
 
 	const drawerStore = getDrawerStore();
 	import { load_cc } from '$lib/cc';
+	import { browser } from '$app/environment';
 	load_cc();
 
 	const popupRechtliches: PopupSettings = {
@@ -41,6 +42,25 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
+
+	const reloadInterval = 60 * 60 * 1000; // 1 hour in milliseconds
+	const start = Date.now();
+
+	function check_needs_reload() {
+		const now = Date.now();
+		const diff = now - start;
+		if (diff > reloadInterval) {
+			location.reload();
+		}
+	}
+
+	if (browser) {
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'visible') {
+				check_needs_reload();
+			}
+		});
+	}
 </script>
 
 <div
