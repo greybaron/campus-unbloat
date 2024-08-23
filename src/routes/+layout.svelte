@@ -35,6 +35,13 @@
 	import type { SvelteComponent } from 'svelte';
 	load_cc();
 
+	import { browser } from '$app/environment';
+	import iosPWASplash from 'ios-pwa-splash';
+
+	if (browser) {
+		iosPWASplash('/splash-icon.png', '#e0e0e0');
+	}
+
 	const popupRechtliches: PopupSettings = {
 		// Represents the type of event that opens/closed the popup
 		event: 'click',
@@ -43,6 +50,25 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
+
+	const reloadInterval = 60 * 60 * 1000; // 1 hour in milliseconds
+	const start = Date.now();
+
+	function check_needs_reload() {
+		const now = Date.now();
+		const diff = now - start;
+		if (diff > reloadInterval) {
+			location.reload();
+		}
+	}
+
+	if (browser) {
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'visible') {
+				check_needs_reload();
+			}
+		});
+	}
 
 	let osterEi: SvelteComponent;
 </script>

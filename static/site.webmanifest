@@ -1,6 +1,7 @@
 {
-	"name": "",
-	"short_name": "",
+	"name": "CampusUnbloat",
+	"short_name": "CampusUnbloat",
+	"start_url": "/dashboard",
 	"icons": [
 		{
 			"src": "/android-chrome-192x192.png",
@@ -13,7 +14,7 @@
 			"type": "image/png"
 		}
 	],
-	"theme_color": "#ffffff",
-	"background_color": "#ffffff",
+	"theme_color": "#161616",
+	"background_color": "#161616",
 	"display": "standalone"
 }
