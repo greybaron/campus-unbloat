@@ -42,7 +42,7 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
-	
+
 	const reloadInterval = 60 * 60 * 1000; // 1 hour in milliseconds
 	const start = Date.now();
 
