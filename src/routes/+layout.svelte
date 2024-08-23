@@ -31,6 +31,7 @@
 
 	const drawerStore = getDrawerStore();
 	import { load_cc } from '$lib/cc';
+	import { browser } from '$app/environment';
 	load_cc();
 
 	import { browser } from '$app/environment';
