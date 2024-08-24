@@ -28,7 +28,7 @@
 	let mensaList: Array<Mensa>;
 	let mensaMeals: Array<MensaMeal> | undefined;
 
-	let mensaSelectElementValue: number; // = 140;;
+	let mensaSelectElementValue: number;
 
 	let showMealsInTile: Writable<boolean>;
 	let expandedMealCategories: Writable<Array<string>>;
@@ -53,7 +53,7 @@
 
 		mensaList = await res.json();
 
-		showMealsInTile = persistentStore('showMealsInTile', false);
+		showMealsInTile = persistentStore('showMealsInTile', true);
 		expandedMealCategories = persistentStore('expandedMealCategories', []);
 		selectedMensa = persistentStore('selectedMensa', mensaList[0].id);
 
