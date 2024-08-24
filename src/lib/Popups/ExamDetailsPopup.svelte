@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { CampusExamDetails } from '$lib/types';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
+
+	import type { CampusExamDetails } from '$lib/types';
 
 	export let examDetails: CampusExamDetails | null;
 </script>

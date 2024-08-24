@@ -1,4 +1,27 @@
 <script lang="ts">
+	import {
+		getModalStore,
+		getToastStore,
+		getDrawerStore,
+		ProgressRadial,
+		type DrawerSettings,
+		type ModalComponent,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import Portal from 'svelte-portal';
+
+	import {
+		getToastSettings,
+		ToastPayloadClass,
+		type BasicUserData,
+		type CdReminders,
+		type ToastPayload
+	} from '$lib/types';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import { components, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder.js';
+
 	import PageContainer from '$lib/PageContainer.svelte';
 	import BasicInfoTile from '$lib/TilesAndModals/BasicInfoTile.svelte';
 	import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
@@ -6,27 +29,28 @@
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
-
-	import {
-		getModalStore,
-		getToastStore,
-		ProgressRadial,
-		type DrawerSettings,
-		type ModalComponent,
-		type ModalSettings
-	} from '@skeletonlabs/skeleton';
-	const toastStore = getToastStore();
-	import {
-		getToastSettings,
-		ToastPayloadClass,
-		type BasicUserData,
-		type CdReminders,
-		type ToastPayload
-	} from '$lib/types.js';
+	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 
 	export let data;
 
+	const toastStore = getToastStore();
+	const drawerStore = getDrawerStore();
+	const componentMap: Record<string, object> = {
+		BasicInfoTile,
+		GradesTile,
+		CalendarTile,
+		MensaTile,
+		ExamSignupTile,
+		BlockplanTile
+	};
+
 	let basicUserData: BasicUserData = JSON.parse(data.user_basic!);
+
+	let componentOrder: Writable<string[]>;
+	let componentProps: Record<string, object>;
+
+	let reminders: CdReminders | null;
+	let presentNotificationCategories: number = 0;
 
 	function showToast(data: ToastPayload | CustomEvent) {
 		let payload: ToastPayload;
@@ -40,31 +64,6 @@
 		const toastSettings = getToastSettings(payload);
 		toastStore.trigger(toastSettings);
 	}
-
-	import { getDrawerStore } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import type { Writable } from 'svelte/store';
-	import Portal from 'svelte-portal';
-
-	const drawerStore = getDrawerStore();
-
-	const componentMap: Record<string, object> = {
-		BasicInfoTile,
-		GradesTile,
-		CalendarTile,
-		MensaTile,
-		ExamSignupTile,
-		BlockplanTile
-	};
-	let componentOrder: Writable<string[]>;
-	let componentProps: Record<string, object>;
-
-	let reminders: CdReminders | null;
-	let presentNotificationCategories: number = 0;
-
-	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
-	import { components, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder.js';
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;

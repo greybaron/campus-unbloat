@@ -8,8 +8,8 @@
 	export let mensaSelectElementValue: number | undefined = undefined;
 	export let selectedMensa: Writable<number>;
 	export let mensaList: Array<Mensa>;
-
 	export let selectedDate: Date = getNextWeekday();
+
 	const dispatch = createEventDispatcher();
 
 	function mensalist_populated(_element: HTMLSelectElement) {

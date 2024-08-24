@@ -1,9 +1,10 @@
 <script lang="ts">
-	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import { createEventDispatcher } from 'svelte';
+
+	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import { dateIsThisWeek, dateIsToday, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 
-	export let inTile = false;
+	export let disablePadding = false;
 	export let selectedDate: Date = getNextWeekday();
 	export let weeklySkibbers: boolean = false;
 
@@ -40,7 +41,12 @@
 	}
 </script>
 
-<div class="flex flex-row {inTile ? 'pb-2' : ''} space-x-1 w-full justify-between items-center">
+<!-- -mb-2 hack for calendar having a bit of blank space -->
+<div
+	class="flex flex-row {disablePadding
+		? '-mb-2'
+		: 'pb-2'} space-x-1 w-full justify-between items-center"
+>
 	<TileInteractiveElementWrapper>
 		<button
 			on:click={() => handleDaySelection(false)}

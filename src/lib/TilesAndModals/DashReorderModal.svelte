@@ -1,15 +1,16 @@
 <script lang="ts">
-	import DashboardModal from '$lib/DashboardModal.svelte';
-
 	import { type SvelteComponent } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import { dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
+
+	import { tileNames, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder';
+	import DashboardModal from '$lib/DashboardModal.svelte';
 
 	export let parent: SvelteComponent;
 	export let componentOrder: Writable<string[]>;
 
 	let items = $componentOrder.map((id) => ({ id, title: tileNames.get(id) }));
-
-	let dropTargetStyle = {};
 
 	function handleSort(e: CustomEvent) {
 		items = e.detail.items;
@@ -25,16 +26,12 @@
 			componentOrder.set(newSort);
 		}
 	}
-
-	import { dndzone } from 'svelte-dnd-action';
-	import { flip } from 'svelte/animate';
-	import { tileNames, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder';
 </script>
 
 <DashboardModal bind:parent title="Anordnung ändern">
 	<div
 		class="grid grid-cols-1 lg:grid-cols-2 gap-2"
-		use:dndzone={{ items, dropTargetStyle, flipDurationMs: 200 }}
+		use:dndzone={{ items, dropTargetStyle: {}, flipDurationMs: 200 }}
 		on:consider={handleSort}
 		on:finalize={finalize}
 	>

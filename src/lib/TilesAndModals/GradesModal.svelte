@@ -1,13 +1,4 @@
 <script lang="ts">
-	import DashboardModal from '$lib/DashboardModal.svelte';
-	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
-	import {
-		getToastSettings,
-		ToastPayloadClass,
-		type CampusDualGrade,
-		type CampusGradeMetadata,
-		type CampusGradeStats
-	} from '$lib/types';
 	import {
 		Accordion,
 		AccordionItem,
@@ -17,11 +8,22 @@
 	} from '@skeletonlabs/skeleton';
 	import { type SvelteComponent } from 'svelte';
 
+	import {
+		getToastSettings,
+		ToastPayloadClass,
+		type CampusDualGrade,
+		type CampusGradeMetadata,
+		type CampusGradeStats
+	} from '$lib/types';
+	import DashboardModal from '$lib/DashboardModal.svelte';
+	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
+
+	export let parent: SvelteComponent;
+	export let grades: Array<CampusDualGrade>;
+
 	const toastStore = getToastStore();
 
-	export let grades: Array<CampusDualGrade>;
 	let filteredGrades: Array<CampusDualGrade> = grades;
-	export let parent: SvelteComponent;
 
 	let filter: string;
 	$: filterGrades(filter);

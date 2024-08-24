@@ -11,11 +11,12 @@
 		type ToastPayload
 	} from '$lib/types';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import GradesModal from '$lib/TilesAndModals/GradesModal.svelte';
 	import PieChart from '$lib/Grades/PieChart.svelte';
 	import ChartLabel from '$lib/Grades/ChartLabel.svelte';
+
+	const dispatch = createEventDispatcher();
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -23,9 +24,6 @@
 
 	let stats: ExamStats;
 	let grades: Array<CampusDualGrade>;
-
-	const dispatch = createEventDispatcher();
-
 	let gradesCountStore: Writable<number>;
 	let total: number;
 

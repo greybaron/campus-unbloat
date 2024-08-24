@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
+
 	import TileInteractiveElementWrapper from './TileInteractiveElementWrapper.svelte';
 
 	export let title: string;

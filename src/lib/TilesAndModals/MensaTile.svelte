@@ -1,24 +1,23 @@
 <script lang="ts">
-	import DashboardTile from '$lib/DashboardTile.svelte';
-	import { onMount, SvelteComponent } from 'svelte';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-
-	import MensaModal from './MensaModal.svelte';
+	import { onMount, SvelteComponent, createEventDispatcher } from 'svelte';
 	import {
 		getModalStore,
 		SlideToggle,
 		type ModalComponent,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
-
-	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import type { Writable } from 'svelte/store';
-	import { createEventDispatcher } from 'svelte';
+
 	import { ToastPayloadClass, type Mensa, type MensaMeal, type ToastPayload } from '$lib/types';
+	import MensaModal from './MensaModal.svelte';
+	import DashboardTile from '$lib/DashboardTile.svelte';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
 	import { fetchMeals } from '$lib/Mensa/MensaFuncs';
 	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+
 	const dispatch = createEventDispatcher();
 
 	let modalStore = getModalStore();
@@ -26,9 +25,8 @@
 	let modal: ModalSettings;
 
 	let mensaList: Array<Mensa>;
-	let mensaMeals: Array<MensaMeal> | undefined;
-
 	let mensaSelectElementValue: number;
+	let mensaMeals: Array<MensaMeal> | undefined;
 
 	let showMealsInTile: Writable<boolean>;
 	let expandedMealCategories: Writable<Array<string>>;

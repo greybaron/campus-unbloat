@@ -2,46 +2,34 @@
 	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import '../app.postcss';
 
+	import type { SvelteComponent } from 'svelte';
 	import {
 		AppShell,
 		AppBar,
 		getDrawerStore,
 		type PopupSettings,
-		popup
+		storePopup,
+		popup,
+		initializeStores,
+		Modal,
+		Toast,
+		Drawer
 	} from '@skeletonlabs/skeleton';
-
-	// Floating UI for Popups
-	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
-	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
-
-	import { initializeStores, Modal, Toast, Drawer } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-
-	initializeStores();
-
-	function formatDate(abapdate: string) {
-		const year = abapdate.slice(0, 4);
-		const month = abapdate.slice(4, 6);
-		const day = abapdate.slice(6, 8);
-
-		return `${day}.${month}.${year}`;
-	}
-
-	const drawerStore = getDrawerStore();
-	import { load_cc } from '$lib/cc';
-	import OsterEi from '$lib/osterEi.svelte';
-	import type { SvelteComponent } from 'svelte';
-	load_cc();
-
 	import { browser } from '$app/environment';
 	import iosPWASplash from 'ios-pwa-splash';
+	// Floating UI for Popups
+	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 
-	if (browser) {
-		iosPWASplash('/splash-icon.png', '#e0e0e0');
-	}
+	// cookieconsent (short name to avoid content blockers)
+	import { load_cc } from '$lib/cc';
+	import OsterEi from '$lib/osterEi.svelte';
 
+	initializeStores();
+	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+	const drawerStore = getDrawerStore();
+	load_cc();
 	const popupRechtliches: PopupSettings = {
 		// Represents the type of event that opens/closed the popup
 		event: 'click',
@@ -51,23 +39,32 @@
 		placement: 'bottom'
 	};
 
+	if (browser) {
+		iosPWASplash('/splash-icon.png', '#e0e0e0');
+		// check if reload necessary on foreground state (delta >1hour)
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'visible') {
+				check_needs_reload();
+			}
+		});
+	}
+
+	function formatDate(abapdate: string) {
+		const year = abapdate.slice(0, 4);
+		const month = abapdate.slice(4, 6);
+		const day = abapdate.slice(6, 8);
+
+		return `${day}.${month}.${year}`;
+	}
+
 	const reloadInterval = 60 * 60 * 1000; // 1 hour in milliseconds
 	const start = Date.now();
-
 	function check_needs_reload() {
 		const now = Date.now();
 		const diff = now - start;
 		if (diff > reloadInterval) {
 			location.reload();
 		}
-	}
-
-	if (browser) {
-		document.addEventListener('visibilitychange', () => {
-			if (document.visibilityState === 'visible') {
-				check_needs_reload();
-			}
-		});
 	}
 
 	let osterEi: SvelteComponent;

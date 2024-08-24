@@ -1,5 +1,8 @@
 <script lang="ts">
-	import DashboardModal from '$lib/DashboardModal.svelte';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
+	import { onMount, type SvelteComponent } from 'svelte';
+
 	import {
 		getToastSettings,
 		SignupOrVerfahren,
@@ -8,19 +11,17 @@
 		type CampusDualVerfahrenOption,
 		type ToastPayload
 	} from '$lib/types';
-
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	const toastStore = getToastStore();
-
-	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
-	import { onMount, type SvelteComponent } from 'svelte';
+	import DashboardModal from '$lib/DashboardModal.svelte';
 	import ExamSignupAccordion from '$lib/ExamSignupAccordion.svelte';
 
 	export let parent: SvelteComponent;
 	export let signupOptions: Array<CampusDualSignupOption>;
 	export let onExamSignupOrCancel: () => void;
 
+	const toastStore = getToastStore();
+
 	let verfahrenOptions: Array<CampusDualVerfahrenOption>;
+	let signupOrVerfahren = SignupOrVerfahren.signup;
 
 	onMount(async () => {
 		let res = await fetch('/api/examverfahren');
@@ -36,8 +37,6 @@
 			verfahrenOptions = await res.json();
 		}
 	});
-
-	let signupOrVerfahren = SignupOrVerfahren.signup;
 </script>
 
 <DashboardModal bind:parent title="Prüfungen">

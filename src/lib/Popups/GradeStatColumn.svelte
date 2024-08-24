@@ -4,7 +4,7 @@
 	export let maxValue: number;
 	export let isMyGrade: boolean;
 
-	let percentage = Math.round((value / maxValue) * 80); // 80% is max;
+	let percentage = Math.round((value / maxValue) * 80); // 80% is max
 </script>
 
 <div class="flex flex-col h-full w-full items-center justify-end">

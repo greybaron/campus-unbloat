@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import type { ExamStats } from '$lib/types';
-	import { Chart, registerables } from 'chart.js';
 	import { onMount } from 'svelte';
+	import { Chart, registerables } from 'chart.js';
+
+	import type { ExamStats } from '$lib/types';
 
 	export let stats: ExamStats;
-
-	Chart.register(...registerables);
-
-	let pieChartElement: HTMLCanvasElement;
 
 	const chartData = {
 		datasets: [
@@ -19,6 +16,9 @@
 			}
 		]
 	};
+
+	Chart.register(...registerables);
+	let pieChartElement: HTMLCanvasElement;
 
 	onMount(() => {
 		if (browser) {

@@ -8,9 +8,8 @@
 	import { dateIsToday, getAltDayString } from '$lib/TSHelpers/DateHelper';
 	import { type Mensa, type MensaMeal } from '$lib/types';
 
-	export let parent: SvelteComponent;
 	export let onSelectedChange: (date: Date) => Promise<MensaMeal[]>;
-
+	export let parent: SvelteComponent;
 	export let mensaList: Array<Mensa>;
 	export let selectedMensa: Writable<number>;
 	export let expandedMealCategories: Writable<Array<string>>;

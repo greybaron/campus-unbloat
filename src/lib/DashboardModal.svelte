@@ -5,15 +5,10 @@
 	export let parent: SvelteComponent;
 	export let dynamicwidth: boolean = false;
 
-	let closeButton: HTMLButtonElement;
-
-	// any browser focuses the button by default, no idea why
-	onMount(() => {
-		closeButton.blur();
-	});
-
 	const htmlElement = document.documentElement;
 	const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+	let closeButton: HTMLButtonElement;
 
 	onMount(() => {
 		const isDarkMode = htmlElement.classList.contains('dark');

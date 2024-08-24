@@ -1,9 +1,12 @@
 <script lang="ts">
-	import DashboardTile from '$lib/DashboardTile.svelte';
-	import { onMount } from 'svelte';
-
-	import ExamSignupModal from './ExamSignupModal.svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+
+	import { ToastPayloadClass, type CampusDualSignupOption, type ToastPayload } from '$lib/types';
+	import DashboardTile from '$lib/DashboardTile.svelte';
+	import ExamSignupModal from './ExamSignupModal.svelte';
+
+	const dispatch = createEventDispatcher();
 
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -12,9 +15,9 @@
 	let signupOptions: Array<CampusDualSignupOption> | null;
 	let signUppable: number | null = null;
 
-	import { createEventDispatcher } from 'svelte';
-	import { ToastPayloadClass, type CampusDualSignupOption, type ToastPayload } from '$lib/types';
-	const dispatch = createEventDispatcher();
+	onMount(async () => {
+		fetchStuff();
+	});
 
 	async function fetchStuff() {
 		signupOptions = null;
@@ -54,10 +57,6 @@
 		await fetchStuff();
 	}
 
-	onMount(async () => {
-		fetchStuff();
-	});
-
 	function openModal() {
 		modalStore.trigger(modal);
 	}
@@ -75,7 +74,7 @@
 						: 'fa-square-pen text-primary-500'} w-12 scale-[2]"
 				></i>
 			</div>
-			<div class="border-l h-full mr-2 border-surface-500-400-token"></div>
+			<div class="border-l h-full ml-1 pr-3 border-surface-500-400-token"></div>
 			<div class="text-left">
 				Du kannst dich für
 				<p class="font-bold">{signUppable} Prüfung{signUppable != 1 ? 'en' : ''}</p>

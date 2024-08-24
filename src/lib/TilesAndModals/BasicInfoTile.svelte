@@ -1,16 +1,16 @@
 <script lang="ts">
-	import DashboardTile from '$lib/DashboardTile.svelte';
 	import { ProgressBar } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
-	import { ToastPayloadClass, type BasicUserData, type ToastPayload } from '$lib/types.js';
+	import { onMount, createEventDispatcher } from 'svelte';
+
+	import DashboardTile from '$lib/DashboardTile.svelte';
+	import { ToastPayloadClass, type BasicUserData, type ToastPayload } from '$lib/types';
 
 	export let basicUserData: BasicUserData;
 
+	const dispatch = createEventDispatcher();
+
 	let fachsemester: string;
 	let ects: string;
-
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
 		const res1 = await fetch('/api/getects');

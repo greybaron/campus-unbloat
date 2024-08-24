@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+
 import { getDateAsUrlParam } from '$lib/TSHelpers/DateHelper';
 import type { MensaMeal } from '$lib/types';
 

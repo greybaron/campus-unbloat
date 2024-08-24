@@ -1,21 +1,21 @@
 <script lang="ts">
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { onMount, createEventDispatcher } from 'svelte';
+	import { type Writable } from 'svelte/store';
+
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import CalendarModal from './CalendarModal.svelte';
 	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
 	import CalendarView from '$lib/Calendar/CalendarView.svelte';
-	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
-	import { createEventDispatcher } from 'svelte';
 	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
-	import { type ToastPayload, ToastPayloadClass } from '$lib/types';
-	import { type Writable } from 'svelte/store';
-	import type { EventUnix, Event } from '$lib/types';
-
-	const dispatch = createEventDispatcher();
+	import { ToastPayloadClass } from '$lib/types';
+	import type { EventUnix, Event, ToastPayload } from '$lib/types';
 
 	export let isReloading: boolean = false;
+
+	const dispatch = createEventDispatcher();
 
 	let currentEvents: Array<Event> = [];
 	let modalStore = getModalStore();
@@ -162,7 +162,6 @@
 >
 	<svelte:fragment slot="header">
 		<CalendarSelector
-			inTile={true}
 			on:dateChanged={handleSelectedDateChange}
 			on:setToToday={setToToday}
 			{selectedDate}

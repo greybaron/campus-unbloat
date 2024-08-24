@@ -1,17 +1,18 @@
 <script lang="ts">
-	import DashboardModal from '$lib/DashboardModal.svelte';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
-	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
-	import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
-	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
-	import { dateIsToday, getAltDayString, getNextWeekday, padIt } from '$lib/TSHelpers/DateHelper';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { type SvelteComponent, onMount } from 'svelte';
 	import type { EventContentArg } from '@fullcalendar/core';
 	import type { Writable } from 'svelte/store';
+
 	import type { EventUnix, Event } from '$lib/types';
+	import DashboardModal from '$lib/DashboardModal.svelte';
+	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
+	import CalendarView from '$lib/Calendar/CalendarView.svelte';
+	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
+	import { dateIsToday, getAltDayString, getNextWeekday, padIt } from '$lib/TSHelpers/DateHelper';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 
 	export let storedEvents: Writable<EventUnix[]>;
 	export let selectedDate: Date;
@@ -164,6 +165,7 @@
 		</div>
 	{:else if view === 'week'}
 		<CalendarSelector
+			disablePadding={true}
 			on:dateChanged={handleSelectedDateChange}
 			on:setToToday={setToToday}
 			{selectedDate}

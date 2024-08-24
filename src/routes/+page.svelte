@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import type { ActionData } from './$types';
+
 	export let form: ActionData;
 
 	let login_in_progress = false;
