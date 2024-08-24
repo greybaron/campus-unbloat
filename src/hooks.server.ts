@@ -27,6 +27,13 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// don't redirect form data
+	if (event.url.pathname == '/') {
+		if (event.request.headers.get('content-type') == 'application/x-www-form-urlencoded') {
+			return resolve(event);
+		}
+	}
+
 	const jwt = event.cookies.get('jwt');
 
 	if (!jwt && event.url.pathname !== '/') {
