@@ -10,7 +10,7 @@
 	let modal: ModalSettings;
 
 	let signupOptions: Array<CampusDualSignupOption> | null;
-	let signUppable: number;
+	let signUppable: number | null = null;
 
 	import { createEventDispatcher } from 'svelte';
 	import { ToastPayloadClass, type CampusDualSignupOption, type ToastPayload } from '$lib/types';
@@ -64,13 +64,23 @@
 </script>
 
 <DashboardTile title="Prüfungen" on:click={openModal} ready={Boolean(signupOptions)}>
-	<svelte:fragment>
-		{#if signUppable || signUppable === 0}
-			Du kannst dich für <p class="font-bold">
-				{signUppable} Prüfung{signUppable != 1 ? 'en' : ''}
-			</p>
-			anmelden.
-			<p class="text-2xl pt-2">{signUppable === 0 ? '✅' : '⚠️'}</p>
+	<div class="flex flex-row items-center">
+		{#if signUppable != null}
+			<div class="flex flex-col">
+				<!-- wow -->
+				<div class="size-6 bg-white relative -mb-6 left-3 -top-1" />
+				<i
+					class="fa-solid {signUppable == 0
+						? 'fa-square-check text-secondary-500'
+						: 'fa-square-pen text-primary-500'} w-12 scale-[2]"
+				></i>
+			</div>
+			<div class="border-l h-full mr-2 border-surface-500-400-token"></div>
+			<div class="text-left">
+				Du kannst dich für
+				<p class="font-bold">{signUppable} Prüfung{signUppable != 1 ? 'en' : ''}</p>
+				anmelden.
+			</div>
 		{/if}
-	</svelte:fragment>
+	</div>
 </DashboardTile>
