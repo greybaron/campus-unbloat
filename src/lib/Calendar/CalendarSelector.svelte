@@ -3,6 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { dateIsThisWeek, dateIsToday, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 
+	export let inTile = false;
 	export let selectedDate: Date = getNextWeekday();
 	export let weeklySkibbers: boolean = false;
 
@@ -39,7 +40,7 @@
 	}
 </script>
 
-<div class="flex flex-row mb-2 space-x-1 w-full justify-between items-center">
+<div class="flex flex-row {inTile ? 'pb-2' : ''} space-x-1 w-full justify-between items-center">
 	<TileInteractiveElementWrapper>
 		<button
 			on:click={() => handleDaySelection(false)}

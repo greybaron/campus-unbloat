@@ -18,12 +18,11 @@
 	export let isReloading: boolean = false;
 
 	let currentEvents: Array<Event> = [];
-	let lastEventUpdate: Date;
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 	let storedEventsUnix: Writable<EventUnix[]>;
-	let lastEventUpdateDate: Writable<Date>;
+	let lastEventUpdate: Writable<Date | null>;
 	let selectedDate: Date = getNextWeekday();
 
 	type fetchedCalendar = Array<{
@@ -44,10 +43,9 @@
 
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
-		lastEventUpdateDate = persistentStore('lastEventUpdate', new Date());
+		lastEventUpdate = persistentStore('lastEventUpdate', null);
 
 		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
-		lastEventUpdate = $lastEventUpdateDate;
 
 		modalComponent = {
 			ref: CalendarModal,
@@ -63,7 +61,7 @@
 			component: modalComponent
 		};
 
-		if (olderThanOneHour(new Date(), lastEventUpdate)) {
+		if (olderThanOneHour($lastEventUpdate)) {
 			fetchCalendar();
 		}
 	});
@@ -97,16 +95,18 @@
 		modalStore.trigger(modal);
 	}
 
-	function olderThanOneHour(currDate: Date, selectedDate: Date): boolean {
-		if (!selectedDate) {
+	function olderThanOneHour(s_date: Date | null): boolean {
+		if (!s_date) {
 			return true;
 		}
-		const diffInMs = currDate.getTime() - new Date(selectedDate).getTime();
-		const diffTime = diffInMs / (1000 * 60 * 60);
-		if (diffTime > 1 || diffTime == 0) {
-			return true;
-		}
-		return false;
+
+		// stores cant store dates, it's a string
+		let date = new Date(s_date);
+		let currDate = new Date();
+		const diffInMs = currDate.getTime() - date.getTime();
+		const diffHours = diffInMs / (1000 * 60 * 60);
+
+		return diffHours > 1;
 	}
 
 	function setToToday() {
@@ -140,7 +140,7 @@
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
 		storedEventsUnix.set(parsedUnix);
-		lastEventUpdateDate.set(new Date());
+		lastEventUpdate.set(new Date());
 		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 
 		isReloading = false;
@@ -162,6 +162,7 @@
 >
 	<svelte:fragment slot="header">
 		<CalendarSelector
+			inTile={true}
 			on:dateChanged={handleSelectedDateChange}
 			on:setToToday={setToToday}
 			{selectedDate}
