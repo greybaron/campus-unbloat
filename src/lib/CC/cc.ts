@@ -4,7 +4,7 @@ export async function load_cc() {
 	if (browser) {
 		try {
 			const CookieConsent = await import('vanilla-cookieconsent');
-			const config = (await import('$lib/cookieconsent-config')).default;
+			const config = (await import('$lib/CC/cookieconsent-config')).default;
 
 			CookieConsent.run(config);
 		} catch (error) {

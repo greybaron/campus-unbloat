@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 
-	import TileInteractiveElementWrapper from './TileInteractiveElementWrapper.svelte';
+	import TileInteractiveElementWrapper from './TilesAndModals/TileInteractiveElementWrapper.svelte';
 
 	export let title: string;
 	export let clickable: boolean = true;

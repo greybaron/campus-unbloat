@@ -12,7 +12,7 @@
 		type ToastPayload
 	} from '$lib/types';
 	import DashboardModal from '$lib/DashboardModal.svelte';
-	import ExamSignupAccordion from '$lib/ExamSignupAccordion.svelte';
+	import ExamSignupAccordion from '$lib/ExamSignup/ExamSignupAccordion.svelte';
 
 	export let parent: SvelteComponent;
 	export let signupOptions: Array<CampusDualSignupOption>;

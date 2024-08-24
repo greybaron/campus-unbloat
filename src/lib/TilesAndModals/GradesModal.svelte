@@ -26,6 +26,7 @@
 	let filteredGrades: Array<CampusDualGrade> = grades;
 
 	let filter: string;
+	let filterElement: HTMLInputElement;
 	$: filterGrades(filter);
 
 	function filterGrades(filter: string) {
@@ -84,12 +85,24 @@
 	}
 </script>
 
+<svelte:window
+	on:keydown={() => {
+		filterElement.focus();
+	}}
+/>
+
 <div class="card p-2 w-80 shadow-2xl z-50" data-popup="popupGradeStats">
 	<GradeStatsPopup bind:gradeStats bind:myGrade />
 </div>
 <DashboardModal bind:parent title="Noten">
 	<svelte:fragment slot="header">
-		<input bind:value={filter} class="input" type="text" placeholder="Suchen..." />
+		<input
+			bind:this={filterElement}
+			bind:value={filter}
+			class="input"
+			type="text"
+			placeholder="Suchen..."
+		/>
 	</svelte:fragment>
 
 	{#if filteredGrades && filteredGrades.length > 0}

@@ -23,7 +23,7 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 
 	// cookieconsent (short name to avoid content blockers)
-	import { load_cc } from '$lib/cc';
+	import { load_cc } from '$lib/CC/cc';
 	import OsterEi from '$lib/osterEi.svelte';
 
 	initializeStores();

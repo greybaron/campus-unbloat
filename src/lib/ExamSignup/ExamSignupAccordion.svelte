@@ -17,8 +17,8 @@
 		type CampusExamDetails,
 		type CampusExamMetadata,
 		type ToastPayload
-	} from './types';
-	import ExamDetailsPopup from './Popups/ExamDetailsPopup.svelte';
+	} from '../types';
+	import ExamDetailsPopup from '../Popups/ExamDetailsPopup.svelte';
 
 	export let data: Array<CampusDualSignupOption> | undefined;
 	export let signupOrVerfahren: SignupOrVerfahren;

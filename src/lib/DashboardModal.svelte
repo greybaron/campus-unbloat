@@ -11,6 +11,9 @@
 	let closeButton: HTMLButtonElement;
 
 	onMount(() => {
+		// any browser focuses the button by default, no idea why
+		closeButton.blur();
+
 		const isDarkMode = htmlElement.classList.contains('dark');
 		themeColorMeta?.setAttribute('content', isDarkMode ? 'rgb(23,23,23)' : 'rgb(139,139,139)');
 	});

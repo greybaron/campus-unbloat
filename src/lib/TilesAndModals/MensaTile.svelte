@@ -12,7 +12,7 @@
 	import MensaModal from './MensaModal.svelte';
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import TileInteractiveElementWrapper from '$lib/TileInteractiveElementWrapper.svelte';
+	import TileInteractiveElementWrapper from '$lib/TilesAndModals/TileInteractiveElementWrapper.svelte';
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
 	import { fetchMeals } from '$lib/Mensa/MensaFuncs';
