@@ -155,7 +155,9 @@
 		<div class="w-[98%] sm:w-96 lg:w-[49rem] mx-auto space-x-1 flex items-center">
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<h1 class="text-3xl font-bold flex-grow" on:click={() => {}}>Hallo, {basicUserData.first_name}.</h1>
+			<h1 class="text-3xl font-bold flex-grow" on:click={() => {}}>
+				Hallo, {basicUserData.first_name}.
+			</h1>
 
 			<button
 				aria-label="Anordnung ändern"
