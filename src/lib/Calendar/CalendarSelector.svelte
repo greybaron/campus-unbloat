@@ -12,7 +12,7 @@
 		if (week) {
 			return dateIsThisWeek(selectedDate);
 		}
-		return dateIsToday(selectedDate);
+		return selectedDate.getDate() == getNextWeekday().getDate();
 	}
 
 	function handleDaySelection(forward: boolean) {

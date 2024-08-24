@@ -62,14 +62,8 @@ export function getDiffInDays(date1: Date, date2: Date): number {
 }
 
 export function dateIsToday(date: Date): boolean {
-	const today = getNextWeekday();
-
-	date = new Date(date);
-	return (
-		date.getDate() === today.getDate() &&
-		date.getMonth() === today.getMonth() &&
-		date.getFullYear() === today.getFullYear()
-	);
+	const today = new Date();
+	return today.getDate() == date.getDate();
 }
 
 export function dateIsThisWeek(date: Date): boolean {
