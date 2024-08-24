@@ -203,6 +203,18 @@
 							<i class="fa-solid fa-right-from-bracket"></i>
 						</button>
 					{/if}
+					{#if $page.url.pathname == '/'}
+						<button
+							aria-label="Quellcode (GitHub)"
+							on:click={() => {
+								window.open('https://github.com/greybaron/campus-unbloat');
+							}}
+							class="h-6 btn btn-sm text-xs variant-ghost"
+						>
+							GitHub
+							<i class="ml-1 fa-brands fa-github"></i>
+						</button>
+					{/if}
 				</div>
 			</svelte:fragment>
 		</AppBar>
