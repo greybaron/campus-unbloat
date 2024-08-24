@@ -56,6 +56,7 @@
 		showMealsInTile = persistentStore('showMealsInTile', true);
 		expandedMealCategories = persistentStore('expandedMealCategories', []);
 		selectedMensa = persistentStore('selectedMensa', mensaList[0].id);
+		handleMealsFetch($selectedMensa);
 
 		modalComponent = {
 			ref: MensaModal,
@@ -63,7 +64,8 @@
 				mensaList: mensaList,
 				expandedMealCategories: expandedMealCategories,
 				selectedMensa: selectedMensa,
-				selectedDate: selectedDate
+				selectedDate: selectedDate,
+				onSelectedChange: handleModalSelectChange
 			}
 		};
 
@@ -73,9 +75,7 @@
 		};
 	});
 
-	$: if ($selectedMensa && selectedDate) handleMealsFetch($selectedMensa);
-
-	async function handleMealsFetch(mensaId: number) {
+	async function handleMealsFetch(mensaId: number): Promise<MensaMeal[] | undefined> {
 		mensaSelectElementValue = mensaId;
 
 		if (mensaSelectorComponent) {
@@ -85,6 +85,7 @@
 		try {
 			mensaMeals = await fetchMeals(selectedDate, mensaId);
 			modalComponent.props!.mensaMeals = mensaMeals;
+			return mensaMeals;
 		} catch (e) {
 			if (e instanceof Error) {
 				let payload: ToastPayload = {
@@ -96,9 +97,20 @@
 			}
 		}
 	}
-	function handleSelectedDateChange(e: CustomEvent<Date>) {
-		selectedDate = e.detail;
-		modalComponent.props!.selectedDate = selectedDate;
+
+	function handleSelectChange(e: CustomEvent<Date>) {
+		if (e.detail) {
+			selectedDate = e.detail;
+			modalComponent.props!.selectedDate = selectedDate;
+		}
+
+		handleMealsFetch($selectedMensa);
+	}
+
+	async function handleModalSelectChange(date: Date): Promise<MensaMeal[]> {
+		selectedDate = date;
+		await handleMealsFetch($selectedMensa);
+		return mensaMeals!;
 	}
 </script>
 
@@ -111,9 +123,9 @@
 >
 	<svelte:fragment slot="header">
 		{#if $showMealsInTile && mensaList}
-			<TileInteractiveElementWrapper>
+			<TileInteractiveElementWrapper add_class="w-full">
 				<MensaSelector
-					on:dateChanged={handleSelectedDateChange}
+					on:selectChanged={handleSelectChange}
 					bind:mensaSelectElementValue
 					{selectedMensa}
 					{mensaList}
