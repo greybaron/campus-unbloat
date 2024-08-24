@@ -32,8 +32,8 @@
 </script>
 
 <DashboardModal bind:parent title="Anordnung ändern">
-	<section
-		class="space-y-2"
+	<div
+		class="grid grid-cols-1 lg:grid-cols-2 gap-2"
 		use:dndzone={{ items, dropTargetStyle, flipDurationMs: 200 }}
 		on:consider={handleSort}
 		on:finalize={finalize}
@@ -47,5 +47,5 @@
 				<i class="fa-solid fa-bars"></i>
 			</div>
 		{/each}
-	</section>
+	</div>
 </DashboardModal>

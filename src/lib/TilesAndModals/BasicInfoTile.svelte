@@ -51,7 +51,7 @@
 	add_class="pointer-events-none"
 	ready={Boolean(basicUserData && fachsemester && ects)}
 >
-	<div class="w-full space-y-2 h-full max-h-40 min-h-32 flex flex-col justify-between">
+	<div class="w-full space-y-2 h-full max-h-44 min-h-32 flex flex-col justify-between">
 		<div class="flex-grow" />
 		{#if basicUserData}
 			<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
