@@ -71,7 +71,7 @@
 </script>
 
 <div
-	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500"
+	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
 	data-popup="popupRechtliches"
 >
 	<div class="flex space-x-2">
