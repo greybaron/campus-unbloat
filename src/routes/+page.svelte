@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import type { ActionData } from './$types';
+
 	export let form: ActionData;
 
 	let login_in_progress = false;
@@ -98,7 +99,9 @@
 
 			<div class="flex justify-center mt-4">
 				<button
-					class="{login_in_progress ? 'variant-ghost-primary' : 'variant-filled-primary'} btn w-32"
+					class="{login_in_progress
+						? 'variant-ghost-primary pointer-events-none'
+						: 'variant-filled-primary'} btn w-32"
 				>
 					Anmelden
 				</button>

@@ -7,6 +7,8 @@
 		ProgressRadial,
 		type PopupSettings
 	} from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+
 	import {
 		getToastSettings,
 		SignupOrVerfahren,
@@ -15,19 +17,17 @@
 		type CampusExamDetails,
 		type CampusExamMetadata,
 		type ToastPayload
-	} from './types';
+	} from '../types';
+	import ExamDetailsPopup from '../Popups/ExamDetailsPopup.svelte';
 
 	export let data: Array<CampusDualSignupOption> | undefined;
-	let examDetails: CampusExamDetails | null = null;
-
 	export let signupOrVerfahren: SignupOrVerfahren;
 	export let onExamSignupOrCancel: () => void;
 
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import ExamDetailsPopup from './Popups/ExamDetailsPopup.svelte';
-
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
+
+	let examDetails: CampusExamDetails | null = null;
 
 	let popupOpen = false;
 	const popupExamDetails: PopupSettings = {

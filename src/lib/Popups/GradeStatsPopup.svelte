@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { CampusGradeStats } from '$lib/types';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
+
+	import type { CampusGradeStats } from '$lib/types';
 	import GradeStatColumn from './GradeStatColumn.svelte';
 
 	export let gradeStats: CampusGradeStats | null;

@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+	import { onMount, createEventDispatcher } from 'svelte';
+
+	import { ToastPayloadClass, type Timeline, type ToastPayload } from '$lib/types';
 	import DashboardTile from '$lib/DashboardTile.svelte';
-	import { onMount } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	let timeline: Timeline;
-
-	import { createEventDispatcher } from 'svelte';
-	import { ToastPayloadClass, type Timeline, type ToastPayload } from '$lib/types';
-	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
-	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
 		const res = await fetch('/api/timeline');

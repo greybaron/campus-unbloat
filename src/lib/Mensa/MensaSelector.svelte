@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { createEventDispatcher, tick } from 'svelte';
 	import type { Writable } from 'svelte/store';
+
 	import type { Mensa } from '../types';
 	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
 
 	export let mensaSelectElementValue: number | undefined = undefined;
 	export let selectedMensa: Writable<number>;
 	export let mensaList: Array<Mensa>;
-
 	export let selectedDate: Date = getNextWeekday();
+
 	const dispatch = createEventDispatcher();
 
 	function mensalist_populated(_element: HTMLSelectElement) {
@@ -22,6 +23,7 @@
 	function changeMensa(mensaId: number | undefined) {
 		if (mensaId) {
 			selectedMensa.set(mensaId);
+			dispatch('selectChanged');
 		}
 	}
 
@@ -36,12 +38,11 @@
 		}
 
 		selectedDate.setDate(selectedDate.getDate() + delta);
-
-		dispatch('dateChanged', selectedDate);
+		dispatch('selectChanged', selectedDate);
 	}
 </script>
 
-<div class="flex mb-2 space-x-1 items-center">
+<div class="flex mb-2 space-x-1 items-center w-full">
 	<button
 		aria-label="Vorheriger Tag"
 		on:click={() => handleDaySelection(false)}

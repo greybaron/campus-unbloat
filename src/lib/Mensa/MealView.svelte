@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
-	import MealGroupContainer from '$lib/Mensa/MealGroupContainer.svelte';
 	import type { Writable } from 'svelte/store';
+
+	import MealGroupContainer from '$lib/Mensa/MealGroupContainer.svelte';
 	import type { MensaMeal } from '../types';
 
 	export let expandedMealCategories: Writable<Array<string>>;

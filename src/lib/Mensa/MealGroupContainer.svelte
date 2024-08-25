@@ -1,23 +1,7 @@
 <script lang="ts">
-	type MensaMealType = {
-		meal_type: string;
-		sub_meals: MensaSubMeals;
-	};
+	import type { MensaMeal } from '$lib/types';
 
-	type MensaSubMeals = Array<{
-		name: string;
-		additional_ingredients: Array<string>;
-		price: string;
-		allergens?: string;
-		variations?: Array<MealVariations>;
-	}>;
-
-	type MealVariations = {
-		name: string;
-		allergens_and_add: string;
-	};
-
-	export let meal: MensaMealType;
+	export let meal: MensaMeal;
 </script>
 
 <div class="space-y-1">

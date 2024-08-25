@@ -125,13 +125,20 @@ export type Mensa = {
 
 export type MensaMeal = {
 	meal_type: string;
-	sub_meals: Array<MensaSubMeal>;
+	sub_meals: MensaSubMeal[];
 };
 
 export type MensaSubMeal = {
 	name: string;
-	additional_ingredients: Array<string>;
+	additional_ingredients: string[];
 	price: string;
+	allergens?: string;
+	variations?: MealVariations[];
+};
+
+type MealVariations = {
+	name: string;
+	allergens_and_add: string;
 };
 
 export type CampusDualGrade = {
