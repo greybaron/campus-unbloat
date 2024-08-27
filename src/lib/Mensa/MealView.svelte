@@ -9,15 +9,20 @@
 	export let expandedMealCategories: Writable<Array<string>>;
 	export let mensaMeals: Array<MensaMeal>;
 
-	const [evenArray, oddArray] = mensaMeals.reduce<[MensaMeal[], MensaMeal[]]>(
-		(acc, item, index) => (acc[index % 2].push(item), acc),
-		[[], []]
-	);
+	let evenArray: MensaMeal[];
+	let oddArray: MensaMeal[];
+	$: mensaMeals,
+		([evenArray, oddArray] = mensaMeals.reduce<[MensaMeal[], MensaMeal[]]>(
+			(acc, item, index) => (acc[index % 2].push(item), acc),
+			[[], []]
+		));
 </script>
 
 <!-- hacky -->
 <MediaQuery query="(min-width: 640px)" let:matches>
-	{#if twoColumn && matches}
+	{#if mensaMeals.length === 0}
+		<p class="pt-2">Keine Gerichte verfügbar.</p>
+	{:else if twoColumn && matches && mensaMeals.length > 1}
 		<div class="grid grid-cols-2 gap-3">
 			<MealViewAccordion mensaMeals={evenArray} {expandedMealCategories} />
 			<MealViewAccordion mensaMeals={oddArray} {expandedMealCategories} />

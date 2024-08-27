@@ -79,7 +79,4 @@
 			</svelte:fragment>
 		</AccordionItem>
 	{/each}
-	{#if mensaMeals.length === 0}
-		<p class="pt-2">Keine Gerichte verfügbar.</p>
-	{/if}
 </Accordion>
