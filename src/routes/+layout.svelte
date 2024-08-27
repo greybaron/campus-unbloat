@@ -75,19 +75,15 @@
 	data-popup="popupRechtliches"
 >
 	<div class="flex space-x-2">
-		<button
-			on:click={() => {
-				goto('/impressum');
-			}}
+		<a
+			href="/impressum"
 			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-secondary-500"
-			>Impressum</button
+			>Impressum</a
 		>
-		<button
-			on:click={() => {
-				goto('/datenschutz');
-			}}
+		<a
+			href="/datenschutz"
 			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-secondary-500"
-			>Datenschutz</button
+			>Datenschutz</a
 		>
 	</div>
 </div>
