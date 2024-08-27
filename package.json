@@ -1,6 +1,6 @@
 {
 	"name": "campus",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -54,6 +54,7 @@
 		"@types/chart.js": "^2.9.41",
 		"chart.js": "^4.4.4",
 		"ios-pwa-splash": "^1.0.0",
+		"svelte-media-queries": "^1.6.2",
 		"svelte-portal": "^2.2.1",
 		"vanilla-cookieconsent": "^3.0.1"
 	}
