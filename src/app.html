@@ -73,5 +73,13 @@
 		darkModeMediaQuery.addEventListener('change', (event) => {
 			setDarkMode(event.matches);
 		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			// reduce initial-scale for iPhone
+			if (/iPhone/i.test(navigator.userAgent)) {
+				var viewportMeta = document.querySelector('meta[name="viewport"]');
+				viewportMeta.content = 'width=device-width, initial-scale=0.9';
+			}
+		});
 	</script>
 </html>
