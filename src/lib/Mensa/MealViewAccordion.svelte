@@ -5,6 +5,7 @@
 	import type { MensaMeal } from '$lib/types';
 	import MealGroupContainer from './MealGroupContainer.svelte';
 
+	export let alwaysExpanded = false;
 	export let mensaMeals: MensaMeal[];
 	export let expandedMealCategories: Writable<Array<string>>;
 
@@ -58,9 +59,13 @@
 	{#each mensaMeals as meal}
 		<AccordionItem
 			hover="hover:dark:backdrop-brightness-200 hover:backdrop-brightness-90 transition-[backdrop-filter]"
-			regionControl="{getGroupColour(meal.meal_type)} border border-surface-900-50-token"
-			open={$expandedMealCategories.includes(meal.meal_type)}
+			regionControl="{getGroupColour(
+				meal.meal_type
+			)} border border-surface-900-50-token {alwaysExpanded ? 'pointer-events-none' : ''}"
+			regionCaret={alwaysExpanded ? 'hidden' : ''}
+			open={alwaysExpanded || $expandedMealCategories.includes(meal.meal_type)}
 			on:toggle={(e) => {
+				if (alwaysExpanded) return;
 				expandedMealCategories.update((categories) => {
 					if (e.detail.open) {
 						return [...categories, meal.meal_type];

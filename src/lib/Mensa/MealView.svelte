@@ -24,8 +24,8 @@
 		<p class="pt-2">Keine Gerichte verfügbar.</p>
 	{:else if twoColumn && matches && mensaMeals.length > 1}
 		<div class="grid grid-cols-2 gap-3">
-			<MealViewAccordion mensaMeals={evenArray} {expandedMealCategories} />
-			<MealViewAccordion mensaMeals={oddArray} {expandedMealCategories} />
+			<MealViewAccordion alwaysExpanded={true} mensaMeals={evenArray} {expandedMealCategories} />
+			<MealViewAccordion alwaysExpanded={true} mensaMeals={oddArray} {expandedMealCategories} />
 		</div>
 	{:else}
 		<MealViewAccordion {mensaMeals} {expandedMealCategories} />
