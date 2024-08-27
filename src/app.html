@@ -27,6 +27,7 @@
 
 		<meta name="viewport" content="width=device-width" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
 		<meta name="description" content="CampusDual 2025 Vision" />
 		<title>CampusUnbloat</title>
 		%sveltekit.head%
@@ -72,6 +73,14 @@
 		// Listen for changes in the prefers-color-scheme media query
 		darkModeMediaQuery.addEventListener('change', (event) => {
 			setDarkMode(event.matches);
+		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			// reduce initial-scale for iPhone
+			if (/iPhone/i.test(navigator.userAgent)) {
+				var viewportMeta = document.querySelector('meta[name="viewport"]');
+				viewportMeta.content = 'width=device-width, initial-scale=0.9';
+			}
 		});
 	</script>
 </html>

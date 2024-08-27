@@ -7,7 +7,7 @@
 <div class="space-y-1">
 	{#each meal.sub_meals as submeal}
 		<div
-			class="card p-2 pl-4 pr-4 border-dashed border-token border-surface-700-200-token space-y-2"
+			class="rounded-xl bg-surface-50-900-token px-4 py-2 border-dashed border-token border-surface-700-200-token space-y-2"
 		>
 			<strong>{submeal.name}</strong>
 			<hr />
@@ -19,9 +19,9 @@
 							<i class="fa-solid fa-plus"></i>
 						</span>
 					</div>
-					<div class="flex flex-grow justify-center items-center">
-						<div class="text-left">
-							<ul class="list-disc list-inside">
+					<div class="flex flex-grow items-center">
+						<div class="text-left ml-4">
+							<ul class="list-disc">
 								{#each submeal.additional_ingredients as ingredient}
 									<li>{ingredient}</li>
 								{/each}
@@ -40,7 +40,7 @@
 						</span>
 					</div>
 
-					<div class="text-center flex-grow">
+					<div class="text-left flex-grow">
 						<strong>Allergene: </strong><span>{submeal.allergens}</span>
 					</div>
 				</div>
@@ -59,8 +59,16 @@
 		</div>
 
 		{#if submeal.variations}
-			<div class="card p-2 border-dashed border-token border-surface-700-200-token space-y-2">
-				<strong>Variationen</strong>
+			<div
+				class="rounded-xl bg-surface-50-900-token px-4 py-2 border-dashed border-token border-surface-700-200-token space-y-2"
+			>
+				<div class="flex space-x-2">
+					<div class="badge-icon p-3 variant-outline">
+						<i class="fa-solid fa-flask-vial"></i>
+					</div>
+					<strong>Variationen</strong>
+					<!-- <i class="fa-solid fa-house"></i> -->
+				</div>
 				{#each submeal.variations as variation}
 					<hr />
 					<strong>{variation.name}</strong>

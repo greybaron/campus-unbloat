@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
 	import type { ActionData } from './$types';
 
 	export let form: ActionData;
@@ -80,19 +79,15 @@
 				</label>
 
 				<div class="flex justify-center space-x-2">
-					<button
-						on:click={() => {
-							goto('/impressum');
-						}}
+					<a
+						href="/impressum"
 						type="button"
-						class="variant-filled btn text-sm h-7 transition-transform">Impressum</button
+						class="variant-filled btn text-sm h-7 transition-transform">Impressum</a
 					>
-					<button
-						on:click={() => {
-							goto('/datenschutz');
-						}}
+					<a
+						href="/datenschutz"
 						type="button"
-						class="variant-filled btn text-sm h-7 transition-transform">Datenschutzerklärung</button
+						class="variant-filled btn text-sm h-7 transition-transform">Datenschutzerklärung</a
 					>
 				</div>
 			</div>

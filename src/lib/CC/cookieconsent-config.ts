@@ -33,8 +33,8 @@ const config: CookieConsent.CookieConsentConfig = {
 					acceptAllBtn: 'Alle akzeptieren',
 					showPreferencesBtn: 'Details einblenden',
 					footer: `
-							<a href="/impressum" target="_blank">Impressum</a>
-							<a href="/datenschutz" target="_blank">Datenschutzerklärung</a>
+							<a href="/impressum">Impressum</a>
+							<a href="/datenschutz">Datenschutzerklärung</a>
 					`
 				},
 				preferencesModal: {
