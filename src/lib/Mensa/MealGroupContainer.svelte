@@ -20,7 +20,7 @@
 						</span>
 					</div>
 					<div class="flex flex-grow items-center">
-						<div class="text-left ml-4">
+						<div class="text-left ml-5">
 							<ul class="list-disc">
 								{#each submeal.additional_ingredients as ingredient}
 									<li>{ingredient}</li>
