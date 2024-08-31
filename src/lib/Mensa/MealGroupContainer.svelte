@@ -7,7 +7,7 @@
 <div class="space-y-1">
 	{#each meal.sub_meals as submeal}
 		<div
-			class="rounded-xl bg-surface-50-900-token px-4 py-2 border-dashed border-token border-surface-700-200-token space-y-2"
+			class="rounded-xl bg-surface-50-900-token px-4 py-2 border-dashed border-token border-surface-700-200-token space-y-2 text-center"
 		>
 			<strong>{submeal.name}</strong>
 			<hr />
