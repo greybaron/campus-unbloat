@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, SvelteComponent, createEventDispatcher } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 	import {
 		getModalStore,
 		SlideToggle,
@@ -15,7 +15,7 @@
 	import TileInteractiveElementWrapper from '$lib/TilesAndModals/TileInteractiveElementWrapper.svelte';
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
-	import { fetchMeals } from '$lib/Mensa/MensaFuncs';
+	import { fetchMeals, fetchOpenMeals } from '$lib/Mensa/MensaFuncs';
 	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 
 	const dispatch = createEventDispatcher();
@@ -31,8 +31,8 @@
 	let showMealsInTile: Writable<boolean>;
 	let expandedMealCategories: Writable<Array<string>>;
 	let selectedMensa: Writable<number>;
+	let selectedOpenMensaName: Writable<string>;
 
-	let mensaSelectorComponent: SvelteComponent;
 	let selectedDate: Date = getNextWeekday();
 
 	onMount(async () => {
@@ -54,7 +54,17 @@
 		showMealsInTile = persistentStore('showMealsInTile', true);
 		expandedMealCategories = persistentStore('expandedMealCategories', []);
 		selectedMensa = persistentStore('selectedMensa', mensaList[0].id);
-		handleMealsFetch($selectedMensa);
+		selectedOpenMensaName = persistentStore('selectedOpenMensaName', '');
+
+		if ($selectedMensa < 0) {
+			mensaList.push({ id: $selectedMensa, name: $selectedOpenMensaName });
+		}
+		mensaList.push({
+			id: 0,
+			name: 'Andere Mensa...'
+		});
+
+		handleMealsFetch();
 
 		modalComponent = {
 			ref: MensaModal,
@@ -62,6 +72,7 @@
 				mensaList: mensaList,
 				expandedMealCategories: expandedMealCategories,
 				selectedMensa: selectedMensa,
+				selectedOpenMensaName: selectedOpenMensaName,
 				selectedDate: selectedDate,
 				onSelectedChange: handleModalSelectChange
 			}
@@ -73,17 +84,17 @@
 		};
 	});
 
-	async function handleMealsFetch(mensaId: number): Promise<MensaMeal[] | undefined> {
-		mensaSelectElementValue = mensaId;
-
-		if (mensaSelectorComponent) {
-			mensaSelectorComponent.setMensaSelected(mensaId);
-		}
-
+	async function handleMealsFetch(): Promise<MensaMeal[] | undefined> {
 		try {
-			mensaMeals = await fetchMeals(selectedDate, mensaId);
-			modalComponent.props!.mensaMeals = mensaMeals;
-			return mensaMeals;
+			if ($selectedMensa > 0) {
+				mensaMeals = await fetchMeals(selectedDate, $selectedMensa);
+				modalComponent.props!.mensaMeals = mensaMeals;
+				return mensaMeals;
+			} else {
+				mensaMeals = await fetchOpenMeals(selectedDate, $selectedMensa * -1);
+				modalComponent.props!.mensaMeals = mensaMeals;
+				return mensaMeals;
+			}
 		} catch (e) {
 			if (e instanceof Error) {
 				let payload: ToastPayload = {
@@ -102,12 +113,12 @@
 			modalComponent.props!.selectedDate = selectedDate;
 		}
 
-		handleMealsFetch($selectedMensa);
+		handleMealsFetch();
 	}
 
 	async function handleModalSelectChange(date: Date): Promise<MensaMeal[]> {
 		selectedDate = date;
-		await handleMealsFetch($selectedMensa);
+		await handleMealsFetch();
 		return mensaMeals!;
 	}
 </script>
@@ -126,6 +137,7 @@
 					on:selectChanged={handleSelectChange}
 					bind:mensaSelectElementValue
 					{selectedMensa}
+					{selectedOpenMensaName}
 					{mensaList}
 				/>
 			</TileInteractiveElementWrapper>

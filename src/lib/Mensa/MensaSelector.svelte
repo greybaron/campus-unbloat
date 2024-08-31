@@ -1,16 +1,38 @@
 <script lang="ts">
 	import { createEventDispatcher, tick } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 
 	import type { Mensa } from '../types';
 	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import OpenMensaModal from '$lib/TilesAndModals/OpenMensaModal.svelte';
 
 	export let mensaSelectElementValue: number | undefined = undefined;
 	export let selectedMensa: Writable<number>;
+	export let selectedOpenMensaName: Writable<string>;
 	export let mensaList: Array<Mensa>;
 	export let selectedDate: Date = getNextWeekday();
 
+	// key to reload mensalist dropdown when an "openmensa" is added to the list
+	let unique = {};
+
 	const dispatch = createEventDispatcher();
+	const modalStore = getModalStore();
+
+	let openmensaModalComponent: ModalComponent;
+	let openMensaModal: ModalSettings;
+
+	openmensaModalComponent = {
+		ref: OpenMensaModal,
+		props: {
+			onOpenMensaSelection: handleOpenMensaSelection
+		}
+	};
+
+	openMensaModal = {
+		type: 'component',
+		component: openmensaModalComponent
+	};
 
 	function mensalist_populated(_element: HTMLSelectElement) {
 		// allegedly, svelte actions trigger once an element is created,
@@ -21,10 +43,41 @@
 	}
 
 	function changeMensa(mensaId: number | undefined) {
-		if (mensaId) {
-			selectedMensa.set(mensaId);
+		if (mensaId === 0) {
+			// sweet sentinel value which means "other mensa" was selected
+			mensaSelectElementValue = $selectedMensa;
+			modalStore.close();
+			// start openmensa selection flow
+			modalStore.trigger(openMensaModal);
+		} else {
+			selectedMensa.set(mensaId!);
 			dispatch('selectChanged');
 		}
+	}
+
+	function handleOpenMensaSelection(mensaId: number, mensaName: string) {
+		const idxOldOpenMensa = mensaList.findIndex((mensa) => mensa.id < 0);
+		if (idxOldOpenMensa != -1) {
+			console.warn('upd old');
+			mensaList[idxOldOpenMensa] = {
+				id: mensaId * -1,
+				name: mensaName
+			};
+		} else {
+			console.warn('ins new');
+			mensaList.splice(mensaList.length - 1, 0, {
+				id: mensaId * -1,
+				name: mensaName
+			});
+		}
+
+		unique = {};
+
+		// omfg
+		selectedMensa.set(mensaId * -1);
+		selectedOpenMensaName.set(mensaName);
+		mensaSelectElementValue = mensaId * -1;
+		dispatch('selectChanged');
 	}
 
 	function handleDaySelection(forward: boolean) {
@@ -50,19 +103,21 @@
 	>
 		<i class="fa-solid fa-arrow-left" />
 	</button>
-	<select
-		aria-label="Mensa auswählen"
-		class="select transition-none"
-		bind:value={mensaSelectElementValue}
-		on:change={() => {
-			changeMensa(mensaSelectElementValue);
-		}}
-		use:mensalist_populated
-	>
-		{#each mensaList as mensa}
-			<option value={mensa.id}>{mensa.name}</option>
-		{/each}
-	</select>
+	{#key unique}
+		<select
+			aria-label="Mensa auswählen"
+			class="select transition-none"
+			bind:value={mensaSelectElementValue}
+			on:change={() => {
+				changeMensa(mensaSelectElementValue);
+			}}
+			use:mensalist_populated
+		>
+			{#each mensaList as mensa}
+				<option value={mensa.id}>{mensa.name}</option>
+			{/each}
+		</select>
+	{/key}
 	<button
 		aria-label="Nächster Tag"
 		on:click={() => handleDaySelection(true)}

@@ -12,6 +12,7 @@
 	export let parent: SvelteComponent;
 	export let mensaList: Array<Mensa>;
 	export let selectedMensa: Writable<number>;
+	export let selectedOpenMensaName: Writable<string>;
 	export let expandedMealCategories: Writable<Array<string>>;
 	export let mensaMeals: Array<MensaMeal> | undefined = undefined;
 	export let selectedDate: Date;
@@ -30,6 +31,7 @@
 		<MensaSelector
 			on:selectChanged={handleSelectChange}
 			{selectedMensa}
+			{selectedOpenMensaName}
 			{mensaList}
 			{selectedDate}
 		/>
