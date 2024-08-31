@@ -79,7 +79,7 @@
 			// reduce initial-scale for iPhone
 			if (/iPhone/i.test(navigator.userAgent)) {
 				var viewportMeta = document.querySelector('meta[name="viewport"]');
-				viewportMeta.content = 'width=device-width, initial-scale=0.9';
+				viewportMeta.content = 'width=device-width, initial-scale=0.9, maximum-scale=0.9';
 			}
 		});
 	</script>
