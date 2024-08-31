@@ -33,8 +33,9 @@
 		if (filter == '') {
 			filteredGrades = grades;
 		} else if (filter) {
+			const words = filter.split(' ').map((word) => word.trim().toLowerCase());
 			filteredGrades = grades.filter((grade) =>
-				grade.name.toLowerCase().includes(filter.toLowerCase())
+				words.every((word) => grade.name.toLowerCase().includes(word))
 			);
 		}
 	}
