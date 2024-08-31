@@ -34,6 +34,7 @@
 	let selectedOpenMensaName: Writable<string>;
 
 	let selectedDate: Date = getNextWeekday();
+	let unique = {};
 
 	onMount(async () => {
 		const res = await fetch('/api/mensalist');
@@ -119,6 +120,10 @@
 	async function handleModalSelectChange(date: Date): Promise<MensaMeal[]> {
 		selectedDate = date;
 		await handleMealsFetch();
+		// dont care
+		if ($selectedMensa < 0) {
+			unique = {};
+		}
 		return mensaMeals!;
 	}
 </script>
@@ -133,13 +138,15 @@
 	<svelte:fragment slot="header">
 		{#if $showMealsInTile && mensaList}
 			<TileInteractiveElementWrapper add_class="w-full">
-				<MensaSelector
-					on:selectChanged={handleSelectChange}
-					bind:mensaSelectElementValue
-					{selectedMensa}
-					{selectedOpenMensaName}
-					{mensaList}
-				/>
+				{#key unique}
+					<MensaSelector
+						on:selectChanged={handleSelectChange}
+						bind:mensaSelectElementValue
+						{selectedMensa}
+						{selectedOpenMensaName}
+						{mensaList}
+					/>
+				{/key}
 			</TileInteractiveElementWrapper>
 		{/if}
 	</svelte:fragment>

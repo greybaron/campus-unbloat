@@ -58,13 +58,11 @@
 	function handleOpenMensaSelection(mensaId: number, mensaName: string) {
 		const idxOldOpenMensa = mensaList.findIndex((mensa) => mensa.id < 0);
 		if (idxOldOpenMensa != -1) {
-			console.warn('upd old');
 			mensaList[idxOldOpenMensa] = {
 				id: mensaId * -1,
 				name: mensaName
 			};
 		} else {
-			console.warn('ins new');
 			mensaList.splice(mensaList.length - 1, 0, {
 				id: mensaId * -1,
 				name: mensaName
