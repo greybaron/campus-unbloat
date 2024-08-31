@@ -141,6 +141,21 @@ type MealVariations = {
 	allergens_and_add: string;
 };
 
+export type openMensaMeal = {
+	id: number;
+	name: string;
+	category: string;
+	prices: openPrices;
+	notes: string[];
+};
+
+type openPrices = {
+	students: number;
+	employees: number;
+	pupils: number;
+	others: number;
+};
+
 export type CampusDualGrade = {
 	name: string;
 	grade: string;
