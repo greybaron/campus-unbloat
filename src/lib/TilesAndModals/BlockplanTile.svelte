@@ -6,6 +6,12 @@
 	import DashboardTile from '$lib/DashboardTile.svelte';
 
 	const dispatch = createEventDispatcher();
+	const sections: { key: keyof Timeline; title: string }[] = [
+		{ key: 'fachsemester', title: 'Fachsemester' },
+		{ key: 'theoriesemester', title: 'Theoriesemester' },
+		{ key: 'praxissemester', title: 'Praxissemester' },
+		{ key: 'specials', title: 'Spezielles' }
+	];
 
 	let timeline: Timeline;
 
@@ -28,56 +34,19 @@
 
 <DashboardTile title="Blockplan" clickable={false} ready={Boolean(timeline)}>
 	<Accordion>
-		{#if timeline.fachsemester.length > 0}
-			<AccordionItem>
-				<svelte:fragment slot="summary">Fachsemester</svelte:fragment>
-				<svelte:fragment slot="content">
-					<ul class="list-disc list-inside text-left">
-						{#each timeline.fachsemester as fsevent}
-							<li class="text-xs">{fsevent.description}</li>
-						{/each}
-					</ul>
-				</svelte:fragment>
-			</AccordionItem>
-		{/if}
-
-		{#if timeline.theoriesemester.length > 0}
-			<AccordionItem>
-				<svelte:fragment slot="summary">Theoriesemester</svelte:fragment>
-				<svelte:fragment slot="content">
-					<ul class="list-disc list-inside text-left">
-						{#each timeline.theoriesemester as tsevent}
-							<li class="text-xs">{tsevent.description}</li>
-						{/each}
-					</ul>
-				</svelte:fragment>
-			</AccordionItem>
-		{/if}
-
-		{#if timeline.praxissemester.length > 0}
-			<AccordionItem>
-				<svelte:fragment slot="summary">Praxissemester</svelte:fragment>
-				<svelte:fragment slot="content">
-					<ul class="list-disc list-inside text-left">
-						{#each timeline.praxissemester as psevent}
-							<li class="text-xs">{psevent.description}</li>
-						{/each}
-					</ul>
-				</svelte:fragment>
-			</AccordionItem>
-		{/if}
-
-		{#if timeline.specials.length > 0}
-			<AccordionItem>
-				<svelte:fragment slot="summary">Spezielles</svelte:fragment>
-				<svelte:fragment slot="content">
-					<ul class="list-disc list-inside text-left">
-						{#each timeline.specials as spevent}
-							<li class="text-xs">{spevent.description}</li>
-						{/each}
-					</ul>
-				</svelte:fragment>
-			</AccordionItem>
-		{/if}
+		{#each sections as section (section.key)}
+			{#if timeline[section.key].length > 0}
+				<AccordionItem>
+					<svelte:fragment slot="summary">{section.title}</svelte:fragment>
+					<svelte:fragment slot="content">
+						<ul class="list-disc text-left ml-4">
+							{#each timeline[section.key] as event}
+								<li class="text-xs">{event.description}</li>
+							{/each}
+						</ul>
+					</svelte:fragment>
+				</AccordionItem>
+			{/if}
+		{/each}
 	</Accordion>
 </DashboardTile>

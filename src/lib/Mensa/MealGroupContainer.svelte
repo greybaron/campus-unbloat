@@ -46,15 +46,8 @@
 				</div>
 				<hr />
 			{/if}
-			<div class="flex flex-row space-x-2">
-				<div>
-					<span class="badge-icon p-3 variant-outline">
-						<i class="fa-solid fa-coins"></i>
-					</span>
-				</div>
-				<div class="flex-grow">
-					<i>{submeal.price}</i>
-				</div>
+			<div>
+					<i class="text-center w-full">{submeal.price}</i>
 			</div>
 		</div>
 
@@ -67,7 +60,6 @@
 						<i class="fa-solid fa-flask-vial"></i>
 					</div>
 					<strong>Variationen</strong>
-					<!-- <i class="fa-solid fa-house"></i> -->
 				</div>
 				{#each submeal.variations as variation}
 					<hr />
