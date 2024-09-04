@@ -47,7 +47,7 @@
 				<hr />
 			{/if}
 			<div>
-					<i class="text-center w-full">{submeal.price}</i>
+				<i class="text-center w-full">{submeal.price}</i>
 			</div>
 		</div>
 
