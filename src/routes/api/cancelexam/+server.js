@@ -36,6 +36,6 @@ export async function POST({ request, cookies }) {
 		if (error instanceof Error) {
 			console.error(error.message);
 		}
-		return new Response('CaDu: Klausurabmeldung fehlgeschlagen', { status: 500 });
+		return new Response('CaDu: Klausurabmeldung ist fehlgeschlagen', { status: 500 });
 	}
 }
