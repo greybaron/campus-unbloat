@@ -15,7 +15,8 @@
 	$: filterMensen(filter);
 
 	onMount(async () => {
-		const res = await fetch('https://openmensa.org/api/v2/canteens');
+		const res = await fetch('/api/openmensalist');
+
 		mensen = await res.json();
 		filteredMensen = mensen;
 	});
