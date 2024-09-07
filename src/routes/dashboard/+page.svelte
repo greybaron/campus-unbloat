@@ -8,7 +8,7 @@
 		type ModalComponent,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
+	import { onMount, type ComponentType } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import Portal from 'svelte-portal';
 
@@ -30,12 +30,13 @@
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
+	import _ from 'lodash';
 
 	export let data;
 
 	const toastStore = getToastStore();
 	const drawerStore = getDrawerStore();
-	const componentMap: Record<string, object> = {
+	const componentMap: Record<string, ComponentType> = {
 		BasicInfoTile,
 		GradesTile,
 		CalendarTile,
@@ -50,7 +51,7 @@
 	let componentProps: Record<string, object>;
 
 	let reminders: CdReminders | null;
-	let presentNotificationCategories: number = 0;
+	let presentReminderCategories: number = 0;
 
 	function showToast(data: ToastPayload | CustomEvent) {
 		let payload: ToastPayload;
@@ -68,6 +69,7 @@
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
+	let readRemindersStore: Writable<CdReminders>;
 
 	onMount(async () => {
 		componentOrder = persistentStore('compOrder', components);
@@ -95,7 +97,7 @@
 
 	async function fetchReminders() {
 		reminders = null;
-		presentNotificationCategories = 0;
+		presentReminderCategories = 0;
 
 		const res = await fetch('/api/reminders');
 
@@ -110,11 +112,13 @@
 			toastStore.trigger(toastSettings);
 		} else {
 			reminders = await res.json();
-			presentNotificationCategories = getPresentNotificationCategories(reminders!);
+			presentReminderCategories = getUnreadReminderCategories(reminders!);
 		}
 	}
 
-	function notifDrawer() {
+	function openRemindersDrawer() {
+		readRemindersStore.set(reminders!);
+		presentReminderCategories = getUnreadReminderCategories(reminders!);
 		const drawerSettings: DrawerSettings = {
 			id: 'example-1',
 			meta: { reminders: reminders }
@@ -122,26 +126,38 @@
 		drawerStore.open(drawerSettings);
 	}
 
-	function getPresentNotificationCategories(reminders: CdReminders): number {
-		let presentNotificationCategories = 0;
+	function getUnreadReminderCategories(reminders: CdReminders): number {
+		const blankCdReminders: CdReminders = {
+			latest: [],
+			upcoming: [],
+			exams: 0,
+			electives: 0,
+			semester: 0
+		};
 
-		if (reminders.latest.length > 0) {
-			presentNotificationCategories++;
+		readRemindersStore = persistentStore('readReminders', blankCdReminders);
+		const readReminders = $readRemindersStore;
+
+		let presentReminderCategories = 0;
+
+		if (!allItemsPresentInSecondDeep(reminders.latest, readReminders.latest))
+			presentReminderCategories++;
+		if (!allItemsPresentInSecondDeep(reminders.upcoming, readReminders.upcoming))
+			presentReminderCategories++;
+		if (reminders.exams > 0 && reminders.exams != readReminders.exams) presentReminderCategories++;
+		if (
+			reminders.semester <= 6 &&
+			reminders.electives != 0 &&
+			reminders.electives != readReminders.electives
+		) {
+			presentReminderCategories++;
 		}
 
-		if (reminders.upcoming.length > 0) {
-			presentNotificationCategories++;
-		}
+		return presentReminderCategories;
+	}
 
-		if (reminders.exams > 0) {
-			presentNotificationCategories++;
-		}
-
-		if (reminders.electives > 0 && reminders.semester <= 6) {
-			presentNotificationCategories++;
-		}
-
-		return presentNotificationCategories;
+	function allItemsPresentInSecondDeep(list1: object[], list2: object[]): boolean {
+		return _.every(list1, (item) => _.some(list2, (item2) => _.isEqual(item, item2)));
 	}
 
 	function openTileReorder() {
@@ -167,14 +183,14 @@
 			</button>
 
 			<div class="relative inline-block">
-				{#if presentNotificationCategories != 0}
+				{#if presentReminderCategories != 0}
 					<span class="size-6 badge-icon variant-filled-secondary absolute -top-1 -right-1 z-10"
-						>{presentNotificationCategories}</span
+						>{presentReminderCategories}</span
 					>
 				{/if}
 				<button
 					aria-label="Benachrichtigungen"
-					on:click={notifDrawer}
+					on:click={openRemindersDrawer}
 					class="transition-none btn-icon {reminders
 						? 'variant-filled-primary'
 						: 'variant-ghost-surface pointer-events-none'}"
