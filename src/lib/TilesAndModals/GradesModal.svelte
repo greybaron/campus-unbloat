@@ -163,16 +163,18 @@
 												⋅ {subgrade.akad_period}
 											</dd>
 										</span>
-										<button
-											on:click={() => {
-												myGrade = getRoundedGrade(subgrade.grade);
-												getGradeStats(subgrade.internal_metadata);
-											}}
-											use:popup={popupGradeStats}
-											class="btn rounded-md size-8 variant-filled btn-icon flex-shrink-0"
-										>
-											<i class="fa-solid fa-chart-column"></i>
-										</button>
+										{#if Boolean(subgrade.internal_metadata)}
+											<button
+												on:click={() => {
+													myGrade = getRoundedGrade(subgrade.grade);
+													getGradeStats(subgrade.internal_metadata);
+												}}
+												use:popup={popupGradeStats}
+												class="btn rounded-md size-8 variant-filled btn-icon flex-shrink-0"
+											>
+												<i class="fa-solid fa-chart-column"></i>
+											</button>
+										{/if}
 									</div>
 								{/each}
 							</dl>
