@@ -34,20 +34,23 @@
 						</p>
 					</div>
 					<div>
-						{#if remarks != ''}
-							<p class="text-xs italic">
-								{'(' + remarks + ')'}
-							</p>
+						{#if remarks}
+							<div class="flex flex-row space-x-2">
+								<i class="fa-solid fa-info-circle"></i>
+								<p class="text-xs w-full flex-grow">
+									{remarks}
+								</p>
+							</div>
 						{/if}
 					</div>
 					<div>
-						<p class="italic">
-							{#if instructor != '' && room != ''}
-								{instructor + ', Raum ' + room}
-							{:else if instructor != ''}
+						<p>
+							{#if instructor && room}
+								{instructor}, Raum {room}
+							{:else if instructor}
 								{instructor}
-							{:else if room != ''}
-								{'Raum: ' + room}
+							{:else if room}
+								Raum: {room}
 							{/if}
 						</p>
 					</div>
