@@ -30,7 +30,7 @@
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
-	import _ from 'lodash';
+	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
 
 	export let data;
 
@@ -157,7 +157,7 @@
 	}
 
 	function allItemsPresentInSecondDeep(list1: object[], list2: object[]): boolean {
-		return _.every(list1, (item) => _.some(list2, (item2) => _.isEqual(item, item2)));
+		return _every(list1, (item) => _some(list2, (item2) => _isEqual(item, item2)));
 	}
 
 	function openTileReorder() {

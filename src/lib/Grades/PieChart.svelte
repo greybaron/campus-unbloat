@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { Chart, registerables } from 'chart.js';
+	import { Chart, PieController, ArcElement, Tooltip } from 'chart.js';
 
 	import type { ExamStats } from '$lib/types';
 
@@ -17,7 +17,7 @@
 		]
 	};
 
-	Chart.register(...registerables);
+	Chart.register(PieController, ArcElement, Tooltip);
 	let pieChartElement: HTMLCanvasElement;
 
 	onMount(() => {

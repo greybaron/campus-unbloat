@@ -55,10 +55,10 @@
 		"@fullcalendar/core": "^6.1.15",
 		"@fullcalendar/timegrid": "^6.1.15",
 		"@types/chart.js": "^2.9.41",
-		"@types/lodash": "^4.17.7",
+		"@types/lodash-es": "^4.17.12",
 		"chart.js": "^4.4.4",
 		"ios-pwa-splash": "^1.0.0",
-		"lodash": "^4.17.21",
+		"lodash-es": "^4.17.21",
 		"svelte-media-queries": "^1.6.2",
 		"svelte-portal": "^2.2.1",
 		"vanilla-cookieconsent": "^3.0.1"
