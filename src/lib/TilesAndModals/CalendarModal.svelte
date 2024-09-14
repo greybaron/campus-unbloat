@@ -81,7 +81,7 @@
 
 	storedEventsUnix = persistentStore('storedEvents', []);
 
-	$: $storedEvents, run(unixEventsToEvents($storedEvents));
+	$: run(unixEventsToEvents($storedEvents));
 	$: if (selectedDate || view) {
 		if (ec) {
 			ec.date = selectedDate;

@@ -7,7 +7,7 @@ export async function load_cc() {
 			const config = (await import('$lib/CC/cookieconsent-config')).default;
 
 			CookieConsent.run(config);
-		} catch (error) {
+		} catch {
 			console.warn('Failed to load cookieconsent (likely due to content filter)');
 		}
 	}
