@@ -2,7 +2,12 @@
 	import { createEventDispatcher } from 'svelte';
 
 	import TileInteractiveElementWrapper from '$lib/TilesAndModals/TileInteractiveElementWrapper.svelte';
-	import { dateIsThisWeek, dateIsToday, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import {
+		dateIsThisWeek,
+		dateIsToday,
+		getNextWeekday,
+		isSameDate
+	} from '$lib/TSHelpers/DateHelper';
 
 	export let disablePadding = false;
 	export let selectedDate: Date = getNextWeekday();
@@ -14,7 +19,8 @@
 		if (week) {
 			return dateIsThisWeek(selectedDate);
 		}
-		return selectedDate.getDate() == getNextWeekday().getDate();
+
+		return isSameDate(selectedDate, getNextWeekday());
 	}
 
 	function handleDaySelection(forward: boolean) {

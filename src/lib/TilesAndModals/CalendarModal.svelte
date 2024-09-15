@@ -20,7 +20,6 @@
 	export let onUpdateSelectedDate: (newDate: Date) => void;
 
 	let ec: SvelteComponent;
-	let titleString: string = 'Kalender';
 	let view: string = 'week'; // Default-View (Wochenansicht)
 	let storedEventsUnix: Writable<EventUnix[]>;
 	let currentDayEvents: Event[] = [];
@@ -82,13 +81,6 @@
 	storedEventsUnix = persistentStore('storedEvents', []);
 
 	$: run(unixEventsToEvents($storedEvents));
-	$: if (selectedDate || view) {
-		if (ec) {
-			ec.date = selectedDate;
-			ec.setOption('date', selectedDate);
-		}
-		refreshTitle(selectedDate);
-	}
 
 	onMount(() => {
 		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
@@ -116,17 +108,6 @@
 		}
 	}
 
-	function refreshTitle(date: Date) {
-		if (
-			view == 'week' ||
-			(!(new Date().getDay() == 0 || new Date().getDay() == 6) && dateIsToday(selectedDate))
-		) {
-			titleString = 'Kalender';
-		} else {
-			titleString = 'Kalender (' + getAltDayString(date) + ')';
-		}
-	}
-
 	function run(events: Event[]) {
 		if (events) {
 			options.events = events;
@@ -134,7 +115,12 @@
 	}
 </script>
 
-<DashboardModal bind:parent title={titleString}>
+<DashboardModal
+	bind:parent
+	title="Kalender{view == 'week' || dateIsToday(selectedDate)
+		? ''
+		: ` (${getAltDayString(selectedDate)})`}"
+>
 	<div class="radio-group-container w-full flex justify-center pb-2">
 		<RadioGroup
 			bind:group={view}
