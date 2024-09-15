@@ -63,7 +63,8 @@ export function getDiffInDays(date1: Date, date2: Date): number {
 
 export function dateIsToday(date: Date): boolean {
 	const today = new Date();
-	return today.getDate() == date.getDate();
+
+	return isSameDate(today, date);
 }
 
 export function dateIsThisWeek(date: Date): boolean {
@@ -84,4 +85,12 @@ export function dateIsThisWeek(date: Date): boolean {
 
 	// Vergleich des übergebenen Datums mit dem Wochenzeitraum
 	return date >= mondayOfThisWeek && date <= sundayOfThisWeek;
+}
+
+export function isSameDate(date1: Date, date2: Date): boolean {
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	);
 }

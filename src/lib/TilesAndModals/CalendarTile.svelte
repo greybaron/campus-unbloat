@@ -148,10 +148,7 @@
 </script>
 
 <DashboardTile
-	title="Kalender{!(new Date().getDay() == 0 || new Date().getDay() == 6) &&
-	dateIsToday(selectedDate)
-		? ''
-		: ` (${getAltDayString(selectedDate)})`}"
+	title="Kalender{dateIsToday(selectedDate) ? '' : ` (${getAltDayString(selectedDate)})`}"
 	on:click={openModal}
 	on:reload={() => {
 		fetchCalendar();
