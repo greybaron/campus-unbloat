@@ -13,7 +13,7 @@
 	}
 </script>
 
-{#if !(gradeStats && maxValue && myGrade)}
+{#if !(gradeStats && maxValue)}
 	<div class="flex h-56 items-center justify-center">
 		<ProgressRadial
 			width="w-20"

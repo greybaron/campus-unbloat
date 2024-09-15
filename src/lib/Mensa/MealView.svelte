@@ -11,11 +11,10 @@
 
 	let evenArray: MensaMeal[];
 	let oddArray: MensaMeal[];
-	$: mensaMeals,
-		([evenArray, oddArray] = mensaMeals.reduce<[MensaMeal[], MensaMeal[]]>(
-			(acc, item, index) => (acc[index % 2].push(item), acc),
-			[[], []]
-		));
+	$: [evenArray, oddArray] = mensaMeals.reduce<[MensaMeal[], MensaMeal[]]>(
+		(acc, item, index) => (acc[index % 2].push(item), acc),
+		[[], []]
+	);
 </script>
 
 <!-- hacky -->

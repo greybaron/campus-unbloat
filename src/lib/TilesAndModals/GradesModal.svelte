@@ -82,6 +82,8 @@
 
 	function getRoundedGrade(grade: string): number {
 		const float = parseFloat(grade.replace(',', '.'));
+		if (isNaN(float)) return 0;
+
 		return Math.round(float);
 	}
 </script>
