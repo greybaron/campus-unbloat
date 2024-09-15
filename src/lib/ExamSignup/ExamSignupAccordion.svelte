@@ -136,12 +136,19 @@
 			<AccordionItem open>
 				<svelte:fragment slot="lead">
 					<span
-						class="badge-icon p-4 fa-solid text-white {signup.status == '📝'
-							? 'variant-filled-secondary fa-pen'
+						class="badge-icon p-4 text-white {signup.status == '📝'
+							? 'variant-filled-secondary'
 							: signup.status == '🚫'
-								? 'variant-filled-error saturate-200 fa-ban'
-								: ' variant-filled-surface fa-question'}"
+								? 'variant-filled-error saturate-200'
+								: ' variant-filled-surface'}"
 					>
+						<i
+							class="fa-solid {signup.status == '📝'
+								? 'fa-pen'
+								: signup.status == '🚫'
+									? 'fa-ban'
+									: 'fa-question'}"
+						/>
 					</span>
 				</svelte:fragment>
 				<svelte:fragment slot="summary"
