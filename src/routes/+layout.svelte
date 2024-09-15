@@ -21,8 +21,6 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 
-	// Font Awesome minified
-	import '$lib/fonts/css/all.min.css';
 	// cookieconsent (short name to avoid content blockers)
 	import { load_cc } from '$lib/CC/cc';
 	import OsterEi from '$lib/osterEi.svelte';
@@ -172,7 +170,12 @@
 								const response = await fetch('/');
 
 								if (response.redirected) {
-									window.location.href = response.url;
+									if (response.url.endsWith('/dashboard')) {
+										goto('/dashboard');
+									} else {
+										// should never happen
+										window.location.href = response.url;
+									}
 								} else {
 									goto('/');
 								}
@@ -198,16 +201,15 @@
 						</button>
 					{/if}
 					{#if $page.url.pathname == '/'}
-						<button
+						<a
+							href="https://github.com/greybaron/campus-unbloat"
+							target="_blank"
 							aria-label="Quellcode (GitHub)"
-							on:click={() => {
-								window.open('https://github.com/greybaron/campus-unbloat');
-							}}
 							class="h-6 btn btn-sm text-xs variant-ghost"
 						>
 							GitHub
 							<i class="ml-1 fa-brands fa-github"></i>
-						</button>
+						</a>
 					{/if}
 				</div>
 			</svelte:fragment>

@@ -12,6 +12,7 @@
 	import type { Writable } from 'svelte/store';
 	import Portal from 'svelte-portal';
 
+	import '$lib/fonts/css/all.min.css';
 	import {
 		getToastSettings,
 		ToastPayloadClass,

@@ -31,7 +31,7 @@ async function copyFontAwesome() {
 export default defineConfig({
 	plugins: [
 		sveltekit(),
-		purgeCss(),
+		purgeCss({ legacy: true }),
 		{
 			name: 'faSubset',
 			buildStart: async () => {
