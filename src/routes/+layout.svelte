@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '@fortawesome/fontawesome-free/css/all.min.css';
 	import '../app.postcss';
 
 	import type { SvelteComponent } from 'svelte';
@@ -69,6 +68,8 @@
 
 	let osterEi: SvelteComponent;
 </script>
+
+<link rel="stylesheet" href="/css/all.min.css" />
 
 <div
 	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
