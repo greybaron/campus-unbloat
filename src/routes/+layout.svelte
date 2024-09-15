@@ -38,7 +38,11 @@
 		placement: 'bottom'
 	};
 
-	if (browser) {
+	if (
+		browser &&
+		/iPhone/i.test(navigator.userAgent) &&
+		!window.matchMedia('(display-mode: standalone)').matches
+	) {
 		iosPWASplash('/splash-icon.png', '#e0e0e0');
 		// check if reload necessary on foreground state (delta >1hour)
 		document.addEventListener('visibilitychange', () => {
