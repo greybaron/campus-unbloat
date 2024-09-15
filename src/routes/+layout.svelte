@@ -38,7 +38,11 @@
 		placement: 'bottom'
 	};
 
-	if (browser) {
+	if (
+		browser &&
+		/iPhone/i.test(navigator.userAgent) &&
+		!window.matchMedia('(display-mode: standalone)').matches
+	) {
 		iosPWASplash('/splash-icon.png', '#e0e0e0');
 		// check if reload necessary on foreground state (delta >1hour)
 		document.addEventListener('visibilitychange', () => {
@@ -68,8 +72,6 @@
 
 	let osterEi: SvelteComponent;
 </script>
-
-<link rel="stylesheet" href="/css/all.min.css" />
 
 <div
 	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
@@ -172,7 +174,12 @@
 								const response = await fetch('/');
 
 								if (response.redirected) {
-									window.location.href = response.url;
+									if (response.url.endsWith('/dashboard')) {
+										goto('/dashboard');
+									} else {
+										// should never happen
+										window.location.href = response.url;
+									}
 								} else {
 									goto('/');
 								}
@@ -198,16 +205,15 @@
 						</button>
 					{/if}
 					{#if $page.url.pathname == '/'}
-						<button
+						<a
+							href="https://github.com/greybaron/campus-unbloat"
+							target="_blank"
 							aria-label="Quellcode (GitHub)"
-							on:click={() => {
-								window.open('https://github.com/greybaron/campus-unbloat');
-							}}
 							class="h-6 btn btn-sm text-xs variant-ghost"
 						>
 							GitHub
 							<i class="ml-1 fa-brands fa-github"></i>
-						</button>
+						</a>
 					{/if}
 				</div>
 			</svelte:fragment>

@@ -14,10 +14,10 @@ async function copyFontAwesome() {
 			'all.min.css'
 		);
 
-		const destinationPath = resolve('static', 'css', 'all.min.css');
+		const destinationPath = resolve('src', 'lib', 'fonts', 'css', 'all.min.css');
 
 		// Ensure the destination directory exists
-		await fs.mkdir(resolve('static', 'css'), { recursive: true });
+		await fs.mkdir(resolve('src', 'lib', 'fonts', 'css'), { recursive: true });
 
 		// copy fontawesome min css (so that relative paths dont point to node_modules)
 		await fs.copyFile(sourcePath, destinationPath);
@@ -31,7 +31,7 @@ async function copyFontAwesome() {
 export default defineConfig({
 	plugins: [
 		sveltekit(),
-		purgeCss(),
+		purgeCss({ legacy: true }),
 		{
 			name: 'faSubset',
 			buildStart: async () => {
@@ -77,7 +77,7 @@ export default defineConfig({
 						regular: ['_'],
 						brands: ['github']
 					},
-					'static/webfonts'
+					'src/lib/fonts/webfonts'
 				);
 				await copyFontAwesome();
 			}
