@@ -21,6 +21,8 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 
+	// Font Awesome minified
+	import '$lib/fonts/css/all.min.css';
 	// cookieconsent (short name to avoid content blockers)
 	import { load_cc } from '$lib/CC/cc';
 	import OsterEi from '$lib/osterEi.svelte';
@@ -68,8 +70,6 @@
 
 	let osterEi: SvelteComponent;
 </script>
-
-<link rel="stylesheet" href="/css/all.min.css" />
 
 <div
 	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
