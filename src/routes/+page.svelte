@@ -58,7 +58,9 @@
 				</div>
 			</div>
 
-			<div class="bg-surface-200-700-token p-2 rounded-md space-y-2 outline-dashed outline-1">
+			<div
+				class="bg-surface-200-700-token p-2 rounded-md space-y-2 border-token border-surface-500-400-token"
+			>
 				<label class="flex items-center space-x-2">
 					<input
 						type="checkbox"

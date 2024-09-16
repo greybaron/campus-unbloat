@@ -7,53 +7,41 @@
 	export let selectedDate: Date;
 </script>
 
-<div class="space-y-3 w-full flex-col justify-center">
+<div class="space-y-2 w-full flex-col justify-center">
 	{#if currentEvents.length == 0}
 		<p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
 	{:else}
 		{#each currentEvents as { start, end, title, room, instructor, remarks, color }}
 			<div
-				class="flex flex-row rounded-xl space-x-1 pr-4 bg-surface-100-800-token border border-surface-300-600-token"
+				class="flex flex-row rounded-xl bg-surface-50-900-token border border-surface-400-500-token"
 			>
-				<div class="min-w-3 h-auto rounded-l-3xl" style="background-color: {color};" />
-				<div class="w-full flex flex-col justify-center items-center">
-					<div>
-						<p class="text-sm pt-1">
-							{padIt(start.getHours().toString()) +
-								':' +
-								padIt(start.getMinutes().toString()) +
-								' - ' +
-								padIt(end.getHours().toString()) +
-								':' +
-								padIt(end.getMinutes().toString())}
-						</p>
-					</div>
-					<div>
-						<p class="font-semibold">
-							{title}
-						</p>
-					</div>
-					<div>
-						{#if remarks}
-							<div class="flex flex-row space-x-2">
-								<i class="fa-solid fa-info-circle"></i>
-								<p class="text-xs w-full flex-grow">
-									{remarks}
-								</p>
-							</div>
+				<div class="w-3 rounded-l-3xl" style="background-color: {color};" />
+				<div class="mr-2 py-2 w-full flex flex-col justify-center items-center">
+					<strong>{title}</strong>
+					<strong>
+						{padIt(start.getHours().toString())}:{padIt(start.getMinutes().toString())}
+						-
+						{padIt(end.getHours().toString())}:{padIt(end.getMinutes().toString())}
+					</strong>
+
+					<p>
+						{#if instructor && room}
+							{instructor}, Raum {room}
+						{:else if instructor}
+							{instructor}
+						{:else if room}
+							Raum: {room}
 						{/if}
-					</div>
-					<div>
-						<p>
-							{#if instructor && room}
-								{instructor}, Raum {room}
-							{:else if instructor}
-								{instructor}
-							{:else if room}
-								Raum: {room}
-							{/if}
-						</p>
-					</div>
+					</p>
+
+					{#if remarks}
+						<div class="mt-0.5 flex flex-row space-x-2 items-center">
+							<i class="fa-solid fa-info-circle"></i>
+							<p class="w-full flex-grow">
+								{remarks}
+							</p>
+						</div>
+					{/if}
 				</div>
 			</div>
 		{/each}
