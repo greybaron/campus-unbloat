@@ -27,6 +27,9 @@ export default {
 			maxHeight: {
 				'safe-screen': 'calc(100dvh - 188px)',
 				'safe-screen-with-header': 'calc(100dvh - 246px)' //assuming header is 58px incl. padding and stuff
+			},
+			backgroundImage: {
+				'gradient-165': 'linear-gradient(165deg, var(--tw-gradient-stops))'
 			}
 		},
 		screens: {

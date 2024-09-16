@@ -2,12 +2,13 @@
 	import type { MensaMeal } from '$lib/types';
 
 	export let meal: MensaMeal;
+	export let gradientColour: string;
 </script>
 
 <div class="space-y-1">
 	{#each meal.sub_meals as submeal}
 		<div
-			class="rounded-xl bg-surface-50-900-token px-4 py-2 border-dashed border-token border-surface-700-200-token space-y-2 text-center"
+			class="rounded-xl bg-gradient-165 to-40% {gradientColour} bg-surface-50-900-token px-4 py-2 border-token border-surface-400-500-token space-y-2 text-center"
 		>
 			<strong>{submeal.name}</strong>
 			<hr />
@@ -19,14 +20,10 @@
 							<i class="fa-solid fa-plus"></i>
 						</span>
 					</div>
-					<div class="flex flex-grow items-center">
-						<div class="text-left ml-5">
-							<ul class="list-disc">
-								{#each submeal.additional_ingredients as ingredient}
-									<li>{ingredient}</li>
-								{/each}
-							</ul>
-						</div>
+					<div>
+						{#each submeal.additional_ingredients as ingredient}
+							<p class="text-left">{ingredient}</p>
+						{/each}
 					</div>
 				</div>
 				<hr />
@@ -53,7 +50,7 @@
 
 		{#if submeal.variations}
 			<div
-				class="rounded-xl bg-surface-50-900-token px-4 py-2 border-dashed border-token border-surface-700-200-token space-y-2"
+				class="rounded-xl bg-surface-50-900-token px-4 py-2 border-token border-surface-400-500-token space-y-2"
 			>
 				<div class="flex space-x-2">
 					<div class="badge-icon p-3 variant-outline">
@@ -62,11 +59,19 @@
 					<strong>Variationen</strong>
 				</div>
 				{#each submeal.variations as variation}
-					<hr />
+					<hr class="pb-1" />
 					<strong>{variation.name}</strong>
 					{#if variation.allergens_and_add}
-						<div>
-							<strong>Allergene: </strong><span>{variation.allergens_and_add}</span>
+						<div class="flex flex-row space-x-2">
+							<div>
+								<span class="badge-icon p-3 variant-outline">
+									<i class="fa-solid fa-info"></i>
+								</span>
+							</div>
+
+							<div class="text-left flex-grow">
+								<strong>Allergene: </strong><span>{variation.allergens_and_add}</span>
+							</div>
 						</div>
 					{/if}
 				{/each}

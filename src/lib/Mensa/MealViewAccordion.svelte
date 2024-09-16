@@ -53,6 +53,27 @@
 
 		return 'bg-surface-100-800-token';
 	}
+
+	function getGroupGradientColour(meal_type: string) {
+		const icons: { [key: string]: string } = {
+			vegan: 'from-green-400/30',
+			vegetarisch: 'from-green-400/30',
+			gemüse: 'from-green-400/30',
+			fleisch: 'from-red-400/30',
+			fisch: 'from-blue-400/30',
+			pastateller: 'from-yellow-300/30'
+		};
+
+		const lowercasedMealType = meal_type.toLowerCase();
+
+		for (const key in icons) {
+			if (lowercasedMealType.includes(key)) {
+				return icons[key];
+			}
+		}
+
+		return 'bg-surface-100-800-token';
+	}
 </script>
 
 <Accordion>
@@ -61,7 +82,7 @@
 			hover="hover:dark:backdrop-brightness-200 hover:backdrop-brightness-90 transition-[backdrop-filter]"
 			regionControl="{getGroupColour(
 				meal.meal_type
-			)} border border-surface-900-50-token {alwaysExpanded ? 'pointer-events-none' : ''}"
+			)} border border-surface-400-500-token {alwaysExpanded ? 'pointer-events-none' : ''}"
 			regionCaret={alwaysExpanded ? 'hidden' : ''}
 			open={alwaysExpanded || $expandedMealCategories.includes(meal.meal_type)}
 			on:toggle={(e) => {
@@ -80,7 +101,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="summary">{meal.meal_type}</svelte:fragment>
 			<svelte:fragment slot="content">
-				<MealGroupContainer {meal} />
+				<MealGroupContainer {meal} gradientColour={getGroupGradientColour(meal.meal_type)} />
 			</svelte:fragment>
 		</AccordionItem>
 	{/each}
