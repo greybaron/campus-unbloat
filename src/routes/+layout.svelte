@@ -24,6 +24,7 @@
 	// cookieconsent (short name to avoid content blockers)
 	import { load_cc } from '$lib/CC/cc';
 	import OsterEi from '$lib/osterEi.svelte';
+	import '$lib/fonts/css/all.min.css';
 
 	initializeStores();
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
