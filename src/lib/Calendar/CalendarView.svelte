@@ -7,7 +7,7 @@
 	export let selectedDate: Date;
 </script>
 
-<div class="space-y-2 w-full flex-col justify-center">
+<div class="space-y-1 w-full flex-col justify-center">
 	{#if currentEvents.length == 0}
 		<p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
 	{:else}
@@ -17,12 +17,13 @@
 			>
 				<div class="w-3 rounded-l-3xl" style="background-color: {color};" />
 				<div class="mr-2 py-2 w-full flex flex-col justify-center items-center">
-					<strong>{title}</strong>
-					<strong>
+					<div>
+						<strong>{title}</strong>
+						<strong class="mx-1">•</strong>
 						{padIt(start.getHours().toString())}:{padIt(start.getMinutes().toString())}
 						-
 						{padIt(end.getHours().toString())}:{padIt(end.getMinutes().toString())}
-					</strong>
+					</div>
 
 					<p>
 						{#if instructor && room}
