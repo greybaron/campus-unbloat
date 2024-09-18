@@ -24,14 +24,7 @@
 		if (browser) {
 			new Chart(pieChartElement, {
 				type: 'pie',
-				data: chartData,
-				options: {
-					plugins: {
-						legend: {
-							display: false
-						}
-					}
-				}
+				data: chartData
 			});
 		}
 	});

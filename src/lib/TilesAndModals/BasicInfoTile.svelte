@@ -48,7 +48,6 @@
 <DashboardTile
 	title="Deine Infos"
 	clickable={false}
-	add_class="pointer-events-none"
 	ready={Boolean(basicUserData && fachsemester && ects)}
 >
 	<div class="w-full space-y-2 h-full max-h-44 min-h-32 flex flex-col justify-between">
