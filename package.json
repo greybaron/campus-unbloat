@@ -10,7 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"pkgv7": "cross-env pkg --targets latest-linuxstatic-armv7 --compress Brotli ./build/index.js --output ./armv7bin"
+		"staticav7": "vite build && npx webpack && npx @yao-pkg/pkg --targets node22-linuxstatic-armv7 --compress Brotli ./build/index.js --output ./armv7bin"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.1.0",
@@ -28,7 +28,6 @@
 		"@typescript-eslint/eslint-plugin": "^8.5.0",
 		"@typescript-eslint/parser": "^8.5.0",
 		"autoprefixer": "^10.4.19",
-		"cross-env": "^7.0.3",
 		"eslint": "^9.10.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.35.1",
@@ -44,7 +43,8 @@
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3",
-		"vite-plugin-tailwind-purgecss": "^0.3.3"
+		"vite-plugin-tailwind-purgecss": "^0.3.3",
+		"webpack-cli": "^5.1.4"
 	},
 	"type": "module",
 	"dependencies": {
