@@ -2,7 +2,7 @@
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
 	import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
-	import { type SvelteComponent, onMount } from 'svelte';
+	import { type SvelteComponent } from 'svelte';
 	import type { EventContentArg } from '@fullcalendar/core';
 	import type { Writable } from 'svelte/store';
 
@@ -12,17 +12,14 @@
 	import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
 	import { dateIsToday, getAltDayString, getNextWeekday, padIt } from '$lib/TSHelpers/DateHelper';
-	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 
-	export let storedEvents: Writable<EventUnix[]>;
-	export let selectedDate: Date;
 	export let parent: SvelteComponent;
+	export let storedEventsUnix: Writable<EventUnix[]>;
+	export let selectedDate: Date;
 	export let onUpdateSelectedDate: (newDate: Date) => void;
 
 	let ec: SvelteComponent;
 	let view: string = 'week'; // Default-View (Wochenansicht)
-	let storedEventsUnix: Writable<EventUnix[]>;
-	let currentDayEvents: Event[] = [];
 	let eventList: Event[] = [];
 	let plugins = [TimeGrid];
 	let options = {
@@ -37,8 +34,6 @@
 		displayEventTime: false,
 		displayEventEnd: false,
 		slotWidth: 60,
-		buttonText: { today: 'Heute' },
-		nowIndicator: true,
 		headerToolbar: { start: '', center: '', end: '' },
 		eventContent: function (arg: EventContentArg) {
 			let eventId = 'custom-event-' + arg.event.id;
@@ -66,7 +61,6 @@
 					element.addEventListener('click', () => {
 						view = 'day';
 						selectedDate = arg.event.start as Date;
-						currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEvents), selectedDate);
 						if (onUpdateSelectedDate) {
 							onUpdateSelectedDate(selectedDate);
 						}
@@ -78,20 +72,13 @@
 		}
 	};
 
-	storedEventsUnix = persistentStore('storedEvents', []);
-
-	$: run(unixEventsToEvents($storedEvents));
-
-	onMount(() => {
-		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
-	});
+	$: if ($storedEventsUnix) options.events = unixEventsToEvents($storedEventsUnix);
 
 	function handleSelectedDateChange(e: CustomEvent<Date>) {
 		selectedDate = e.detail;
 		if (ec) {
 			ec.setOption('date', selectedDate);
 		}
-		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 		if (onUpdateSelectedDate) {
 			onUpdateSelectedDate(selectedDate);
 		}
@@ -102,15 +89,8 @@
 		if (ec) {
 			ec.setOption('date', selectedDate);
 		}
-		currentDayEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
 		if (onUpdateSelectedDate) {
 			onUpdateSelectedDate(selectedDate);
-		}
-	}
-
-	function run(events: Event[]) {
-		if (events) {
-			options.events = events;
 		}
 	}
 </script>
@@ -137,6 +117,7 @@
 	</div>
 
 	{#if view === 'day'}
+		{@const currentDayEvents = getCurrentEvents(options.events, selectedDate)}
 		<div class="w-full h-full flex justify-center">
 			<div class="flex flex-col items-center justify-center md:w-3/5 w-4/5">
 				<button class="w-full" on:click|stopPropagation={() => {}}>

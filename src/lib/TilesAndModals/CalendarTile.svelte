@@ -17,6 +17,7 @@
 
 	const dispatch = createEventDispatcher();
 
+	let events: Array<Event> = [];
 	let currentEvents: Array<Event> = [];
 	let modalStore = getModalStore();
 	let modalComponent: ModalComponent;
@@ -45,12 +46,13 @@
 		storedEventsUnix = persistentStore('storedEvents', []);
 		lastEventUpdate = persistentStore('lastEventUpdate', null);
 
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		events = unixEventsToEvents($storedEventsUnix);
+		currentEvents = getCurrentEvents(events, selectedDate);
 
 		modalComponent = {
 			ref: CalendarModal,
 			props: {
-				storedEvents: storedEventsUnix,
+				storedEventsUnix: storedEventsUnix,
 				selectedDate: selectedDate,
 				onUpdateSelectedDate: updateSelectedDate
 			}
@@ -88,7 +90,7 @@
 	function handleSelectedDateChange(e: CustomEvent<Date>) {
 		selectedDate = e.detail;
 		modalComponent.props!.selectedDate = selectedDate;
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		currentEvents = getCurrentEvents(events, selectedDate);
 	}
 
 	function openModal() {
@@ -112,13 +114,13 @@
 	function setToToday() {
 		selectedDate = getNextWeekday();
 		modalComponent.props!.selectedDate = selectedDate;
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		currentEvents = getCurrentEvents(events, selectedDate);
 	}
 
 	function updateSelectedDate(newDate: Date) {
 		selectedDate = newDate;
 		modalComponent.props!.selectedDate = selectedDate;
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		currentEvents = getCurrentEvents(events, selectedDate);
 	}
 
 	async function fetchCalendar() {
@@ -140,8 +142,10 @@
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
 		storedEventsUnix.set(parsedUnix);
+		events = unixEventsToEvents(parsedUnix);
+
 		lastEventUpdate.set(new Date());
-		currentEvents = getCurrentEvents(unixEventsToEvents($storedEventsUnix), selectedDate);
+		currentEvents = getCurrentEvents(events, selectedDate);
 
 		isReloading = false;
 	}
