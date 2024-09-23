@@ -10,7 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"staticav7": "vite build && npx webpack && npx @yao-pkg/pkg --targets node22-macos-arm64 --compress Brotli ./build/webpack/main.js --output ./armv7bin"
+		"staticav7": "vite build && npx webpack && npx @yao-pkg/pkg --targets node22-linuxstatic-armv7 --compress Brotli ./build/webpack/main.js --output ./armv7bin"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.1.0",
