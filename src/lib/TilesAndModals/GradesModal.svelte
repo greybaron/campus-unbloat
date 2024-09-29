@@ -19,8 +19,7 @@
 	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
 
 	export let parent: SvelteComponent;
-	// export let grades: Array<CampusDualGrade>;
-	let grades: Array<CampusDualGrade> = [];
+	export let grades: Array<CampusDualGrade>;
 
 	const totalCps = grades.reduce((sum, item) => sum + item.credit_points, 0);
 	const weightedAverage =
