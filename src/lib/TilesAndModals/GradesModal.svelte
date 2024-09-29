@@ -21,10 +21,11 @@
 	export let parent: SvelteComponent;
 	export let grades: Array<CampusDualGrade>;
 
+	const totalCps = grades.reduce((sum, item) => sum + item.credit_points, 0);
 	const weightedAverage =
 		grades.reduce((sum, item) => {
 			return sum + parseFloat(item.grade.replace(',', '.')) * item.credit_points; // Convert string to number and add to sum
-		}, 0) / 180;
+		}, 0) / totalCps;
 	const popupAvgInfo: PopupSettings = {
 		event: 'hover',
 		target: 'popupAvgInfo',
