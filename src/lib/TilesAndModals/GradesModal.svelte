@@ -21,10 +21,10 @@
 	export let parent: SvelteComponent;
 	export let grades: Array<CampusDualGrade>;
 
-	const averageGrade =
+	const weightedAverage =
 		grades.reduce((sum, item) => {
-			return sum + parseFloat(item.grade.replace(',', '.')); // Convert string to number and add to sum
-		}, 0) / grades.length;
+			return sum + parseFloat(item.grade.replace(',', '.')) * item.credit_points; // Convert string to number and add to sum
+		}, 0) / 180;
 	const popupAvgInfo: PopupSettings = {
 		event: 'hover',
 		target: 'popupAvgInfo',
@@ -104,8 +104,8 @@
 	}}
 />
 
-<div class="card p-4 shadow-xl" data-popup="popupAvgInfo">
-	<div><p>Ungewichteter Durchschnitt</p></div>
+<div class="card p-4 shadow-xl z-50" data-popup="popupAvgInfo">
+	<p>Gewichteter Durchschnitt</p>
 	<div class="arrow bg-surface-100-800-token" />
 </div>
 
@@ -122,9 +122,9 @@
 				type="text"
 				placeholder="Suchen..."
 			/>
-			<div use:popup={popupAvgInfo} class="badge variant-filled pl-3 z-50">
-				<i class="fa-solid fa-graduation-cap scale-125"></i>
-				<p class="pointer-events-none">{averageGrade.toPrecision(3)}</p>
+			<div use:popup={popupAvgInfo} class="badge variant-filled pl-3">
+				<i class="fa-solid fa-graduation-cap scale-125 pointer-events-none"></i>
+				<p class="pointer-events-none">{weightedAverage.toPrecision(3)}</p>
 			</div>
 		</div>
 	</svelte:fragment>
