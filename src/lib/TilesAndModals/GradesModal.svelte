@@ -122,9 +122,8 @@
 				type="text"
 				placeholder="Suchen..."
 			/>
-			<div use:popup={popupAvgInfo} class="badge variant-filled pl-3 bg-red-400 z-50">
+			<div use:popup={popupAvgInfo} class="badge variant-filled pl-3 z-50">
 				<i class="fa-solid fa-graduation-cap scale-125"></i>
-				<!-- {averageGrade.toPrecision(3)} -->
 				<p class="pointer-events-none">{averageGrade.toPrecision(3)}</p>
 			</div>
 		</div>
