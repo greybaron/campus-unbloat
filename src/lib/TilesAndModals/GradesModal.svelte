@@ -19,7 +19,8 @@
 	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
 
 	export let parent: SvelteComponent;
-	export let grades: Array<CampusDualGrade>;
+	// export let grades: Array<CampusDualGrade>;
+	let grades: Array<CampusDualGrade> = [];
 
 	const totalCps = grades.reduce((sum, item) => sum + item.credit_points, 0);
 	const weightedAverage =
@@ -106,7 +107,8 @@
 />
 
 <div class="card p-4 shadow-xl z-50" data-popup="popupAvgInfo">
-	<p>Gewichteter Durchschnitt</p>
+	<p class="font-bold">Gewichteter Durchschnitt</p>
+	<p class="text-center text-xs">Summe(Note ⋅ CPs) / Gesamt-CPs</p>
 	<div class="arrow bg-surface-100-800-token" />
 </div>
 
@@ -125,7 +127,7 @@
 			/>
 			<div use:popup={popupAvgInfo} class="badge variant-filled pl-3">
 				<i class="fa-solid fa-graduation-cap scale-125 pointer-events-none"></i>
-				<p class="pointer-events-none">{weightedAverage.toPrecision(3)}</p>
+				<p class="pointer-events-none">{totalCps ? weightedAverage.toPrecision(3) : '...'}</p>
 			</div>
 		</div>
 	</svelte:fragment>
