@@ -21,6 +21,16 @@
 	export let parent: SvelteComponent;
 	export let grades: Array<CampusDualGrade>;
 
+	const averageGrade =
+		grades.reduce((sum, item) => {
+			return sum + parseFloat(item.grade.replace(',', '.')); // Convert string to number and add to sum
+		}, 0) / grades.length;
+	const popupAvgInfo: PopupSettings = {
+		event: 'hover',
+		target: 'popupAvgInfo',
+		placement: 'left'
+	};
+
 	const toastStore = getToastStore();
 
 	let filteredGrades: Array<CampusDualGrade> = grades;
@@ -94,18 +104,30 @@
 	}}
 />
 
+<div class="card p-4 shadow-xl" data-popup="popupAvgInfo">
+	<div><p>Ungewichteter Durchschnitt</p></div>
+	<div class="arrow bg-surface-100-800-token" />
+</div>
+
 <div class="card p-2 w-80 shadow-2xl z-50" data-popup="popupGradeStats">
 	<GradeStatsPopup bind:gradeStats bind:myGrade />
 </div>
 <DashboardModal bind:parent title="Noten">
 	<svelte:fragment slot="header">
-		<input
-			bind:this={filterElement}
-			bind:value={filter}
-			class="input"
-			type="text"
-			placeholder="Suchen..."
-		/>
+		<div class="flex space-x-2">
+			<input
+				bind:this={filterElement}
+				bind:value={filter}
+				class="input"
+				type="text"
+				placeholder="Suchen..."
+			/>
+			<div use:popup={popupAvgInfo} class="badge variant-filled pl-3 bg-red-400 z-50">
+				<i class="fa-solid fa-graduation-cap scale-125"></i>
+				<!-- {averageGrade.toPrecision(3)} -->
+				<p class="pointer-events-none">{averageGrade.toPrecision(3)}</p>
+			</div>
+		</div>
 	</svelte:fragment>
 
 	{#if filteredGrades && filteredGrades.length > 0}

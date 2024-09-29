@@ -72,7 +72,8 @@ export default defineConfig({
 							'ban',
 							'question',
 							'square-pen',
-							'square-check'
+							'square-check',
+							'graduation-cap'
 						],
 						regular: ['_'],
 						brands: ['github']
