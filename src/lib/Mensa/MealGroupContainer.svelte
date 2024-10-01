@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { MensaMeal } from '$lib/types';
+	import type { MealGroup } from '$lib/types';
 
-	export let meal: MensaMeal;
+	export let mealGroup: MealGroup;
 	export let gradientColour: string;
 </script>
 
 <div class="space-y-1">
-	{#each meal.sub_meals as submeal}
+	{#each mealGroup.sub_meals as submeal}
 		<div
 			class="rounded-xl bg-gradient-165 to-40% {gradientColour} bg-surface-50-900-token px-4 py-2 border-token border-surface-400-500-token space-y-2 text-center"
 		>

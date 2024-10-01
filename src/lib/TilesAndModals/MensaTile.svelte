@@ -8,7 +8,7 @@
 	} from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
 
-	import { ToastPayloadClass, type Mensa, type MensaMeal, type ToastPayload } from '$lib/types';
+	import { ToastPayloadClass, type Canteen, type MealGroup, type ToastPayload } from '$lib/types';
 	import MensaModal from './MensaModal.svelte';
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
@@ -24,20 +24,20 @@
 	let modalComponent: ModalComponent;
 	let modal: ModalSettings;
 
-	let mensaList: Array<Mensa>;
-	let mensaSelectElementValue: number;
-	let mensaMeals: Array<MensaMeal> | undefined;
+	let canteens: Array<Canteen>;
+	let canteenSelectListValue: number;
+	let mealGroups: Array<MealGroup> | undefined;
 
 	let showMealsInTile: Writable<boolean>;
 	let expandedMealCategories: Writable<Array<string>>;
-	let selectedMensa: Writable<number>;
+	let selectedCanteen: Writable<number>;
 	let selectedOpenMensaName: Writable<string>;
 
 	let selectedDate: Date = getNextWeekday();
 	let unique = {};
 
 	onMount(async () => {
-		const res = await fetch('/api/mensalist');
+		const res = await fetch('/api/mensa/canteens');
 
 		if (!res.ok) {
 			let error = await res.text();
@@ -50,17 +50,17 @@
 			return;
 		}
 
-		mensaList = await res.json();
+		canteens = await res.json();
 
 		showMealsInTile = persistentStore('showMealsInTile', true);
 		expandedMealCategories = persistentStore('expandedMealCategories', []);
-		selectedMensa = persistentStore('selectedMensa', mensaList[0].id);
+		selectedCanteen = persistentStore('selectedCanteen', canteens[0].id);
 		selectedOpenMensaName = persistentStore('selectedOpenMensaName', '');
 
-		if ($selectedMensa < 0) {
-			mensaList.push({ id: $selectedMensa, name: $selectedOpenMensaName });
+		if ($selectedCanteen < 0) {
+			canteens.push({ id: $selectedCanteen, name: $selectedOpenMensaName });
 		}
-		mensaList.push({
+		canteens.push({
 			id: 0,
 			name: 'Andere Mensa...'
 		});
@@ -70,9 +70,9 @@
 		modalComponent = {
 			ref: MensaModal,
 			props: {
-				mensaList: mensaList,
+				canteens: canteens,
 				expandedMealCategories: expandedMealCategories,
-				selectedMensa: selectedMensa,
+				selectedCanteen: selectedCanteen,
 				selectedOpenMensaName: selectedOpenMensaName,
 				selectedDate: selectedDate,
 				onSelectedChange: handleModalSelectChange
@@ -85,16 +85,16 @@
 		};
 	});
 
-	async function handleMealsFetch(): Promise<MensaMeal[] | undefined> {
+	async function handleMealsFetch(): Promise<MealGroup[] | undefined> {
 		try {
-			if ($selectedMensa > 0) {
-				mensaMeals = await fetchMeals(selectedDate, $selectedMensa);
-				modalComponent.props!.mensaMeals = mensaMeals;
-				return mensaMeals;
+			if ($selectedCanteen > 0) {
+				mealGroups = await fetchMeals(selectedDate, $selectedCanteen);
+				modalComponent.props!.mealGroups = mealGroups;
+				return mealGroups;
 			} else {
-				mensaMeals = await fetchOpenMeals(selectedDate, $selectedMensa * -1);
-				modalComponent.props!.mensaMeals = mensaMeals;
-				return mensaMeals;
+				mealGroups = await fetchOpenMeals(selectedDate, $selectedCanteen * -1);
+				modalComponent.props!.mealGroups = mealGroups;
+				return mealGroups;
 			}
 		} catch (e) {
 			if (e instanceof Error) {
@@ -117,14 +117,14 @@
 		handleMealsFetch();
 	}
 
-	async function handleModalSelectChange(date: Date): Promise<MensaMeal[]> {
+	async function handleModalSelectChange(date: Date): Promise<MealGroup[]> {
 		selectedDate = date;
 		await handleMealsFetch();
 		// dont care
-		if ($selectedMensa < 0) {
+		if ($selectedCanteen < 0) {
 			unique = {};
 		}
-		return mensaMeals!;
+		return mealGroups!;
 	}
 </script>
 
@@ -133,18 +133,18 @@
 	on:click={() => {
 		modalStore.trigger(modal);
 	}}
-	ready={Boolean(mensaList)}
+	ready={Boolean(canteens)}
 >
 	<svelte:fragment slot="header">
-		{#if $showMealsInTile && mensaList}
+		{#if $showMealsInTile && canteens}
 			<TileInteractiveElementWrapper add_class="w-full">
 				{#key unique}
 					<MensaSelector
 						on:selectChanged={handleSelectChange}
-						bind:mensaSelectElementValue
-						{selectedMensa}
+						bind:canteenSelectListValue
+						{selectedCanteen}
 						{selectedOpenMensaName}
-						{mensaList}
+						{canteens}
 					/>
 				{/key}
 			</TileInteractiveElementWrapper>
@@ -165,8 +165,8 @@
 			<p class="pt-4 my-auto text-md font-bold">Klicken, um alle Mensen anzuzeigen.</p>
 		{/if}
 		<TileInteractiveElementWrapper>
-			{#if $showMealsInTile && mensaMeals}
-				<MealView bind:expandedMealCategories {mensaMeals} />
+			{#if $showMealsInTile && mealGroups}
+				<MealView bind:expandedMealCategories {mealGroups} />
 			{/if}
 		</TileInteractiveElementWrapper>
 	</div>

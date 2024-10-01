@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/private';
 
 export async function GET() {
 	try {
-		const response = await fetch(`${env.MENSA_API_URL}/mensalist`);
+		const response = await fetch(`${env.MENSA_API_URL}/openmensacanteens`);
 
 		if (!response.ok) {
 			throw new Error();
@@ -10,10 +10,10 @@ export async function GET() {
 
 		return response;
 	} catch (error) {
-		console.error('Error at mensalist:');
+		console.error('Error at openmensacanteens:');
 		if (error instanceof Error) {
 			console.error(error.message);
 		}
-		return new Response('Mensalisten-Abfrage ist fehlgeschlagen', { status: 500 });
+		return new Response('OpenMensa-Listen-Abfrage ist fehlgeschlagen', { status: 500 });
 	}
 }

@@ -6,20 +6,20 @@
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
 	import { dateIsToday, getAltDayString } from '$lib/TSHelpers/DateHelper';
-	import { type Mensa, type MensaMeal } from '$lib/types';
+	import { type Canteen, type MealGroup } from '$lib/types';
 
-	export let onSelectedChange: (date: Date) => Promise<MensaMeal[]>;
+	export let onSelectedChange: (date: Date) => Promise<MealGroup[]>;
 	export let parent: SvelteComponent;
-	export let mensaList: Array<Mensa>;
-	export let selectedMensa: Writable<number>;
+	export let canteens: Array<Canteen>;
+	export let selectedCanteen: Writable<number>;
 	export let selectedOpenMensaName: Writable<string>;
 	export let expandedMealCategories: Writable<Array<string>>;
-	export let mensaMeals: Array<MensaMeal> | undefined = undefined;
+	export let mealGroups: Array<MealGroup> | undefined = undefined;
 	export let selectedDate: Date;
 
 	async function handleSelectChange(e: CustomEvent<Date>) {
 		if (e.detail) selectedDate = e.detail;
-		mensaMeals = await onSelectedChange(selectedDate);
+		mealGroups = await onSelectedChange(selectedDate);
 	}
 </script>
 
@@ -30,14 +30,14 @@
 	<svelte:fragment slot="header">
 		<MensaSelector
 			on:selectChanged={handleSelectChange}
-			{selectedMensa}
+			{selectedCanteen}
 			{selectedOpenMensaName}
-			{mensaList}
+			{canteens}
 			{selectedDate}
 		/>
 	</svelte:fragment>
 
-	{#if mensaMeals}
-		<MealView twoColumn={true} bind:expandedMealCategories {mensaMeals} />
+	{#if mealGroups}
+		<MealView twoColumn={true} bind:expandedMealCategories {mealGroups} />
 	{/if}
 </DashboardModal>

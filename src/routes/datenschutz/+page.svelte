@@ -96,7 +96,7 @@
 		{#if env.PUBLIC_IMPRESS_ADDRZUSATZ}
 			{env.PUBLIC_IMPRESS_ADDRZUSATZ}<br />
 		{/if}
-		{env.PUBLIC_IMPRESS_ORT_PLZ}
+		{env.PUBLIC_IMPRESS_PLZ_ORT}
 	</p>
 	<p>
 		Telefon: {env.PUBLIC_IMPRESS_TELEFON}<br />

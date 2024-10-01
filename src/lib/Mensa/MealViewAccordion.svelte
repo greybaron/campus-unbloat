@@ -2,11 +2,12 @@
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
 
-	import type { MensaMeal } from '$lib/types';
+	import type { MealGroup } from '$lib/types';
 	import MealGroupContainer from './MealGroupContainer.svelte';
 
 	export let alwaysExpanded = false;
-	export let mensaMeals: MensaMeal[];
+	export let mealGroups: MealGroup[];
+
 	export let expandedMealCategories: Writable<Array<string>>;
 
 	function getGroupIcon(meal_type: string) {
@@ -77,31 +78,34 @@
 </script>
 
 <Accordion>
-	{#each mensaMeals as meal}
+	{#each mealGroups as mealGroup}
 		<AccordionItem
 			hover="hover:dark:backdrop-brightness-200 hover:backdrop-brightness-90 transition-[backdrop-filter]"
 			regionControl="{getGroupColour(
-				meal.meal_type
+				mealGroup.meal_type
 			)} border border-surface-400-500-token {alwaysExpanded ? 'pointer-events-none' : ''}"
 			regionCaret={alwaysExpanded ? 'hidden' : ''}
-			open={alwaysExpanded || $expandedMealCategories.includes(meal.meal_type)}
+			open={alwaysExpanded || $expandedMealCategories.includes(mealGroup.meal_type)}
 			on:toggle={(e) => {
 				if (alwaysExpanded) return;
 				expandedMealCategories.update((categories) => {
 					if (e.detail.open) {
-						return [...categories, meal.meal_type];
+						return [...categories, mealGroup.meal_type];
 					} else {
-						return categories.filter((cat) => cat !== meal.meal_type);
+						return categories.filter((cat) => cat !== mealGroup.meal_type);
 					}
 				});
 			}}
 		>
 			<svelte:fragment slot="lead">
-				<i class="{getGroupIcon(meal.meal_type)} scale-125"></i>
+				<i class="{getGroupIcon(mealGroup.meal_type)} scale-125"></i>
 			</svelte:fragment>
-			<svelte:fragment slot="summary">{meal.meal_type}</svelte:fragment>
+			<svelte:fragment slot="summary">{mealGroup.meal_type}</svelte:fragment>
 			<svelte:fragment slot="content">
-				<MealGroupContainer {meal} gradientColour={getGroupGradientColour(meal.meal_type)} />
+				<MealGroupContainer
+					{mealGroup}
+					gradientColour={getGroupGradientColour(mealGroup.meal_type)}
+				/>
 			</svelte:fragment>
 		</AccordionItem>
 	{/each}

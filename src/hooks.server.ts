@@ -13,13 +13,13 @@ if (process.env.NODE_ENV === 'production') {
 		!(
 			publicEnv.PUBLIC_IMPRESS_FULLNAME &&
 			publicEnv.PUBLIC_IMPRESS_STRASSE_HAUSNR &&
-			publicEnv.PUBLIC_IMPRESS_ORT_PLZ &&
+			publicEnv.PUBLIC_IMPRESS_PLZ_ORT &&
 			publicEnv.PUBLIC_IMPRESS_TELEFON &&
 			publicEnv.PUBLIC_IMPRESS_EMAIL
 		)
 	) {
 		console.error(
-			'One or more environment variables are missing:\n\nPUBLIC_IMPRESS_FULLNAME\nPUBLIC_IMPRESS_STRASSE_HAUSNR\nPUBLIC_IMPRESS_ORT_PLZ\nPUBLIC_IMPRESS_TELEFON\nPUBLIC_IMPRESS_EMAIL'
+			'One or more environment variables are missing:\n\nPUBLIC_IMPRESS_FULLNAME\nPUBLIC_IMPRESS_STRASSE_HAUSNR\nPUBLIC_IMPRESS_PLZ_ORT\nPUBLIC_IMPRESS_TELEFON\nPUBLIC_IMPRESS_EMAIL'
 		);
 		console.warn('Optional: PUBLIC_IMPRESS_ADDRZUSATZ');
 		process.exit(1);
