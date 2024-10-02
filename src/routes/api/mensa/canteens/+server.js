@@ -14,6 +14,6 @@ export async function GET() {
 		if (error instanceof Error) {
 			console.error(error.message);
 		}
-		return new Response('canteensen-Abfrage ist fehlgeschlagen', { status: 500 });
+		return new Response('Mensalisten-Abfrage ist fehlgeschlagen', { status: 500 });
 	}
 }
