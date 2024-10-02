@@ -1,13 +1,9 @@
 import { env } from '$env/dynamic/private';
 
-export async function GET({ url }) {
+export async function GET({ params }) {
 	try {
-		let mensaId = url.searchParams.get('mensa');
-		let date = url.searchParams.get('date');
-
-		const response = await fetch(
-			`${env.MENSA_API_URL}/get_day_at_mensa?mensa=${mensaId}&date=${date}`
-		);
+		const { canteen, date } = params;
+		const response = await fetch(`${env.MENSA_API_URL}/canteens/${canteen}/days/${date}`);
 
 		if (!response.ok) {
 			throw new Error();

@@ -1,12 +1,12 @@
 import { browser } from '$app/environment';
 
 import { getDateAsUrlParam } from '$lib/TSHelpers/DateHelper';
-import type { MensaMeal, MensaSubMeal, openMensaMeal } from '$lib/types';
+import type { MealGroup, SubMeal, openmensaMeal } from '$lib/types';
 
-export async function fetchMeals(date: Date, mensaId: number): Promise<MensaMeal[] | undefined> {
+export async function fetchMeals(date: Date, canteenId: number): Promise<MealGroup[] | undefined> {
 	if (browser) {
 		const date_str = getDateAsUrlParam(date);
-		const res = await fetch(`/api/get_day_at_mensa?mensa=${mensaId}&date=${date_str}`);
+		const res = await fetch(`/api/mensa/canteens/${canteenId}/days/${date_str}`);
 
 		if (!res.ok) {
 			throw new Error(await res.text());
@@ -18,12 +18,12 @@ export async function fetchMeals(date: Date, mensaId: number): Promise<MensaMeal
 
 export async function fetchOpenMeals(
 	date: Date,
-	mensaId: number
-): Promise<MensaMeal[] | undefined> {
+	canteenId: number
+): Promise<MealGroup[] | undefined> {
 	if (browser) {
 		const date_str = getDateAsUrlParam(date);
 		const res = await fetch(
-			`https://openmensa.org/api/v2/canteens/${mensaId}/days/${date_str}/meals`
+			`https://openmensa.org/api/v2/canteens/${canteenId}/days/${date_str}/meals`
 		);
 
 		if (!res.ok) {
@@ -33,14 +33,14 @@ export async function fetchOpenMeals(
 				throw new Error(await res.text());
 			}
 		} else {
-			const meals: openMensaMeal[] = await res.json();
-			return openMensaMealToMensaMeal(meals);
+			const meals: openmensaMeal[] = await res.json();
+			return openMensaMealsToMealGroups(meals);
 		}
 	}
 }
 
-function openMensaMealToMensaMeal(openMeals: openMensaMeal[]): MensaMeal[] {
-	const mealMap: Map<string, MensaSubMeal[]> = new Map();
+function openMensaMealsToMealGroups(openMeals: openmensaMeal[]): MealGroup[] {
+	const mealMap: Map<string, SubMeal[]> = new Map();
 
 	for (const openMeal of openMeals) {
 		const priceStr = openMealToPrice(openMeal.prices);

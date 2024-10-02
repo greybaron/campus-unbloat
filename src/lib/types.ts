@@ -118,17 +118,17 @@ export type ExamStats = {
 	ronmodus: number;
 };
 
-export type Mensa = {
+export type Canteen = {
 	id: number;
 	name: string;
 };
 
-export type MensaMeal = {
+export type MealGroup = {
 	meal_type: string;
-	sub_meals: MensaSubMeal[];
+	sub_meals: SubMeal[];
 };
 
-export type MensaSubMeal = {
+export type SubMeal = {
 	name: string;
 	additional_ingredients: string[];
 	price: string;
@@ -141,7 +141,7 @@ type MealVariations = {
 	allergens_and_add: string;
 };
 
-export type openMensaMeal = {
+export type openmensaMeal = {
 	id: number;
 	name: string;
 	category: string;

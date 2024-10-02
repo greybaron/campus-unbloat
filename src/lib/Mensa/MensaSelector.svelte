@@ -3,17 +3,17 @@
 	import type { Writable } from 'svelte/store';
 	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 
-	import type { Mensa } from '../types';
+	import type { Canteen } from '../types';
 	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
 	import OpenMensaModal from '$lib/TilesAndModals/OpenMensaModal.svelte';
 
-	export let mensaSelectElementValue: number | undefined = undefined;
-	export let selectedMensa: Writable<number>;
+	export let canteenSelectListValue: number | undefined = undefined;
+	export let selectedCanteen: Writable<number>;
 	export let selectedOpenMensaName: Writable<string>;
-	export let mensaList: Array<Mensa>;
+	export let canteens: Array<Canteen>;
 	export let selectedDate: Date = getNextWeekday();
 
-	// key to reload mensalist dropdown when an "openmensa" is added to the list
+	// key to reload canteens dropdown when an "openmensa" canteen is added to the list
 	let unique = {};
 
 	const dispatch = createEventDispatcher();
@@ -34,47 +34,47 @@
 		component: openmensaModalComponent
 	};
 
-	function mensalist_populated(_element: HTMLSelectElement) {
+	function canteens_populated(_element: HTMLSelectElement) {
 		// allegedly, svelte actions trigger once an element is created,
-		// but mensaSelectElementValueDropdown is still undefined at this point sooo...
+		// but canteenSelectListValueDropdown is still undefined at this point sooo...
 		tick().then(() => {
-			mensaSelectElementValue = $selectedMensa;
+			canteenSelectListValue = $selectedCanteen;
 		});
 	}
 
-	function changeMensa(mensaId: number | undefined) {
-		if (mensaId === 0) {
+	function changeCanteen(canteenId: number | undefined) {
+		if (canteenId === 0) {
 			// sweet sentinel value which means "other mensa" was selected
-			mensaSelectElementValue = $selectedMensa;
+			canteenSelectListValue = $selectedCanteen;
 			modalStore.close();
 			// start openmensa selection flow
 			modalStore.trigger(openMensaModal);
 		} else {
-			selectedMensa.set(mensaId!);
+			selectedCanteen.set(canteenId!);
 			dispatch('selectChanged');
 		}
 	}
 
-	function handleOpenMensaSelection(mensaId: number, mensaName: string) {
-		const idxOldOpenMensa = mensaList.findIndex((mensa) => mensa.id < 0);
+	function handleOpenMensaSelection(canteenId: number, canteenName: string) {
+		const idxOldOpenMensa = canteens.findIndex((canteen) => canteen.id < 0);
 		if (idxOldOpenMensa != -1) {
-			mensaList[idxOldOpenMensa] = {
-				id: mensaId * -1,
-				name: mensaName
+			canteens[idxOldOpenMensa] = {
+				id: canteenId * -1,
+				name: canteenName
 			};
 		} else {
-			mensaList.splice(mensaList.length - 1, 0, {
-				id: mensaId * -1,
-				name: mensaName
+			canteens.splice(canteens.length - 1, 0, {
+				id: canteenId * -1,
+				name: canteenName
 			});
 		}
 
 		unique = {};
 
 		// omfg
-		selectedMensa.set(mensaId * -1);
-		selectedOpenMensaName.set(mensaName);
-		mensaSelectElementValue = mensaId * -1;
+		selectedCanteen.set(canteenId * -1);
+		selectedOpenMensaName.set(canteenName);
+		canteenSelectListValue = canteenId * -1;
 		dispatch('selectChanged');
 	}
 
@@ -105,14 +105,14 @@
 		<select
 			aria-label="Mensa auswählen"
 			class="select transition-none"
-			bind:value={mensaSelectElementValue}
+			bind:value={canteenSelectListValue}
 			on:change={() => {
-				changeMensa(mensaSelectElementValue);
+				changeCanteen(canteenSelectListValue);
 			}}
-			use:mensalist_populated
+			use:canteens_populated
 		>
-			{#each mensaList as mensa}
-				<option value={mensa.id}>{mensa.name}</option>
+			{#each canteens as canteen}
+				<option value={canteen.id}>{canteen.name}</option>
 			{/each}
 		</select>
 	{/key}

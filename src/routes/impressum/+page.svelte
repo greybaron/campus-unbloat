@@ -12,7 +12,7 @@
 		{#if env.PUBLIC_IMPRESS_ADDRZUSATZ}
 			{env.PUBLIC_IMPRESS_ADDRZUSATZ}<br />
 		{/if}
-		{env.PUBLIC_IMPRESS_ORT_PLZ}
+		{env.PUBLIC_IMPRESS_PLZ_ORT}
 	</p>
 
 	<h2 class="h2">Kontakt</h2>
