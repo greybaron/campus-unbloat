@@ -36,7 +36,7 @@
 					</p>
 
 					{#if remarks}
-						<div class="mt-0.5 px-2 flex flex-row space-x-2 items-center">
+						<div class="mt-0.5 px-2 flex flex-row space-x-2 items-center pr-8">
 							<i class="fa-solid fa-info-circle"></i>
 							<p class="text-center">{remarks}</p>
 						</div>
