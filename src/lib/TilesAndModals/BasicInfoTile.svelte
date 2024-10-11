@@ -59,13 +59,29 @@
 		<div class="flex-grow" />
 		{#if fachsemester && ects}
 			<div class="flex space-x-2">
-				<div class="card rounded-xl w-full p-2 space-y-2 justify-center flex flex-col">
+				<div
+					class="bg-white/40 dark:bg-surface-800 shadow rounded-xl w-full p-2 space-y-2 justify-center flex flex-col"
+				>
 					<small id="fachsem">Fachsemester: {fachsemester}</small>
-					<ProgressBar labelledby="fachsem" value={parseInt(fachsemester)} max={6} />
+					<ProgressBar
+						meter="bg-secondary-500"
+						track="bg-secondary-500/30"
+						labelledby="fachsem"
+						value={parseInt(fachsemester)}
+						max={6}
+					/>
 				</div>
-				<div class="card rounded-xl w-full p-2 space-y-2 justify-center flex flex-col">
+				<div
+					class="bg-white/40 dark:bg-surface-800 shadow rounded-xl w-full p-2 space-y-2 justify-center flex flex-col"
+				>
 					<small id="ects">ECTS: {ects} / 180</small>
-					<ProgressBar labelledby="ects" value={parseInt(ects)} max={180} />
+					<ProgressBar
+						meter="bg-primary-500"
+						track="bg-primary-500/30"
+						labelledby="ects"
+						value={parseInt(ects)}
+						max={180}
+					/>
 				</div>
 			</div>
 		{/if}

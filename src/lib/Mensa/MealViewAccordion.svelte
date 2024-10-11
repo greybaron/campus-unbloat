@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import type { Writable } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
 
 	import type { MealGroup } from '$lib/types';
 	import MealGroupContainer from './MealGroupContainer.svelte';
 
 	export let alwaysExpanded = false;
 	export let mealGroups: MealGroup[];
-
 	export let expandedMealCategories: Writable<Array<string>>;
+
+	const dispatch = createEventDispatcher();
 
 	function getGroupIcon(meal_type: string) {
 		const icons: { [key: string]: string } = {
@@ -52,7 +54,7 @@
 			}
 		}
 
-		return 'bg-surface-100-800-token';
+		return 'bg-surface-50-900-token';
 	}
 
 	function getGroupGradientColour(meal_type: string) {
@@ -73,7 +75,7 @@
 			}
 		}
 
-		return 'bg-surface-100-800-token';
+		return 'bg-surface-50-900-token';
 	}
 </script>
 
@@ -87,7 +89,6 @@
 			regionCaret={alwaysExpanded ? 'hidden' : ''}
 			open={alwaysExpanded || $expandedMealCategories.includes(mealGroup.meal_type)}
 			on:toggle={(e) => {
-				if (alwaysExpanded) return;
 				expandedMealCategories.update((categories) => {
 					if (e.detail.open) {
 						return [...categories, mealGroup.meal_type];
@@ -103,6 +104,7 @@
 			<svelte:fragment slot="summary">{mealGroup.meal_type}</svelte:fragment>
 			<svelte:fragment slot="content">
 				<MealGroupContainer
+					on:click={() => dispatch('mealGroupClicked')}
 					{mealGroup}
 					gradientColour={getGroupGradientColour(mealGroup.meal_type)}
 				/>

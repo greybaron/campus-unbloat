@@ -1,11 +1,20 @@
 <script lang="ts">
 	import type { MealGroup } from '$lib/types';
+	import { createEventDispatcher } from 'svelte';
 
 	export let mealGroup: MealGroup;
 	export let gradientColour: string;
+
+	const dispatch = createEventDispatcher();
 </script>
 
-<div class="space-y-1">
+<div
+	on:click={() => {
+		dispatch('click');
+	}}
+	role="presentation"
+	class="space-y-1"
+>
 	{#each mealGroup.sub_meals as submeal}
 		<div
 			class="rounded-xl bg-gradient-165 to-40% {gradientColour} bg-surface-50-900-token px-4 py-2 border-token border-surface-400-500-token space-y-2 text-center"

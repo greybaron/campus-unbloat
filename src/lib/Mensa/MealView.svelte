@@ -4,6 +4,7 @@
 	import type { MealGroup } from '../types';
 	import MealViewAccordion from './MealViewAccordion.svelte';
 	import MediaQuery from 'svelte-media-queries';
+	import { createEventDispatcher } from 'svelte';
 
 	export let twoColumn = false;
 	export let expandedMealCategories: Writable<Array<string>>;
@@ -15,6 +16,8 @@
 		(acc, item, index) => (acc[index % 2].push(item), acc),
 		[[], []]
 	);
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <!-- hacky -->
@@ -27,6 +30,10 @@
 			<MealViewAccordion alwaysExpanded={true} mealGroups={oddArray} {expandedMealCategories} />
 		</div>
 	{:else}
-		<MealViewAccordion {mealGroups} {expandedMealCategories} />
+		<MealViewAccordion
+			{mealGroups}
+			{expandedMealCategories}
+			on:mealGroupClicked={() => dispatch('mealGroupClicked')}
+		/>
 	{/if}
 </MediaQuery>

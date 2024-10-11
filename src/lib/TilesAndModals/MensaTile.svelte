@@ -166,7 +166,11 @@
 		{/if}
 		<TileInteractiveElementWrapper>
 			{#if $showMealsInTile && mealGroups}
-				<MealView bind:expandedMealCategories {mealGroups} />
+				<MealView
+					bind:expandedMealCategories
+					{mealGroups}
+					on:mealGroupClicked={() => modalStore.trigger(modal)}
+				/>
 			{/if}
 		</TileInteractiveElementWrapper>
 	</div>
