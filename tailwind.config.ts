@@ -44,6 +44,18 @@ export default {
 			themes: {
 				custom: [customCrimson]
 			}
-		})
+		}),
+		function ({ addComponents }) {
+			const opacities = [50, 60];
+			const newComponents = {};
+
+			opacities.forEach((opacity) => {
+				newComponents[`.card-transparent-${opacity}`] = {
+					[`@apply bg-white/${opacity} dark:bg-surface-700 shadow rounded-xl`]: {}
+				};
+			});
+
+			addComponents(newComponents);
+		}
 	]
 } satisfies Config;

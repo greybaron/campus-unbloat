@@ -12,9 +12,7 @@
 		<p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
 	{:else}
 		{#each currentEvents as { start, end, title, room, instructor, remarks, color }}
-			<div
-				class="flex flex-row rounded-xl bg-surface-50-900-token border border-surface-400-500-token"
-			>
+			<div class="flex flex-row card-transparent-60">
 				<div class="w-3 rounded-l-3xl" style="background-color: {color};" />
 				<div class="mr-2 py-2 w-full flex flex-col justify-center items-center">
 					<div>

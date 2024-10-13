@@ -54,10 +54,10 @@
 			}
 		}
 
-		return 'bg-surface-50-900-token';
+		return 'bg-white/60 dark:bg-surface-700';
 	}
 
-	function getGroupGradientColour(meal_type: string) {
+	function getGroupGradientColour(meal_type: string): string | undefined {
 		const icons: { [key: string]: string } = {
 			vegan: 'from-green-400/30',
 			vegetarisch: 'from-green-400/30',
@@ -74,8 +74,6 @@
 				return icons[key];
 			}
 		}
-
-		return 'bg-surface-50-900-token';
 	}
 </script>
 

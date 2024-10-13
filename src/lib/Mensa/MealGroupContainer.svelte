@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 
 	export let mealGroup: MealGroup;
-	export let gradientColour: string;
+	export let gradientColour: string | undefined;
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -17,7 +17,7 @@
 >
 	{#each mealGroup.sub_meals as submeal}
 		<div
-			class="rounded-xl bg-gradient-165 to-40% {gradientColour} bg-surface-50-900-token px-4 py-2 border-token border-surface-400-500-token space-y-2 text-center"
+			class="card-transparent-60 bg-gradient-165 to-40% {gradientColour} px-4 py-2 space-y-2 text-center"
 		>
 			<strong>{submeal.name}</strong>
 			<hr />
@@ -58,9 +58,7 @@
 		</div>
 
 		{#if submeal.variations}
-			<div
-				class="rounded-xl bg-surface-50-900-token px-4 py-2 border-token border-surface-400-500-token space-y-2"
-			>
+			<div class="card-transparent-60 px-4 py-2 space-y-2">
 				<div class="flex space-x-2">
 					<div class="badge-icon p-3 variant-outline">
 						<i class="fa-solid fa-flask-vial"></i>
