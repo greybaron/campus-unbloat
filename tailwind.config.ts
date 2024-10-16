@@ -35,7 +35,7 @@ export default {
 		screens: {
 			sm: '480px',
 			md: '640px',
-			lg: '820px'
+			lg: '812px'
 		}
 	},
 	plugins: [

@@ -167,7 +167,7 @@
 
 <PageContainer>
 	{#if basicUserData}
-		<div class="w-[98%] sm:w-96 lg:w-[49rem] mx-auto space-x-1 flex items-center">
+		<div class="w-[98%] sm:w-96 lg:w-[48.6rem] mx-auto space-x-1 flex items-center">
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<h1 class="text-3xl font-bold flex-grow" on:click={() => {}}>
