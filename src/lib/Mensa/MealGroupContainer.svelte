@@ -13,7 +13,7 @@
 		dispatch('click');
 	}}
 	role="presentation"
-	class="space-y-1"
+	class="space-y-1 override-open-modal"
 >
 	{#each mealGroup.sub_meals as submeal}
 		<div
