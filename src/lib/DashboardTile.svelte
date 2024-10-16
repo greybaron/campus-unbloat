@@ -11,13 +11,51 @@
 	export let ready: boolean = false;
 
 	const dispatch = createEventDispatcher();
+	let pointerPressed = false;
+
+	function hasParentWithClass(element: HTMLElement, classname: string): boolean {
+		let currentElement: HTMLElement | null = element;
+
+		while (currentElement) {
+			if (currentElement.classList.contains(classname)) {
+				return true;
+			}
+			currentElement = currentElement.parentElement;
+		}
+
+		return false;
+	}
+
+	function handlePointerStart(e: PointerEvent) {
+		let target = e.target as HTMLElement;
+		if (
+			!clickable ||
+			(hasParentWithClass(target, 'dont-open-modal') &&
+				!hasParentWithClass(target, 'override-open-modal'))
+		) {
+			return;
+		}
+
+		pointerPressed = true;
+		window.addEventListener('pointercancel', handlePointerEnd);
+		window.addEventListener('pointerup', handlePointerEnd);
+	}
+
+	function handlePointerEnd() {
+		pointerPressed = false;
+		window.removeEventListener('pointercancel', handlePointerEnd);
+		window.removeEventListener('pointerup', handlePointerEnd);
+	}
 </script>
 
 <button
 	on:click={() => dispatch('click')}
+	on:pointerdown={handlePointerStart}
 	aria-label={title}
 	disabled={!clickable}
-	class="h-full bg-[#ddb8c1] dark:bg-[#3b1725] flex flex-col items-center w-full sm:w-96 rounded-2xl p-4 pt-2 pb-3 space-y-1"
+	class="{pointerPressed
+		? 'scale-[97%]'
+		: ''} transition-transform h-full bg-[#ddb8c1] dark:bg-[#3b1725] flex flex-col items-center w-full sm:w-96 rounded-2xl p-4 pt-2 pb-3 space-y-1"
 >
 	<div class="flex flex-row w-full items-center justify-between">
 		{#if clickable}
