@@ -184,7 +184,8 @@
 
 			<div class="relative inline-block">
 				{#if presentReminderCategories != 0}
-					<span class="size-6 badge-icon variant-filled-secondary absolute -top-1 -right-1 z-10"
+					<span
+						class="size-6 badge-icon variant-filled-secondary absolute -top-1 -right-1 z-10 pointer-events-none"
 						>{presentReminderCategories}</span
 					>
 				{/if}
