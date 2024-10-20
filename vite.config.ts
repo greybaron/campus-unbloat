@@ -73,7 +73,8 @@ export default defineConfig({
 							'question',
 							'square-pen',
 							'square-check',
-							'graduation-cap'
+							'graduation-cap',
+							'bug'
 						],
 						regular: ['_'],
 						brands: ['github']

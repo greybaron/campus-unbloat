@@ -38,6 +38,14 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
+	const popupProjectInfo: PopupSettings = {
+		// Represents the type of event that opens/closed the popup
+		event: 'click',
+		// Matches the data-popup value on your popup element
+		target: 'popupProjectInfo',
+		// Defines which side of your trigger the popup will appear
+		placement: 'bottom'
+	};
 
 	if (
 		browser &&
@@ -75,7 +83,7 @@
 </script>
 
 <div
-	class="card z-50 p-4 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
+	class="card z-50 p-3 w-72 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
 	data-popup="popupRechtliches"
 >
 	<div class="flex space-x-2">
@@ -88,6 +96,28 @@
 			href="/datenschutz"
 			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-secondary-500"
 			>Datenschutz</a
+		>
+	</div>
+</div>
+
+<div
+	class="card z-50 p-3 shadow-xl variant-glass-tertiary border-token border-secondary-500 fixed"
+	data-popup="popupProjectInfo"
+>
+	<div class="flex space-x-2">
+		<a
+			href="https://github.com/greybaron/campus-unbloat"
+			target="_blank"
+			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-secondary-500"
+			><i class="fa-brands fa-github"></i>
+			<p>Quellcode</p></a
+		>
+		<a
+			href="https://github.com/greybaron/campus-unbloat/issues/new?assignees=greybaron&labels=triage&title=[Feature]:%20/[Bug]:%20...&body=Describe%20a%20bug%20you%20encountered,%20or%20a%20feature%20that%20you%20think%20is%20missing."
+			target="_blank"
+			class="flex-grow btn btn-sm bg-surface-50-900-token border-2 border-primary-400-500-token"
+			><i class="fa-solid fa-bug"></i>
+			<p>Fehler melden</p></a
 		>
 	</div>
 </div>
@@ -162,6 +192,12 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<div class="flex items-center justify-end space-x-1">
+					<button
+						use:popup={popupProjectInfo}
+						class="size-6 btn-icon variant-ghost-secondary text-xs"
+					>
+						<i class="fa-solid fa-info"></i>
+					</button>
 					<button
 						use:popup={popupRechtliches}
 						class="h-6 btn btn-sm variant-ghost-secondary text-xs"
