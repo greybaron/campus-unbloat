@@ -101,7 +101,7 @@
 </div>
 
 <div
-	class="card z-50 p-3 shadow-xl variant-glass-tertiary border-token border-secondary-500 fixed"
+	class="card z-50 p-3 shadow-xl variant-glass-secondary border-token border-secondary-500 fixed"
 	data-popup="popupProjectInfo"
 >
 	<div class="flex space-x-2">
