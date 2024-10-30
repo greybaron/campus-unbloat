@@ -33,6 +33,9 @@
 </script>
 
 <DashboardTile title="Blockplan" clickable={false} ready={Boolean(timeline)}>
+	{#if !(timeline.fachsemester.length > 0 || timeline.theoriesemester.length > 0 || timeline.praxissemester.length > 0 || timeline.specials.length > 0)}
+		Es gibt keine Einträge.
+	{/if}
 	<Accordion>
 		{#each sections as section (section.key)}
 			{#if timeline[section.key].length > 0}

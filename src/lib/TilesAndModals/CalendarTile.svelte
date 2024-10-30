@@ -25,6 +25,8 @@
 	let storedEventsUnix: Writable<EventUnix[]>;
 	let lastEventUpdate: Writable<Date | null>;
 	let selectedDate: Date = getNextWeekday();
+	// workaround for the case of loading being finished and there being 0 events
+	let loading = true;
 
 	type fetchedCalendar = Array<{
 		title: string;
@@ -137,6 +139,7 @@
 			dispatch('showToast', payload);
 			return;
 		}
+		loading = false;
 
 		let fetchedCalendar = await res.json();
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
@@ -144,7 +147,10 @@
 		storedEventsUnix.set(parsedUnix);
 		events = unixEventsToEvents(parsedUnix);
 
-		lastEventUpdate.set(new Date());
+		if (events.length > 0) {
+			lastEventUpdate.set(new Date());
+		}
+
 		currentEvents = getCurrentEvents(events, selectedDate);
 
 		isReloading = false;
@@ -157,7 +163,7 @@
 	on:reload={() => {
 		fetchCalendar();
 	}}
-	ready={storedEventsUnix && $storedEventsUnix.length != 0}
+	ready={storedEventsUnix && ($storedEventsUnix.length != 0 || !loading)}
 	reloadable={true}
 	reloading={isReloading}
 >

@@ -53,8 +53,18 @@
 	<div class="w-full space-y-2 h-full max-h-44 min-h-32 flex flex-col justify-between">
 		<div class="flex-grow" />
 		{#if basicUserData}
-			<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
-			<p>{basicUserData.seminar_name}</p>
+			{#if basicUserData.seminar_group}
+				<p>{basicUserData.user} - {basicUserData.seminar_group}</p>
+				<p>{basicUserData.seminar_name}</p>
+			{:else}
+				<p>{basicUserData.user}</p>
+				<div class="flex items-center m-2 space-x-2">
+					<i class="fa-solid fa-info-circle"></i>
+					<p class="text-sm">
+						Anscheinend hast du keine Seminargruppe. Dies ist normal wenn das Studium vorbei ist
+					</p>
+				</div>
+			{/if}
 		{/if}
 		<div class="flex-grow" />
 		{#if fachsemester && ects}

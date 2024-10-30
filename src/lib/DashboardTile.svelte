@@ -29,7 +29,7 @@
 	function handlePointerStart(e: PointerEvent) {
 		let target = e.target as HTMLElement;
 		if (
-			!clickable ||
+			!(clickable && ready) ||
 			(hasParentWithClass(target, 'dont-open-modal') &&
 				!hasParentWithClass(target, 'override-open-modal'))
 		) {
@@ -49,7 +49,9 @@
 </script>
 
 <button
-	on:click={() => dispatch('click')}
+	on:click={() => {
+		if (ready) dispatch('click');
+	}}
 	on:pointerdown={handlePointerStart}
 	aria-label={title}
 	disabled={!clickable}
