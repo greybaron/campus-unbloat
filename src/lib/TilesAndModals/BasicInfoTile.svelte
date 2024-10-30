@@ -58,10 +58,10 @@
 				<p>{basicUserData.seminar_name}</p>
 			{:else}
 				<p>{basicUserData.user}</p>
-				<div class="flex items-center m-2 space-x-2">
+				<div class="flex items-center m-4 space-x-2">
 					<i class="fa-solid fa-info-circle"></i>
 					<p class="text-sm">
-						Anscheinend hast du keine Seminargruppe. Dies ist normal wenn das Studium vorbei ist
+						Anscheinend hast du keine Seminargruppe. Das ist normal wenn das Studium vorbei ist
 					</p>
 				</div>
 			{/if}
