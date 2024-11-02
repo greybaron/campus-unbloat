@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ cookies }) {
 	const jwt = cookies.get('jwt');
@@ -11,10 +11,21 @@ export async function load({ cookies }) {
 	});
 
 	if (!response.ok) {
-		if (response.status === 429) {
-			return error(429, 'Zu viele Anfragen');
+		switch (response.status) {
+			// unauthorized means backend re-login failed, therefore delete the session
+			case 401:
+				cookies.set('jwt', '', {
+					path: '/',
+					sameSite: 'lax',
+					httpOnly: true,
+					secure: process.env.NODE_ENV === 'production'
+				});
+				throw redirect(303, '/login');
+			case 429:
+				return error(429, 'Zu viele Anfragen');
+			default:
+				return error(response.status, await response.text());
 		}
-		return error(response.status, await response.text());
 	}
 
 	const loginResponse = await response.json();
