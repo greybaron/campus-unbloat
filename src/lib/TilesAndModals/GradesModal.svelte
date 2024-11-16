@@ -40,7 +40,12 @@
 	let filterElement: HTMLInputElement;
 	$: filterGrades(filter);
 
+	// hack to emulate "autocollapse" while being able to collapse the remaining
+	let accordionOpenIndex = 0;
+
 	function filterGrades(filter: string) {
+		accordionOpenIndex = 0;
+
 		if (filter == '') {
 			filteredGrades = grades;
 		} else if (filter) {
@@ -132,9 +137,16 @@
 	</svelte:fragment>
 
 	{#if filteredGrades && filteredGrades.length > 0}
-		<Accordion autocollapse>
+		<Accordion>
 			{#each filteredGrades as grade, idx}
-				<AccordionItem open={idx == 0}>
+				<AccordionItem
+					open={idx == accordionOpenIndex}
+					on:toggle={(state) => {
+						if (state.detail.open) {
+							accordionOpenIndex = idx;
+						}
+					}}
+				>
 					<svelte:fragment slot="lead">
 						<span
 							class="badge-icon p-4 {grade.total_passed === undefined
